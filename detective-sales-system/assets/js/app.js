@@ -214,12 +214,19 @@ function loadReportContent() {
 
 // 生成数据可视化图表
 function generateCharts() {
+    const chartContainer = document.querySelector('.chart-container');
+    
     if (!currentCase || !currentCase.clues || currentCase.clues.length === 0) {
-        // 清空图表容器
-        document.getElementById('clueImportanceChart').parentNode.innerHTML = '<p>暂无足够数据生成图表</p>';
-        document.getElementById('clueTypeChart').parentNode.innerHTML = '<p>暂无足够数据生成图表</p>';
+        // 显示无数据提示
+        chartContainer.innerHTML = '<p>暂无足够数据生成图表</p>';
         return;
     }
+
+    // 重新创建canvas元素
+    chartContainer.innerHTML = `
+        <canvas id="clueImportanceChart" width="400" height="300"></canvas>
+        <canvas id="clueTypeChart" width="400" height="300"></canvas>
+    `;
 
     // 生成线索重要性分布图表
     generateImportanceChart();

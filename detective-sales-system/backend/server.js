@@ -78,6 +78,13 @@ app.post('/api/ai-analyze', async (req, res) => {
 
     // 处理响应
     let aiResponse;
+    
+    // 检查响应类型
+    if (typeof response.data === 'string' && response.data.includes('<html>')) {
+      console.error('AI模型返回了HTML响应，可能是错误页面或重定向:', response.data.substring(0, 500) + '...');
+      throw new Error('AI model returned HTML response instead of JSON');
+    }
+    
     if (model === 'wenxin') {
       aiResponse = response.data.result || response.data.choices?.[0]?.message?.content;
     } else if (model === 'doubao') {

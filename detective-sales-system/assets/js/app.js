@@ -952,21 +952,68 @@ function hideAllScreens() {
     });
 }
 
+// 简单加密函数
+function encryptData(data) {
+    if (!data) return '';
+    const key = 'detective_sales_system_secret_key_2024';
+    let encrypted = '';
+    for (let i = 0; i < data.length; i++) {
+        const charCode = data.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+        encrypted += String.fromCharCode(charCode);
+    }
+    return btoa(encrypted);
+}
+
+// 简单解密函数
+function decryptData(encryptedData) {
+    if (!encryptedData) return '';
+    try {
+        const key = 'detective_sales_system_secret_key_2024';
+        const decoded = atob(encryptedData);
+        let decrypted = '';
+        for (let i = 0; i < decoded.length; i++) {
+            const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+            decrypted += String.fromCharCode(charCode);
+        }
+        return decrypted;
+    } catch (e) {
+        return '';
+    }
+}
+
 // 加载设置
 function loadSettings() {
-    return JSON.parse(localStorage.getItem('detective_settings')) || {
-        defaultModel: 'wenxin',
-        apiKey: '',
-        apiUrl: ''
-    };
+    const storedSettings = localStorage.getItem('detective_settings');
+    if (!storedSettings) {
+        return {
+            defaultModel: 'wenxin',
+            apiKey: '',
+            apiUrl: ''
+        };
+    }
+    
+    try {
+        const settings = JSON.parse(storedSettings);
+        return {
+            defaultModel: settings.defaultModel || 'wenxin',
+            apiKey: decryptData(settings.apiKey) || '',
+            apiUrl: decryptData(settings.apiUrl) || ''
+        };
+    } catch (e) {
+        return {
+            defaultModel: 'wenxin',
+            apiKey: '',
+            apiUrl: ''
+        };
+    }
 }
 
 // 保存设置
 function saveSettings() {
     const settings = {
         defaultModel: document.getElementById('default-ai-model').value,
-        apiKey: document.getElementById('ai-api-key').value,
-        apiUrl: document.getElementById('ai-api-url').value
+        apiKey: encryptData(document.getElementById('ai-api-key').value),
+        apiUrl: encryptData(document.getElementById('ai-api-url').value)
     };
     
     localStorage.setItem('detective_settings', JSON.stringify(settings));

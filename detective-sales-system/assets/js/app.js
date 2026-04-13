@@ -1187,35 +1187,157 @@ function aiAnalyzeClues(model) {
 
 // 生成AI分析结果（模拟）
 function generateAIResults(model, clues, caseTitle, clientName) {
-    // 根据不同模型生成不同风格的分析结果
-    const modelResponses = {
-        wenxin: [
-            `根据收集到的线索，${clientName}的${caseTitle}项目涉及以下基础事实：\n${clues.map(clue => `- ${clue.content}`).join('\n')}`,
-            `通过分析线索之间的关联，发现：\n1. 线索之间存在明显的关联关系\n2. 重要线索集中在特定领域\n3. 不同类型的线索相互印证`,
-            `基于线索分析，${clientName}可能存在以下潜在需求：\n1. 对产品质量的高要求\n2. 对价格的敏感性\n3. 对服务响应速度的期待`,
-            `建议采取以下行动方案：\n1. 提供详细的产品方案和样品\n2. 制定有竞争力的价格策略\n3. 建立快速响应机制\n4. 定期跟进客户需求变化`
-        ],
-        tongyi: [
-            `经过对${clientName}${caseTitle}项目线索的梳理，确认以下基础事实：\n${clues.map(clue => `${clue.type}线索：${clue.content}`).join('\n')}`,
-            `线索关联分析：\n- 重要性较高的线索集中在产品质量和价格方面\n- 不同来源的线索相互补充，形成完整的需求画像\n- 客户关注的核心问题清晰可见`,
-            `潜在需求推断：\n1. 产品性能和可靠性是首要考虑因素\n2. 预算控制是重要决策因素\n3. 希望获得个性化的解决方案\n4. 重视长期合作关系`,
-            `行动建议：\n1. 针对客户核心需求提供定制化方案\n2. 突出产品的质量优势和性价比\n3. 建立专门的客户对接团队\n4. 制定长期合作计划`
-        ],
-        deepseek: [
-            `基础事实梳理：\n${clues.map((clue, index) => `${index + 1}. [${clue.importance}星] ${clue.content} (标签: ${clue.tags})`).join('\n')}`,
-            `关联线索发现：\n通过对线索的语义分析，发现多个线索指向同一核心需求，不同类型的线索相互验证，形成了较为完整的客户需求画像。`,
-            `潜在需求推断：\n基于线索分析，客户可能存在未明确表达的深层需求，包括对产品稳定性的担忧、对服务支持的期望，以及对成本效益的平衡考虑。`,
-            `行动方案建议：\n1. 针对核心需求提供详细的解决方案\n2. 主动回应客户可能的担忧\n3. 提供透明的价格结构\n4. 建立定期沟通机制\n5. 提供个性化的服务支持`
-        ],
-        doubao: [
-            `根据收集到的线索，为您梳理${clientName}${caseTitle}项目的基础事实：\n${clues.map(clue => `• ${clue.content}`).join('\n')}`,
-            `线索关联分析：\n仔细分析这些线索，我发现它们之间存在密切的联系。客户关注的重点主要集中在产品质量、价格合理性和服务支持三个方面，这些因素共同影响着客户的决策过程。`,
-            `潜在需求推断：\n通过对线索的深度分析，我认为客户可能还有以下潜在需求：\n- 希望获得长期稳定的合作关系\n- 对产品的技术支持有较高期待\n- 可能面临内部决策流程的挑战\n- 对供应商的可靠性有较高要求`,
-            `行动方案建议：\n为了更好地满足客户需求，建议采取以下行动：\n1. 提供详细的产品技术文档和案例\n2. 制定灵活的价格方案\n3. 建立专门的客户服务团队\n4. 提供定期的产品培训和技术支持\n5. 建立客户反馈机制，及时调整方案`
-        ]
+    // 提取所有线索内容
+    const allClueContent = clues.map(c => c.content).join(' ');
+    
+    // 关键词检测
+    const keywords = {
+        budget: ['预算', '价格', '费用', '成本', '便宜', '贵', '性价比'],
+        quality: ['质量', '品质', '性能', '可靠性', '稳定', '耐用'],
+        service: ['服务', '售后', '支持', '响应', '技术', '维护'],
+        time: ['时间', '周期', '交货', '交付', '尽快', '紧急'],
+        competitor: ['竞品', '竞争对手', '其他公司', 'X公司', '同行'],
+        sample: ['样品', '试用', '测试', '演示'],
+        custom: ['定制', '个性化', '特殊', '专门']
     };
     
-    return modelResponses[model] || modelResponses.wenxin;
+    const detectedKeywords = {};
+    for (const [key, words] of Object.entries(keywords)) {
+        detectedKeywords[key] = words.some(word => allClueContent.includes(word));
+    }
+    
+    // 随机变体
+    const randomVariation = Math.floor(Math.random() * 3);
+    
+    // 根据检测到的关键词生成个性化分析
+    const generateStep1 = () => {
+        const base = `根据收集到的线索，${clientName}的${caseTitle}项目涉及以下基础事实：`;
+        const variations = [
+            clues.map(clue => `- ${clue.content}`).join('\n'),
+            clues.map((clue, i) => `${i + 1}. ${clue.content} (${clue.importance}星重要)`).join('\n'),
+            clues.map(clue => `• [${clue.type}] ${clue.content}`).join('\n')
+        ];
+        return `${base}\n${variations[randomVariation]}`;
+    };
+    
+    const generateStep2 = () => {
+        let findings = [];
+        if (detectedKeywords.budget && detectedKeywords.quality) {
+            findings.push('客户同时关注价格和质量，寻求高性价比解决方案');
+        } else if (detectedKeywords.budget) {
+            findings.push('预算是客户的核心考虑因素');
+        } else if (detectedKeywords.quality) {
+            findings.push('产品质量是客户最关注的要点');
+        }
+        
+        if (detectedKeywords.service) {
+            findings.push('客户对售后服务和技术支持有较高要求');
+        }
+        if (detectedKeywords.time) {
+            findings.push('项目时间周期是重要考量因素');
+        }
+        if (detectedKeywords.competitor) {
+            findings.push('客户可能正在与其他供应商接触');
+        }
+        
+        if (findings.length === 0) {
+            findings = [
+                '线索之间存在一定的关联性',
+                '需要进一步收集更多信息',
+                '客户需求正在逐步明确'
+            ];
+        }
+        
+        const introVariations = [
+            '通过分析线索之间的关联，发现：',
+            '线索关联分析结果：',
+            '深入分析线索后发现：'
+        ];
+        
+        return `${introVariations[randomVariation]}\n${findings.map((f, i) => `${i + 1}. ${f}`).join('\n')}`;
+    };
+    
+    const generateStep3 = () => {
+        let needs = [];
+        if (detectedKeywords.sample) {
+            needs.push('希望先看到样品或进行测试');
+        }
+        if (detectedKeywords.custom) {
+            needs.push('可能需要定制化的解决方案');
+        }
+        if (detectedKeywords.quality && !detectedKeywords.budget) {
+            needs.push('对产品稳定性和可靠性有较高期待');
+        }
+        if (detectedKeywords.service) {
+            needs.push('重视长期的技术支持和维护服务');
+        }
+        if (detectedKeywords.competitor) {
+            needs.push('可能在比较多家供应商的方案');
+        }
+        if (detectedKeywords.time) {
+            needs.push('可能有较紧急的时间要求');
+        }
+        
+        if (needs.length === 0) {
+            needs = [
+                '需要进一步了解客户的深层需求',
+                '建议与客户进行更深入的沟通',
+                '可能存在未明确表达的需求'
+            ];
+        }
+        
+        const introVariations = [
+            `基于线索分析，${clientName}可能存在以下潜在需求：`,
+            '潜在需求推断：',
+            '客户可能还有以下需求：'
+        ];
+        
+        return `${introVariations[randomVariation]}\n${needs.map((n, i) => `${i + 1}. ${n}`).join('\n')}`;
+    };
+    
+    const generateStep4 = () => {
+        let actions = [];
+        if (detectedKeywords.sample) {
+            actions.push('尽快准备样品供客户测试');
+        }
+        if (detectedKeywords.custom) {
+            actions.push('提供定制化的解决方案');
+        }
+        if (detectedKeywords.quality) {
+            actions.push('重点展示产品的质量优势和可靠性');
+        }
+        if (detectedKeywords.budget) {
+            actions.push('制定有竞争力的价格方案');
+        }
+        if (detectedKeywords.service) {
+            actions.push('提供详细的售后服务方案');
+        }
+        if (detectedKeywords.time) {
+            actions.push('明确项目时间计划和交付周期');
+        }
+        if (detectedKeywords.competitor) {
+            actions.push('突出我们的差异化优势');
+        }
+        
+        if (actions.length === 0) {
+            actions = [
+                '与客户进行深入沟通',
+                '准备详细的产品方案',
+                '安排产品演示',
+                '定期跟进客户反馈'
+            ];
+        }
+        
+        const introVariations = [
+            '建议采取以下行动方案：',
+            '行动建议：',
+            '为了更好地满足客户需求，建议：'
+        ];
+        
+        return `${introVariations[randomVariation]}\n${actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}`;
+    };
+    
+    return [generateStep1(), generateStep2(), generateStep3(), generateStep4()];
 }
 
 // 添加提示样式

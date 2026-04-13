@@ -73,15 +73,22 @@ app.post('/api/ai-analyze', async (req, res) => {
       }
     });
 
+    // 记录完整响应
+    console.log('AI模型完整响应:', JSON.stringify(response.data, null, 2));
+
     // 处理响应
     let aiResponse;
     if (model === 'wenxin') {
       aiResponse = response.data.result || response.data.choices?.[0]?.message?.content;
+    } else if (model === 'doubao') {
+      // 豆包可能有不同的响应格式
+      aiResponse = response.data.choices?.[0]?.message?.content || response.data.result;
     } else {
       aiResponse = response.data.choices?.[0]?.message?.content;
     }
 
     if (!aiResponse) {
+      console.error('无法提取AI响应，完整响应:', response.data);
       throw new Error('No response from AI model');
     }
 

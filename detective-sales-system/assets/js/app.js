@@ -1415,6 +1415,166 @@ function parseAIResponse(response) {
     }
 }
 
+// 智能本地分析（降级方案）
+function generateLocalAnalysis(clues, caseTitle, clientName, mode) {
+    // 提取所有线索内容
+    const allClueContent = clues.map(c => c.content).join(' ');
+    
+    // 关键词检测
+    const keywords = {
+        budget: ['预算', '价格', '费用', '成本', '便宜', '贵', '性价比'],
+        quality: ['质量', '品质', '性能', '可靠性', '稳定', '耐用'],
+        service: ['服务', '售后', '支持', '响应', '技术', '维护'],
+        time: ['时间', '周期', '交货', '交付', '尽快', '紧急'],
+        competitor: ['竞品', '竞争对手', '其他公司', 'X公司', '同行'],
+        sample: ['样品', '试用', '测试', '演示'],
+        custom: ['定制', '个性化', '特殊', '专门']
+    };
+    
+    const detectedKeywords = {};
+    for (const [key, words] of Object.entries(keywords)) {
+        detectedKeywords[key] = words.some(word => allClueContent.includes(word));
+    }
+    
+    // 随机变体
+    const randomVariation = Math.floor(Math.random() * 3);
+    
+    // 根据检测到的关键词生成个性化分析
+    const generateStep1 = () => {
+        const base = `根据收集到的线索，${clientName}的${caseTitle}项目涉及以下基础事实：`;
+        const variations = [
+            clues.map(clue => `- ${clue.content}`).join('\n'),
+            clues.map((clue, i) => `${i + 1}. ${clue.content} (${clue.importance}星重要)`).join('\n'),
+            clues.map(clue => `• [${clue.type}] ${clue.content}`).join('\n')
+        ];
+        return `${base}\n${variations[randomVariation]}`;
+    };
+    
+    const generateStep2 = () => {
+        let findings = [];
+        if (detectedKeywords.budget && detectedKeywords.quality) {
+            findings.push('客户同时关注价格和质量，寻求高性价比解决方案');
+        } else if (detectedKeywords.budget) {
+            findings.push('预算是客户的核心考虑因素');
+        } else if (detectedKeywords.quality) {
+            findings.push('产品质量是客户最关注的要点');
+        }
+        
+        if (detectedKeywords.service) {
+            findings.push('客户对售后服务和技术支持有较高要求');
+        }
+        if (detectedKeywords.time) {
+            findings.push('项目时间周期是重要考量因素');
+        }
+        if (detectedKeywords.competitor) {
+            findings.push('客户可能正在与其他供应商接触');
+        }
+        
+        if (findings.length === 0) {
+            findings = [
+                '线索之间存在一定的关联性',
+                '需要进一步收集更多信息',
+                '客户需求正在逐步明确'
+            ];
+        }
+        
+        const introVariations = [
+            '通过分析线索之间的关联，发现：',
+            '线索关联分析结果：',
+            '深入分析线索后发现：'
+        ];
+        
+        return `${introVariations[randomVariation]}\n${findings.map((f, i) => `${i + 1}. ${f}`).join('\n')}`;
+    };
+    
+    const generateStep3 = () => {
+        let needs = [];
+        if (detectedKeywords.sample) {
+            needs.push('希望先看到样品或进行测试');
+        }
+        if (detectedKeywords.custom) {
+            needs.push('可能需要定制化的解决方案');
+        }
+        if (detectedKeywords.quality && !detectedKeywords.budget) {
+            needs.push('对产品稳定性和可靠性有较高期待');
+        }
+        if (detectedKeywords.service) {
+            needs.push('重视长期的技术支持和维护服务');
+        }
+        if (detectedKeywords.competitor) {
+            needs.push('可能在比较多家供应商的方案');
+        }
+        if (detectedKeywords.time) {
+            needs.push('可能有较紧急的时间要求');
+        }
+        
+        if (needs.length === 0) {
+            needs = [
+                '需要进一步了解客户的深层需求',
+                '建议与客户进行更深入的沟通',
+                '可能存在未明确表达的需求'
+            ];
+        }
+        
+        const introVariations = [
+            `基于线索分析，${clientName}可能存在以下潜在需求：`,
+            '潜在需求推断：',
+            '客户可能还有以下需求：'
+        ];
+        
+        return `${introVariations[randomVariation]}\n${needs.map((n, i) => `${i + 1}. ${n}`).join('\n')}`;
+    };
+    
+    const generateStep4 = () => {
+        let actions = [];
+        if (detectedKeywords.sample) {
+            actions.push('尽快准备样品供客户测试');
+        }
+        if (detectedKeywords.custom) {
+            actions.push('提供定制化的解决方案');
+        }
+        if (detectedKeywords.quality) {
+            actions.push('重点展示产品的质量优势和可靠性');
+        }
+        if (detectedKeywords.budget) {
+            actions.push('制定有竞争力的价格方案');
+        }
+        if (detectedKeywords.service) {
+            actions.push('提供详细的售后服务方案');
+        }
+        if (detectedKeywords.time) {
+            actions.push('明确项目时间计划和交付周期');
+        }
+        if (detectedKeywords.competitor) {
+            actions.push('突出我们的差异化优势');
+        }
+        
+        if (actions.length === 0) {
+            actions = [
+                '与客户进行深入沟通',
+                '准备详细的产品方案',
+                '安排产品演示',
+                '定期跟进客户反馈'
+            ];
+        }
+        
+        const introVariations = [
+            '建议采取以下行动方案：',
+            '行动建议：',
+            '为了更好地满足客户需求，建议：'
+        ];
+        
+        return `${introVariations[randomVariation]}\n${actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}`;
+    };
+    
+    return {
+        step1: generateStep1(),
+        step2: generateStep2(),
+        step3: generateStep3(),
+        step4: generateStep4()
+    };
+}
+
 // AI分析线索
 async function aiAnalyzeClues(model) {
     if (!currentCase) return;

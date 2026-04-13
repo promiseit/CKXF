@@ -817,17 +817,17 @@ function exportPPT() {
 </html>`;
 
     // 创建下载链接
-    const blob = new Blob([pptContent], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+    const blob = new Blob([pptContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${currentCase.title}_PPT.pptx`;
+    a.download = `${currentCase.title}_PPT.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    showToast('PPT导出成功！');
+    showToast('PPT导出成功！请注意：这是HTML格式的PPT，可在浏览器中打开查看。');
 }
 
 // 下一步

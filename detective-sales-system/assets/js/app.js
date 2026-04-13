@@ -991,7 +991,8 @@ function loadSettings() {
         return {
             defaultModel: 'wenxin',
             apiKey: '',
-            apiUrl: ''
+            apiUrl: '',
+            modelId: ''
         };
     }
     
@@ -1000,13 +1001,15 @@ function loadSettings() {
         return {
             defaultModel: settings.defaultModel || 'wenxin',
             apiKey: decryptData(settings.apiKey) || '',
-            apiUrl: decryptData(settings.apiUrl) || ''
+            apiUrl: decryptData(settings.apiUrl) || '',
+            modelId: decryptData(settings.modelId) || ''
         };
     } catch (e) {
         return {
             defaultModel: 'wenxin',
             apiKey: '',
-            apiUrl: ''
+            apiUrl: '',
+            modelId: ''
         };
     }
 }
@@ -1016,7 +1019,8 @@ function saveSettings() {
     const settings = {
         defaultModel: document.getElementById('default-ai-model').value,
         apiKey: encryptData(document.getElementById('ai-api-key').value),
-        apiUrl: encryptData(document.getElementById('ai-api-url').value)
+        apiUrl: encryptData(document.getElementById('ai-api-url').value),
+        modelId: encryptData(document.getElementById('ai-model-id').value)
     };
     
     localStorage.setItem('detective_settings', JSON.stringify(settings));
@@ -1029,6 +1033,7 @@ function loadSettingsToForm() {
     document.getElementById('default-ai-model').value = settings.defaultModel || 'wenxin';
     document.getElementById('ai-api-key').value = settings.apiKey || '';
     document.getElementById('ai-api-url').value = settings.apiUrl || '';
+    document.getElementById('ai-model-id').value = settings.modelId || '';
 }
 
 // 测试API连接
@@ -1036,6 +1041,7 @@ async function testAPI() {
     const settings = loadSettings();
     const apiKey = settings.apiKey;
     const apiUrl = settings.apiUrl;
+    const modelId = settings.modelId;
     const model = settings.defaultModel || 'wenxin';
     
     if (!apiKey) {
@@ -1061,7 +1067,7 @@ async function testAPI() {
                 response = await callDeepseekAPI(apiKey, apiUrl, testPrompt);
                 break;
             case 'doubao':
-                response = await callDoubaoAPI(apiKey, apiUrl, testPrompt);
+                response = await callDoubaoAPI(apiKey, apiUrl, testPrompt, modelId);
                 break;
             default:
                 throw new Error('不支持的模型');
@@ -1351,10 +1357,11 @@ async function callDeepseekAPI(apiKey, apiUrl, prompt) {
 }
 
 // 调用豆包API
-async function callDoubaoAPI(apiKey, apiUrl, prompt) {
+async function callDoubaoAPI(apiKey, apiUrl, prompt, modelId) {
     const url = apiUrl || 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
+    const model = modelId || 'ep-20241203163159-7z9xg';
     
-    console.log('调用豆包API，URL:', url);
+    console.log('调用豆包API，URL:', url, '模型:', model);
     
     try {
         const response = await fetch(url, {
@@ -1364,7 +1371,7 @@ async function callDoubaoAPI(apiKey, apiUrl, prompt) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'ep-20241203163159-7z9xg',
+                model: model,
                 messages: [
                     { role: 'user', content: prompt }
                 ],
@@ -1415,6 +1422,7 @@ async function aiAnalyzeClues(model) {
     const settings = loadSettings();
     const apiKey = settings.apiKey;
     const apiUrl = settings.apiUrl;
+    const modelId = settings.modelId;
     const analysisMode = document.getElementById('analysis-mode').value;
     
     if (!apiKey) {
@@ -1448,7 +1456,7 @@ async function aiAnalyzeClues(model) {
                 response = await callDeepseekAPI(apiKey, apiUrl, prompt);
                 break;
             case 'doubao':
-                response = await callDoubaoAPI(apiKey, apiUrl, prompt);
+                response = await callDoubaoAPI(apiKey, apiUrl, prompt, modelId);
                 break;
             default:
                 throw new Error('不支持的模型');

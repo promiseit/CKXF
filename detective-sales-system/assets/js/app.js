@@ -1585,11 +1585,6 @@ async function aiAnalyzeClues(model) {
     const modelId = settings.modelId;
     const analysisMode = document.getElementById('analysis-mode').value;
     
-    if (!apiKey) {
-        showToast('请先在设置中配置API Key');
-        return;
-    }
-    
     const modeText = analysisMode === 'deep' ? '深度思考' : '快速分析';
     showToast(`AI${modeText}中，请稍候...`);
     
@@ -1602,31 +1597,49 @@ async function aiAnalyzeClues(model) {
             tags: clue.tags.join(', ')
         }));
         
-        const prompt = buildPrompt(clues, currentCase.title, currentCase.clientName, analysisMode);
+        let analysisResults;
         
-        let response;
-        switch (model) {
-            case 'wenxin':
-                response = await callWenxinAPI(apiKey, apiUrl, prompt);
-                break;
-            case 'tongyi':
-                response = await callTongyiAPI(apiKey, apiUrl, prompt);
-                break;
-            case 'deepseek':
-                response = await callDeepseekAPI(apiKey, apiUrl, prompt);
-                break;
-            case 'doubao':
-                response = await callDoubaoAPI(apiKey, apiUrl, prompt, modelId);
-                break;
-            default:
-                throw new Error('不支持的模型');
+        // 如果配置了API Key，先尝试调用真实API
+        if (apiKey) {
+            try {
+                const prompt = buildPrompt(clues, currentCase.title, currentCase.clientName, analysisMode);
+                
+                let response;
+                switch (model) {
+                    case 'wenxin':
+                        response = await callWenxinAPI(apiKey, apiUrl, prompt);
+                        break;
+                    case 'tongyi':
+                        response = await callTongyiAPI(apiKey, apiUrl, prompt);
+                        break;
+                    case 'deepseek':
+                        response = await callDeepseekAPI(apiKey, apiUrl, prompt);
+                        break;
+                    case 'doubao':
+                        response = await callDoubaoAPI(apiKey, apiUrl, prompt, modelId);
+                        break;
+                    default:
+                        throw new Error('不支持的模型');
+                }
+                
+                if (!response) {
+                    throw new Error('未获取到AI响应');
+                }
+                
+                analysisResults = parseAIResponse(response);
+                showToast(`AI${modeText}完成！`);
+                
+            } catch (apiError) {
+                console.warn('API调用失败，使用本地智能分析:', apiError);
+                // API调用失败，使用本地智能分析作为降级方案
+                analysisResults = generateLocalAnalysis(clues, currentCase.title, currentCase.clientName, analysisMode);
+                showToast(`AI${modeText}完成（本地智能分析）！`);
+            }
+        } else {
+            // 没有配置API Key，直接使用本地智能分析
+            analysisResults = generateLocalAnalysis(clues, currentCase.title, currentCase.clientName, analysisMode);
+            showToast(`AI${modeText}完成（本地智能分析）！`);
         }
-        
-        if (!response) {
-            throw new Error('未获取到AI响应');
-        }
-        
-        const analysisResults = parseAIResponse(response);
         
         // 更新分析文本框
         currentCase.analysis = currentCase.analysis || {};
@@ -1649,7 +1662,6 @@ async function aiAnalyzeClues(model) {
         }
         
         saveCases();
-        showToast(`AI${modeText}完成！`);
         
     } catch (error) {
         console.error('AI分析错误:', error);

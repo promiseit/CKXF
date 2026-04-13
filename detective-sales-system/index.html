@@ -317,12 +317,20 @@
                                 <div class="settings-notice">
                                     <p><i class="fas fa-info-circle"></i> <strong>说明：</strong></p>
                                     <ul>
-                                        <li>必须配置API Key才能使用大模型分析功能</li>
                                         <li>支持快速分析和深度思考两种模式</li>
                                         <li>快速分析：简洁明了，快速生成结果</li>
                                         <li>深度思考：深入分析，挖掘更多细节</li>
                                         <li><strong>注意：</strong>由于浏览器CORS限制，直接调用第三方API可能失败</li>
-                                        <li>建议使用代理服务器或后端API来调用大模型</li>
+                                        <li><strong>智能降级：</strong>API调用失败时会自动使用本地智能分析</li>
+                                    </ul>
+                                </div>
+                                <div class="settings-notice">
+                                    <p><i class="fas fa-lightbulb"></i> <strong>CORS解决方案：</strong></p>
+                                    <ul>
+                                        <li><strong>1. 浏览器扩展</strong>：安装CORS Unblock等扩展（仅用于开发测试）</li>
+                                        <li><strong>2. 公共CORS代理</strong>：使用 <code>https://cors-anywhere.herokuapp.com/</code> 前缀</li>
+                                        <li><strong>3. 本地代理</strong>：使用Node.js或Python创建简单代理服务器</li>
+                                        <li><strong>4. 服务器端配置</strong>：在API服务端添加CORS响应头</li>
                                     </ul>
                                 </div>
                                 <div class="form-actions">

@@ -310,28 +310,95 @@ function generateReport() {
 function downloadReport() {
     if (!currentCase) return;
 
-    // 生成报告内容
-    const reportContent = `# ${currentCase.title} - 分析报告\n\n` +
-        `## 案件概览\n` +
-        `**客户名称：** ${currentCase.clientName}\n` +
-        `**案件状态：** ${getStatusText(currentCase.status)}\n` +
-        `**创建时间：** ${formatDate(currentCase.createdAt)}\n\n` +
-        `## 线索统计\n` +
-        `共收集 ${currentCase.clues ? currentCase.clues.length : 0} 条线索\n\n` +
-        `## 分析结果\n` +
-        `### 1. 基础事实梳理\n${currentCase.analysis?.[1] || '未填写'}\n\n` +
-        `### 2. 关联线索发现\n${currentCase.analysis?.[2] || '未填写'}\n\n` +
-        `### 3. 潜在需求推断\n${currentCase.analysis?.[3] || '未填写'}\n\n` +
-        `### 4. 行动方案建议\n${currentCase.analysis?.[4] || '未填写'}\n\n` +
-        `---\n` +
-        `**报告生成时间：** ${formatDate(new Date().toISOString())}`;
+    // 生成Word格式的报告内容（HTML格式）
+    const reportContent = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>${currentCase.title} - 分析报告</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #555;
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #666;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .info-item {
+            margin-bottom: 8px;
+        }
+        .info-label {
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 14px;
+            color: #999;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>${currentCase.title} - 分析报告</h1>
+    
+    <h2>案件概览</h2>
+    <div class="info-item"><span class="info-label">客户名称：</span>${currentCase.clientName}</div>
+    <div class="info-item"><span class="info-label">案件状态：</span>${getStatusText(currentCase.status)}</div>
+    <div class="info-item"><span class="info-label">创建时间：</span>${formatDate(currentCase.createdAt)}</div>
+    
+    <h2>线索统计</h2>
+    <p>共收集 ${currentCase.clues ? currentCase.clues.length : 0} 条线索</p>
+    
+    <h2>分析结果</h2>
+    <h3>1. 基础事实梳理</h3>
+    <p>${currentCase.analysis?.[1] || '未填写'}</p>
+    
+    <h3>2. 关联线索发现</h3>
+    <p>${currentCase.analysis?.[2] || '未填写'}</p>
+    
+    <h3>3. 潜在需求推断</h3>
+    <p>${currentCase.analysis?.[3] || '未填写'}</p>
+    
+    <h3>4. 行动方案建议</h3>
+    <p>${currentCase.analysis?.[4] || '未填写'}</p>
+    
+    <div class="footer">
+        <p>报告生成时间：${formatDate(new Date().toISOString())}</p>
+        <p>神探销售系统</p>
+    </div>
+</body>
+</html>`;
 
     // 创建下载链接
-    const blob = new Blob([reportContent], { type: 'text/markdown' });
+    const blob = new Blob([reportContent], { type: 'application/msword' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${currentCase.title}_报告.md`;
+    a.download = `${currentCase.title}_报告.doc`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

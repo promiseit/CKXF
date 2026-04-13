@@ -6,6 +6,7 @@
     <title>神探销售系统 - 客户分析探案平台</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="detective-container">
@@ -194,6 +195,14 @@
                             </div>
                             <div class="report-content" id="report-content">
                                 <!-- 报告内容将通过JS生成 -->
+                            </div>
+                            <!-- 数据可视化图表 -->
+                            <div class="chart-section">
+                                <h4>数据可视化</h4>
+                                <div class="chart-container">
+                                    <canvas id="clueImportanceChart" width="400" height="300"></canvas>
+                                    <canvas id="clueTypeChart" width="400" height="300"></canvas>
+                                </div>
                             </div>
                         </div>
 

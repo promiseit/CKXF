@@ -188,25 +188,169 @@ function loadAnalysisData() {
 function loadReportContent() {
     const reportContent = document.getElementById('report-content');
     reportContent.innerHTML = '';
-    
+
     if (!currentCase) return;
-    
+
     reportContent.innerHTML = `
         <h4>案件概览</h4>
         <p><strong>案件名称：</strong>${currentCase.title}</p>
         <p><strong>客户名称：</strong>${currentCase.clientName}</p>
         <p><strong>案件状态：</strong>${getStatusText(currentCase.status)}</p>
         <p><strong>创建时间：</strong>${formatDate(currentCase.createdAt)}</p>
-        
+
         <h4>线索统计</h4>
         <p>共收集 ${currentCase.clues ? currentCase.clues.length : 0} 条线索</p>
-        
+
         <h4>分析结果</h4>
         <p><strong>1. 基础事实梳理：</strong>${currentCase.analysis?.[1] || '未填写'}</p>
         <p><strong>2. 关联线索发现：</strong>${currentCase.analysis?.[2] || '未填写'}</p>
         <p><strong>3. 潜在需求推断：</strong>${currentCase.analysis?.[3] || '未填写'}</p>
         <p><strong>4. 行动方案建议：</strong>${currentCase.analysis?.[4] || '未填写'}</p>
     `;
+
+    // 生成图表
+    generateCharts();
+}
+
+// 生成数据可视化图表
+function generateCharts() {
+    if (!currentCase || !currentCase.clues || currentCase.clues.length === 0) {
+        // 清空图表容器
+        document.getElementById('clueImportanceChart').parentNode.innerHTML = '<p>暂无足够数据生成图表</p>';
+        document.getElementById('clueTypeChart').parentNode.innerHTML = '<p>暂无足够数据生成图表</p>';
+        return;
+    }
+
+    // 生成线索重要性分布图表
+    generateImportanceChart();
+    // 生成线索类型分布图表
+    generateTypeChart();
+}
+
+// 生成线索重要性分布图表
+function generateImportanceChart() {
+    const ctx = document.getElementById('clueImportanceChart').getContext('2d');
+    
+    // 统计各重要性级别的线索数量
+    const importanceCounts = [0, 0, 0, 0, 0]; // 1-5星
+    currentCase.clues.forEach(clue => {
+        importanceCounts[clue.importance - 1]++;
+    });
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['1星', '2星', '3星', '4星', '5星'],
+            datasets: [{
+                label: '线索数量',
+                data: importanceCounts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(255, 159, 64, 0.7)',
+                    'rgba(255, 205, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(54, 162, 235, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 205, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '线索重要性分布',
+                    color: '#f1c40f',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#e0e0e0'
+                    },
+                    grid: {
+                        color: 'rgba(241, 196, 15, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#e0e0e0'
+                    },
+                    grid: {
+                        color: 'rgba(241, 196, 15, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 生成线索类型分布图表
+function generateTypeChart() {
+    const ctx = document.getElementById('clueTypeChart').getContext('2d');
+    
+    // 统计各类型的线索数量
+    const typeCounts = {};
+    currentCase.clues.forEach(clue => {
+        typeCounts[clue.type] = (typeCounts[clue.type] || 0) + 1;
+    });
+
+    const labels = Object.keys(typeCounts).map(type => getClueTypeText(type));
+    const data = Object.values(typeCounts);
+    const backgroundColors = [
+        'rgba(255, 99, 132, 0.7)',
+        'rgba(54, 162, 235, 0.7)',
+        'rgba(255, 205, 86, 0.7)',
+        'rgba(75, 192, 192, 0.7)',
+        'rgba(153, 102, 255, 0.7)'
+    ];
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors.slice(0, labels.length),
+                borderColor: backgroundColors.slice(0, labels.length).map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '线索类型分布',
+                    color: '#f1c40f',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    labels: {
+                        color: '#e0e0e0'
+                    }
+                }
+            }
+        }
+    });
 }
 
 // 显示新建案件表单

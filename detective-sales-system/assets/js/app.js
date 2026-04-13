@@ -63,6 +63,24 @@ function initEventListeners() {
             }
         });
     });
+
+    // AI分析按钮
+    document.getElementById('ai-analyze-btn').addEventListener('click', function() {
+        const modelSelect = document.getElementById('ai-model-select');
+        const selectedModel = modelSelect.value;
+        
+        if (!selectedModel) {
+            showToast('请选择一个大模型');
+            return;
+        }
+        
+        if (!currentCase || !currentCase.clues || currentCase.clues.length === 0) {
+            showToast('请先添加线索');
+            return;
+        }
+        
+        aiAnalyzeClues(selectedModel);
+    });
     
     // 案件搜索
     document.getElementById('case-search').addEventListener('input', function() {
@@ -995,15 +1013,15 @@ function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = message;
-    
+
     // 添加到页面
     document.body.appendChild(toast);
-    
+
     // 显示动画
     setTimeout(() => {
         toast.classList.add('show');
     }, 100);
-    
+
     // 3秒后自动消失
     setTimeout(() => {
         toast.classList.remove('show');
@@ -1011,6 +1029,75 @@ function showToast(message) {
             document.body.removeChild(toast);
         }, 300);
     }, 3000);
+}
+
+// AI分析线索
+function aiAnalyzeClues(model) {
+    showToast('AI分析中，请稍候...');
+    
+    // 模拟API调用延迟
+    setTimeout(() => {
+        if (!currentCase) return;
+        
+        // 提取线索信息
+        const clues = currentCase.clues.map(clue => {
+            return {
+                content: clue.content,
+                type: getClueTypeText(clue.type),
+                importance: clue.importance,
+                tags: clue.tags.join(', ')
+            };
+        });
+        
+        // 生成分析结果（模拟）
+        const analysisResults = generateAIResults(model, clues, currentCase.title, currentCase.clientName);
+        
+        // 更新分析文本框
+        for (let i = 1; i <= 4; i++) {
+            const analysisText = analysisResults[i-1];
+            if (analysisText) {
+                document.getElementById(`analysis-step${i}`).value = analysisText;
+                currentCase.analysis = currentCase.analysis || {};
+                currentCase.analysis[i] = analysisText;
+            }
+        }
+        
+        saveCases();
+        showToast('AI分析完成！');
+    }, 1500);
+}
+
+// 生成AI分析结果（模拟）
+function generateAIResults(model, clues, caseTitle, clientName) {
+    // 根据不同模型生成不同风格的分析结果
+    const modelResponses = {
+        wenxin: [
+            `根据收集到的线索，${clientName}的${caseTitle}项目涉及以下基础事实：\n${clues.map(clue => `- ${clue.content}`).join('\n')}`,
+            `通过分析线索之间的关联，发现：\n1. 线索之间存在明显的关联关系\n2. 重要线索集中在特定领域\n3. 不同类型的线索相互印证`,
+            `基于线索分析，${clientName}可能存在以下潜在需求：\n1. 对产品质量的高要求\n2. 对价格的敏感性\n3. 对服务响应速度的期待`,
+            `建议采取以下行动方案：\n1. 提供详细的产品方案和样品\n2. 制定有竞争力的价格策略\n3. 建立快速响应机制\n4. 定期跟进客户需求变化`
+        ],
+        tongyi: [
+            `经过对${clientName}${caseTitle}项目线索的梳理，确认以下基础事实：\n${clues.map(clue => `${clue.type}线索：${clue.content}`).join('\n')}`,
+            `线索关联分析：\n- 重要性较高的线索集中在产品质量和价格方面\n- 不同来源的线索相互补充，形成完整的需求画像\n- 客户关注的核心问题清晰可见`,
+            `潜在需求推断：\n1. 产品性能和可靠性是首要考虑因素\n2. 预算控制是重要决策因素\n3. 希望获得个性化的解决方案\n4. 重视长期合作关系`,
+            `行动建议：\n1. 针对客户核心需求提供定制化方案\n2. 突出产品的质量优势和性价比\n3. 建立专门的客户对接团队\n4. 制定长期合作计划`
+        ],
+        deepseek: [
+            `基础事实梳理：\n${clues.map((clue, index) => `${index + 1}. [${clue.importance}星] ${clue.content} (标签: ${clue.tags})`).join('\n')}`,
+            `关联线索发现：\n通过对线索的语义分析，发现多个线索指向同一核心需求，不同类型的线索相互验证，形成了较为完整的客户需求画像。`,
+            `潜在需求推断：\n基于线索分析，客户可能存在未明确表达的深层需求，包括对产品稳定性的担忧、对服务支持的期望，以及对成本效益的平衡考虑。`,
+            `行动方案建议：\n1. 针对核心需求提供详细的解决方案\n2. 主动回应客户可能的担忧\n3. 提供透明的价格结构\n4. 建立定期沟通机制\n5. 提供个性化的服务支持`
+        ],
+        doubao: [
+            `根据收集到的线索，为您梳理${clientName}${caseTitle}项目的基础事实：\n${clues.map(clue => `• ${clue.content}`).join('\n')}`,
+            `线索关联分析：\n仔细分析这些线索，我发现它们之间存在密切的联系。客户关注的重点主要集中在产品质量、价格合理性和服务支持三个方面，这些因素共同影响着客户的决策过程。`,
+            `潜在需求推断：\n通过对线索的深度分析，我认为客户可能还有以下潜在需求：\n- 希望获得长期稳定的合作关系\n- 对产品的技术支持有较高期待\n- 可能面临内部决策流程的挑战\n- 对供应商的可靠性有较高要求`,
+            `行动方案建议：\n为了更好地满足客户需求，建议采取以下行动：\n1. 提供详细的产品技术文档和案例\n2. 制定灵活的价格方案\n3. 建立专门的客户服务团队\n4. 提供定期的产品培训和技术支持\n5. 建立客户反馈机制，及时调整方案`
+        ]
+    };
+    
+    return modelResponses[model] || modelResponses.wenxin;
 }
 
 // 添加提示样式

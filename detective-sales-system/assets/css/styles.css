@@ -598,6 +598,28 @@ body {
     margin-top: 0.5rem;
 }
 
+/* AI分析相关样式 */
+.ai-analysis-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.ai-model-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(241, 196, 15, 0.3);
+    border-radius: 4px;
+    color: #e0e0e0;
+    padding: 0.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+}
+
+.ai-model-select option {
+    background: #16213e;
+    color: #e0e0e0;
+}
+
 /* 分析推理模块 */
 .analysis-steps {
     display: flex;

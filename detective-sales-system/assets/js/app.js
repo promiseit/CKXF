@@ -1240,160 +1240,66 @@ ${cluesText}
 请直接返回JSON，不要有其他文字。`;
 }
 
-// 调用文心一言API
-async function callWenxinAPI(apiKey, apiUrl, prompt) {
-    const url = apiUrl || 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions';
+// 调用后端API
+async function callBackendAPI(model, apiKey, apiUrl, prompt, modelId) {
+    const backendUrl = apiUrl || 'http://localhost:3001/api/ai-analyze';
     
-    console.log('调用文心一言API，URL:', url);
+    console.log('调用后端API，URL:', backendUrl, '模型:', model);
     
     try {
-        const response = await fetch(url, {
+        const response = await fetch(backendUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                messages: [
-                    { role: 'user', content: prompt }
-                ],
-                temperature: 0.7
+                model,
+                apiKey,
+                prompt,
+                modelId
             })
         });
         
-        console.log('文心一言响应状态:', response.status);
+        console.log('后端响应状态:', response.status);
         
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('文心一言错误响应:', errorText);
-            throw new Error(`HTTP ${response.status}: ${errorText}`);
+            const errorData = await response.json();
+            console.error('后端错误响应:', errorData);
+            throw new Error(errorData.error || `HTTP ${response.status}`);
         }
         
         const data = await response.json();
-        console.log('文心一言响应数据:', data);
-        return data.result || data.choices?.[0]?.message?.content;
+        console.log('后端响应数据:', data);
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Backend API error');
+        }
+        
+        return data.response;
     } catch (error) {
-        console.error('文心一言调用失败:', error);
+        console.error('后端API调用失败:', error);
         throw error;
     }
+}
+
+// 调用文心一言API
+async function callWenxinAPI(apiKey, apiUrl, prompt) {
+    return await callBackendAPI('wenxin', apiKey, apiUrl, prompt);
 }
 
 // 调用通义千问API
 async function callTongyiAPI(apiKey, apiUrl, prompt) {
-    const url = apiUrl || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
-    
-    console.log('调用通义千问API，URL:', url);
-    
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'qwen-turbo',
-                messages: [
-                    { role: 'user', content: prompt }
-                ],
-                temperature: 0.7
-            })
-        });
-        
-        console.log('通义千问响应状态:', response.status);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('通义千问错误响应:', errorText);
-            throw new Error(`HTTP ${response.status}: ${errorText}`);
-        }
-        
-        const data = await response.json();
-        console.log('通义千问响应数据:', data);
-        return data.choices?.[0]?.message?.content;
-    } catch (error) {
-        console.error('通义千问调用失败:', error);
-        throw error;
-    }
+    return await callBackendAPI('tongyi', apiKey, apiUrl, prompt);
 }
 
 // 调用DeepSeek API
 async function callDeepseekAPI(apiKey, apiUrl, prompt) {
-    const url = apiUrl || 'https://api.deepseek.com/chat/completions';
-    
-    console.log('调用DeepSeek API，URL:', url);
-    
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'deepseek-chat',
-                messages: [
-                    { role: 'user', content: prompt }
-                ],
-                temperature: 0.7
-            })
-        });
-        
-        console.log('DeepSeek响应状态:', response.status);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('DeepSeek错误响应:', errorText);
-            throw new Error(`HTTP ${response.status}: ${errorText}`);
-        }
-        
-        const data = await response.json();
-        console.log('DeepSeek响应数据:', data);
-        return data.choices?.[0]?.message?.content;
-    } catch (error) {
-        console.error('DeepSeek调用失败:', error);
-        throw error;
-    }
+    return await callBackendAPI('deepseek', apiKey, apiUrl, prompt);
 }
 
 // 调用豆包API
 async function callDoubaoAPI(apiKey, apiUrl, prompt, modelId) {
-    const url = apiUrl || 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
-    const model = modelId || 'ep-20241203163159-7z9xg';
-    
-    console.log('调用豆包API，URL:', url, '模型:', model);
-    
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: model,
-                messages: [
-                    { role: 'user', content: prompt }
-                ],
-                temperature: 0.7
-            })
-        });
-        
-        console.log('豆包响应状态:', response.status);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('豆包错误响应:', errorText);
-            throw new Error(`HTTP ${response.status}: ${errorText}`);
-        }
-        
-        const data = await response.json();
-        console.log('豆包响应数据:', data);
-        return data.choices?.[0]?.message?.content;
-    } catch (error) {
-        console.error('豆包调用失败:', error);
-        throw error;
-    }
+    return await callBackendAPI('doubao', apiKey, apiUrl, prompt, modelId);
 }
 
 // 解析AI返回的JSON

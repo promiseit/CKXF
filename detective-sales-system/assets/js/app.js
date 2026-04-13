@@ -18,6 +18,7 @@ function initEventListeners() {
     document.getElementById('case-list-btn').addEventListener('click', showCaseList);
     document.getElementById('new-case-btn').addEventListener('click', showNewCaseForm);
     document.getElementById('start-case-btn').addEventListener('click', showNewCaseForm);
+    document.getElementById('settings-btn').addEventListener('click', showSettings);
     
     // 新建案件表单
     document.getElementById('new-case-form').addEventListener('submit', handleNewCaseSubmit);
@@ -66,21 +67,19 @@ function initEventListeners() {
 
     // AI分析按钮
     document.getElementById('ai-analyze-btn').addEventListener('click', function() {
-        const modelSelect = document.getElementById('ai-model-select');
-        const selectedModel = modelSelect.value;
-        
-        if (!selectedModel) {
-            showToast('请选择一个大模型');
-            return;
-        }
-        
         if (!currentCase || !currentCase.clues || currentCase.clues.length === 0) {
             showToast('请先添加线索');
             return;
         }
         
-        aiAnalyzeClues(selectedModel);
+        const settings = loadSettings();
+        const defaultModel = settings.defaultModel || 'wenxin';
+        
+        aiAnalyzeClues(defaultModel);
     });
+
+    // 保存设置按钮
+    document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
     
     // 案件搜索
     document.getElementById('case-search').addEventListener('input', function() {
@@ -900,6 +899,13 @@ function showCaseList() {
     renderCaseList();
 }
 
+// 显示设置页面
+function showSettings() {
+    hideAllScreens();
+    document.getElementById('settings-screen').classList.add('active');
+    loadSettingsToForm();
+}
+
 // 隐藏所有页面
 function hideAllScreens() {
     document.querySelectorAll('.screen').forEach(screen => {
@@ -908,6 +914,35 @@ function hideAllScreens() {
     document.querySelectorAll('.modal').forEach(modal => {
         modal.classList.remove('active');
     });
+}
+
+// 加载设置
+function loadSettings() {
+    return JSON.parse(localStorage.getItem('detective_settings')) || {
+        defaultModel: 'wenxin',
+        apiKey: '',
+        apiUrl: ''
+    };
+}
+
+// 保存设置
+function saveSettings() {
+    const settings = {
+        defaultModel: document.getElementById('default-ai-model').value,
+        apiKey: document.getElementById('ai-api-key').value,
+        apiUrl: document.getElementById('ai-api-url').value
+    };
+    
+    localStorage.setItem('detective_settings', JSON.stringify(settings));
+    showToast('设置保存成功！');
+}
+
+// 加载设置到表单
+function loadSettingsToForm() {
+    const settings = loadSettings();
+    document.getElementById('default-ai-model').value = settings.defaultModel || 'wenxin';
+    document.getElementById('ai-api-key').value = settings.apiKey || '';
+    document.getElementById('ai-api-url').value = settings.apiUrl || '';
 }
 
 // 更新状态栏

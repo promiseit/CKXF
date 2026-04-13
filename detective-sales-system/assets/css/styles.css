@@ -738,6 +738,25 @@ body {
     font-size: 1.2rem;
 }
 
+/* 设置页面样式 */
+.settings-content {
+    padding: 1rem;
+}
+
+.settings-section {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(241, 196, 15, 0.2);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.settings-section h3 {
+    color: #f1c40f;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
 /* 动画效果 */
 @keyframes fadeIn {
     from {

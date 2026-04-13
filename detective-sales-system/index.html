@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神探销售系统 - 客户分析探案平台</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="detective-container">
+        <!-- 顶部导航栏 -->
+        <header class="detective-header">
+            <div class="logo">
+                <i class="fas fa-search"></i>
+                <h1>神探销售系统</h1>
+            </div>
+            <nav class="header-nav">
+                <button id="case-list-btn" class="nav-btn active">
+                    <i class="fas fa-folder-open"></i> 案件列表
+                </button>
+                <button id="new-case-btn" class="nav-btn">
+                    <i class="fas fa-plus"></i> 新建案件
+                </button>
+                <button id="settings-btn" class="nav-btn">
+                    <i class="fas fa-cog"></i> 设置
+                </button>
+            </nav>
+        </header>
+
+        <!-- 主要内容区 -->
+        <main class="detective-main">
+            <!-- 左侧案件列表 -->
+            <aside class="case-sidebar">
+                <div class="sidebar-header">
+                    <h2>案件列表</h2>
+                    <input type="text" id="case-search" placeholder="搜索案件...">
+                </div>
+                <ul id="case-list" class="case-list">
+                    <!-- 案件列表将通过JS动态生成 -->
+                </ul>
+            </aside>
+
+            <!-- 右侧内容区 -->
+            <section class="main-content">
+                <!-- 案件状态栏 -->
+                <div class="case-status-bar">
+                    <div class="status-step active" data-step="collecting">
+                        <i class="fas fa-search"></i>
+                        <span>收集线索</span>
+                    </div>
+                    <div class="status-line"></div>
+                    <div class="status-step" data-step="analyzing">
+                        <i class="fas fa-brain"></i>
+                        <span>分析推理</span>
+                    </div>
+                    <div class="status-line"></div>
+                    <div class="status-step" data-step="reporting">
+                        <i class="fas fa-file-alt"></i>
+                        <span>生成报告</span>
+                    </div>
+                    <div class="status-line"></div>
+                    <div class="status-step" data-step="closed">
+                        <i class="fas fa-check-circle"></i>
+                        <span>结案</span>
+                    </div>
+                </div>
+
+                <!-- 内容区域 -->
+                <div class="content-area">
+                    <!-- 欢迎页面 -->
+                    <div id="welcome-screen" class="screen active">
+                        <div class="welcome-content">
+                            <div class="detective-icon">
+                                <i class="fas fa-magnifying-glass"></i>
+                            </div>
+                            <h2>欢迎使用神探销售系统</h2>
+                            <p>用探案的思路分析客户，发现潜在需求，抓住销售机会</p>
+                            <button id="start-case-btn" class="primary-btn">
+                                <i class="fas fa-plus-circle"></i> 开始新案件
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 新建案件页面 -->
+                    <div id="new-case-screen" class="screen">
+                        <div class="screen-header">
+                            <h2>新建案件</h2>
+                            <button class="close-btn"><i class="fas fa-times"></i></button>
+                        </div>
+                        <form id="new-case-form">
+                            <div class="form-group">
+                                <label for="case-title">案件标题</label>
+                                <input type="text" id="case-title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-name">客户名称</label>
+                                <input type="text" id="client-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="case-description">案件描述</label>
+                                <textarea id="case-description" rows="3"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="cancel-btn">取消</button>
+                                <button type="submit" class="primary-btn">创建案件</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- 案件详情页面 -->
+                    <div id="case-detail-screen" class="screen">
+                        <div class="screen-header">
+                            <h2 id="case-detail-title">案件详情</h2>
+                            <div class="case-actions">
+                                <button class="action-btn" id="edit-case-btn">
+                                    <i class="fas fa-edit"></i> 编辑
+                                </button>
+                                <button class="action-btn" id="delete-case-btn">
+                                    <i class="fas fa-trash"></i> 删除
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 案件基本信息 -->
+                        <div class="case-info">
+                            <div class="info-item">
+                                <label>客户名称：</label>
+                                <span id="detail-client-name"></span>
+                            </div>
+                            <div class="info-item">
+                                <label>创建时间：</label>
+                                <span id="detail-created-at"></span>
+                            </div>
+                            <div class="info-item">
+                                <label>状态：</label>
+                                <span id="detail-status"></span>
+                            </div>
+                        </div>
+
+                        <!-- 线索收集模块 -->
+                        <div class="module-section" id="clue-collection-section">
+                            <div class="module-header">
+                                <h3>线索收集</h3>
+                                <button class="add-btn" id="add-clue-btn">
+                                    <i class="fas fa-plus"></i> 添加线索
+                                </button>
+                            </div>
+                            <div class="clue-list" id="clue-list">
+                                <!-- 线索列表将通过JS动态生成 -->
+                            </div>
+                        </div>
+
+                        <!-- 分析推理模块 -->
+                        <div class="module-section" id="analysis-section">
+                            <div class="module-header">
+                                <h3>分析推理</h3>
+                            </div>
+                            <div class="analysis-steps">
+                                <div class="analysis-step">
+                                    <h4>1. 基础事实梳理</h4>
+                                    <textarea class="analysis-text" id="analysis-step1"></textarea>
+                                </div>
+                                <div class="analysis-step">
+                                    <h4>2. 关联线索发现</h4>
+                                    <textarea class="analysis-text" id="analysis-step2"></textarea>
+                                </div>
+                                <div class="analysis-step">
+                                    <h4>3. 潜在需求推断</h4>
+                                    <textarea class="analysis-text" id="analysis-step3"></textarea>
+                                </div>
+                                <div class="analysis-step">
+                                    <h4>4. 行动方案建议</h4>
+                                    <textarea class="analysis-text" id="analysis-step4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 报告生成模块 -->
+                        <div class="module-section" id="report-section">
+                            <div class="module-header">
+                                <h3>报告生成</h3>
+                                <div class="report-actions">
+                                    <button class="action-btn" id="generate-report-btn">
+                                        <i class="fas fa-file-alt"></i> 生成报告
+                                    </button>
+                                    <button class="action-btn" id="export-ppt-btn">
+                                        <i class="fas fa-file-powerpoint"></i> 导出PPT
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="report-content" id="report-content">
+                                <!-- 报告内容将通过JS生成 -->
+                            </div>
+                        </div>
+
+                        <!-- 案件操作 -->
+                        <div class="case-operations">
+                            <button class="primary-btn" id="next-step-btn">
+                                下一步 <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 添加线索弹窗 -->
+                    <div id="add-clue-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>添加线索</h3>
+                                <button class="close-btn"><i class="fas fa-times"></i></button>
+                            </div>
+                            <form id="add-clue-form">
+                                <div class="form-group">
+                                    <label for="clue-content">线索内容</label>
+                                    <textarea id="clue-content" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clue-type">线索类型</label>
+                                    <select id="clue-type">
+                                        <option value="text">文本</option>
+                                        <option value="file">文件</option>
+                                        <option value="image">图片</option>
+                                        <option value="audio">音频</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clue-importance">重要性</label>
+                                    <select id="clue-importance">
+                                        <option value="1">1星</option>
+                                        <option value="2">2星</option>
+                                        <option value="3">3星</option>
+                                        <option value="4">4星</option>
+                                        <option value="5">5星</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clue-tags">标签（用逗号分隔）</label>
+                                    <input type="text" id="clue-tags" placeholder="例如：价格,需求,竞品">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="cancel-btn">取消</button>
+                                    <button type="submit" class="primary-btn">添加线索</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

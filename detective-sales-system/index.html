@@ -302,7 +302,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="ai-api-url">API URL</label>
-                                    <input type="url" id="ai-api-url" placeholder="输入API地址">
+                                    <input type="url" id="ai-api-url" placeholder="输入API地址（可选）">
+                                </div>
+                                <div class="settings-notice">
+                                    <p><i class="fas fa-info-circle"></i> <strong>说明：</strong></p>
+                                    <ul>
+                                        <li>如果不配置API Key，系统将使用智能模拟分析</li>
+                                        <li>由于浏览器CORS限制，直接调用第三方API可能失败</li>
+                                        <li>API调用失败时会自动降级到智能模拟分析</li>
+                                        <li>智能模拟分析会根据线索关键词生成个性化结果</li>
+                                    </ul>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="primary-btn" id="save-settings-btn">保存设置</button>

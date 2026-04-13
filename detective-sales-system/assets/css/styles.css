@@ -757,6 +757,29 @@ body {
     font-size: 1.2rem;
 }
 
+.settings-notice {
+    background: rgba(241, 196, 15, 0.1);
+    border: 1px solid rgba(241, 196, 15, 0.3);
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.settings-notice p {
+    color: #f1c40f;
+    margin-bottom: 0.5rem;
+}
+
+.settings-notice ul {
+    margin-left: 1.5rem;
+    color: #e0e0e0;
+}
+
+.settings-notice li {
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
 /* 动画效果 */
 @keyframes fadeIn {
     from {

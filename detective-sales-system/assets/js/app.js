@@ -559,11 +559,14 @@ function downloadReport() {
 function exportPPT() {
     if (!currentCase) return;
 
-    // 生成数据可视化图表HTML
+    // 初始化图表数据
     let chartHtml = '';
+    let importanceCounts = [0, 0, 0, 0, 0];
+    let typeLabels = [];
+    let typeData = [];
+
     if (currentCase.clues && currentCase.clues.length > 0) {
         // 统计线索重要性数据
-        const importanceCounts = [0, 0, 0, 0, 0]; // 1-5星
         currentCase.clues.forEach(clue => {
             importanceCounts[clue.importance - 1]++;
         });
@@ -573,8 +576,8 @@ function exportPPT() {
         currentCase.clues.forEach(clue => {
             typeCounts[clue.type] = (typeCounts[clue.type] || 0) + 1;
         });
-        const typeLabels = Object.keys(typeCounts).map(type => getClueTypeText(type));
-        const typeData = Object.values(typeCounts);
+        typeLabels = Object.keys(typeCounts).map(type => getClueTypeText(type));
+        typeData = Object.values(typeCounts);
 
         chartHtml = `
     <!-- 数据可视化 -->

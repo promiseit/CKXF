@@ -583,14 +583,20 @@ function exportPPT() {
     <!-- 数据可视化 -->
     <div class="slide">
         <h2>数据可视化</h2>
-        <div class="content" style="display: flex; justify-content: space-around; align-items: center;">
-            <div style="text-align: center; width: 45%;">
-                <h3>线索重要性分布</h3>
-                <canvas id="importanceChart" width="400" height="300"></canvas>
-            </div>
-            <div style="text-align: center; width: 45%;">
-                <h3>线索类型分布</h3>
-                <canvas id="typeChart" width="400" height="300"></canvas>
+        <div class="content" style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
+                <div style="text-align: center; width: 45%; max-width: 400px;">
+                    <h3>线索重要性分布</h3>
+                    <div style="width: 100%; height: 300px; margin: 0 auto;">
+                        <canvas id="importanceChart" style="max-width: 100%; height: 100%;"></canvas>
+                    </div>
+                </div>
+                <div style="text-align: center; width: 45%; max-width: 400px;">
+                    <h3>线索类型分布</h3>
+                    <div style="width: 100%; height: 300px; margin: 0 auto;">
+                        <canvas id="typeChart" style="max-width: 100%; height: 100%;"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -207,9 +207,6 @@ function loadReportContent() {
         <p><strong>3. 潜在需求推断：</strong>${currentCase.analysis?.[3] || '未填写'}</p>
         <p><strong>4. 行动方案建议：</strong>${currentCase.analysis?.[4] || '未填写'}</p>
     `;
-
-    // 生成图表
-    generateCharts();
 }
 
 // 生成数据可视化图表
@@ -562,6 +559,41 @@ function downloadReport() {
 function exportPPT() {
     if (!currentCase) return;
 
+    // 生成数据可视化图表HTML
+    let chartHtml = '';
+    if (currentCase.clues && currentCase.clues.length > 0) {
+        // 统计线索重要性数据
+        const importanceCounts = [0, 0, 0, 0, 0]; // 1-5星
+        currentCase.clues.forEach(clue => {
+            importanceCounts[clue.importance - 1]++;
+        });
+
+        // 统计线索类型数据
+        const typeCounts = {};
+        currentCase.clues.forEach(clue => {
+            typeCounts[clue.type] = (typeCounts[clue.type] || 0) + 1;
+        });
+        const typeLabels = Object.keys(typeCounts).map(type => getClueTypeText(type));
+        const typeData = Object.values(typeCounts);
+
+        chartHtml = `
+    <!-- 数据可视化 -->
+    <div class="slide">
+        <h2>数据可视化</h2>
+        <div class="content" style="display: flex; justify-content: space-around; align-items: center;">
+            <div style="text-align: center; width: 45%;">
+                <h3>线索重要性分布</h3>
+                <canvas id="importanceChart" width="400" height="300"></canvas>
+            </div>
+            <div style="text-align: center; width: 45%;">
+                <h3>线索类型分布</h3>
+                <canvas id="typeChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+        `;
+    }
+
     // 生成PPT内容（HTML格式）
     const pptContent = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -569,6 +601,7 @@ function exportPPT() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${currentCase.title} - PPT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -643,6 +676,8 @@ function exportPPT() {
         </div>
     </div>
 
+    ${chartHtml}
+
     <!-- 分析结果 -->
     <div class="slide">
         <h2>分析结果</h2>
@@ -687,6 +722,88 @@ function exportPPT() {
             神探销售系统 - ${formatDate(new Date().toISOString())}
         </div>
     </div>
+
+    <script>
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 线索重要性分布图表
+            const importanceCtx = document.getElementById('importanceChart');
+            if (importanceCtx) {
+                new Chart(importanceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['1星', '2星', '3星', '4星', '5星'],
+                        datasets: [{
+                            label: '线索数量',
+                            data: ${JSON.stringify(importanceCounts)},
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(255, 159, 64, 0.7)',
+                                'rgba(255, 205, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(54, 162, 235, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 205, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 线索类型分布图表
+            const typeCtx = document.getElementById('typeChart');
+            if (typeCtx) {
+                new Chart(typeCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ${JSON.stringify(typeLabels)},
+                        datasets: [{
+                            data: ${JSON.stringify(typeData)},
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 205, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 205, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>`;
 

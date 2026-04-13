@@ -26,6 +26,7 @@ function initEventListeners() {
     document.getElementById('add-clue-btn').addEventListener('click', showAddClueModal);
     document.getElementById('add-clue-form').addEventListener('submit', handleAddClueSubmit);
     document.getElementById('generate-report-btn').addEventListener('click', generateReport);
+    document.getElementById('download-report-btn').addEventListener('click', downloadReport);
     document.getElementById('export-ppt-btn').addEventListener('click', exportPPT);
     document.getElementById('next-step-btn').addEventListener('click', nextStep);
     document.getElementById('edit-case-btn').addEventListener('click', editCase);
@@ -298,20 +299,191 @@ function handleAddClueSubmit(e) {
 // 生成报告
 function generateReport() {
     if (!currentCase) return;
-    
+
     // 这里可以实现更复杂的报告生成逻辑
     // 目前只是更新报告内容
     loadReportContent();
     showToast('报告生成成功！');
 }
 
+// 下载报告
+function downloadReport() {
+    if (!currentCase) return;
+
+    // 生成报告内容
+    const reportContent = `# ${currentCase.title} - 分析报告\n\n` +
+        `## 案件概览\n` +
+        `**客户名称：** ${currentCase.clientName}\n` +
+        `**案件状态：** ${getStatusText(currentCase.status)}\n` +
+        `**创建时间：** ${formatDate(currentCase.createdAt)}\n\n` +
+        `## 线索统计\n` +
+        `共收集 ${currentCase.clues ? currentCase.clues.length : 0} 条线索\n\n` +
+        `## 分析结果\n` +
+        `### 1. 基础事实梳理\n${currentCase.analysis?.[1] || '未填写'}\n\n` +
+        `### 2. 关联线索发现\n${currentCase.analysis?.[2] || '未填写'}\n\n` +
+        `### 3. 潜在需求推断\n${currentCase.analysis?.[3] || '未填写'}\n\n` +
+        `### 4. 行动方案建议\n${currentCase.analysis?.[4] || '未填写'}\n\n` +
+        `---\n` +
+        `**报告生成时间：** ${formatDate(new Date().toISOString())}`;
+
+    // 创建下载链接
+    const blob = new Blob([reportContent], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentCase.title}_报告.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('报告下载成功！');
+}
+
 // 导出PPT
 function exportPPT() {
     if (!currentCase) return;
-    
-    // 这里只是模拟PPT导出功能
-    // 实际项目中可以使用第三方库实现
-    showToast('PPT导出功能已触发（模拟）');
+
+    // 生成PPT内容（HTML格式）
+    const pptContent = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${currentCase.title} - PPT</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .slide {
+            width: 900px;
+            height: 600px;
+            background: white;
+            margin: 20px auto;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            page-break-after: always;
+        }
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        h3 {
+            font-size: 1.4em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+        }
+        .content {
+            margin-top: 30px;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 标题页 -->
+    <div class="slide title-slide">
+        <h1>${currentCase.title}</h1>
+        <h2>客户：${currentCase.clientName}</h2>
+        <p>案件状态：${getStatusText(currentCase.status)}</p>
+        <p>生成时间：${formatDate(new Date().toISOString())}</p>
+    </div>
+
+    <!-- 案件概览 -->
+    <div class="slide">
+        <h2>案件概览</h2>
+        <div class="content">
+            <p><strong>客户名称：</strong>${currentCase.clientName}</p>
+            <p><strong>案件状态：</strong>${getStatusText(currentCase.status)}</p>
+            <p><strong>创建时间：</strong>${formatDate(currentCase.createdAt)}</p>
+            <p><strong>线索数量：</strong>${currentCase.clues ? currentCase.clues.length : 0}</p>
+        </div>
+    </div>
+
+    <!-- 分析结果 -->
+    <div class="slide">
+        <h2>分析结果</h2>
+        <div class="content">
+            <h3>1. 基础事实梳理</h3>
+            <p>${currentCase.analysis?.[1] || '未填写'}</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>分析结果</h2>
+        <div class="content">
+            <h3>2. 关联线索发现</h3>
+            <p>${currentCase.analysis?.[2] || '未填写'}</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>分析结果</h2>
+        <div class="content">
+            <h3>3. 潜在需求推断</h3>
+            <p>${currentCase.analysis?.[3] || '未填写'}</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>分析结果</h2>
+        <div class="content">
+            <h3>4. 行动方案建议</h3>
+            <p>${currentCase.analysis?.[4] || '未填写'}</p>
+        </div>
+    </div>
+
+    <!-- 总结页 -->
+    <div class="slide">
+        <h2>总结</h2>
+        <div class="content">
+            <p>本报告基于收集的线索和分析结果生成，</p>
+            <p>为销售决策提供参考依据。</p>
+        </div>
+        <div class="footer">
+            神探销售系统 - ${formatDate(new Date().toISOString())}
+        </div>
+    </div>
+</body>
+</html>`;
+
+    // 创建下载链接
+    const blob = new Blob([pptContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentCase.title}_PPT.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('PPT导出成功！');
 }
 
 // 下一步

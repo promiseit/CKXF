@@ -780,6 +780,32 @@ body {
     font-size: 0.9rem;
 }
 
+/* AI分析选项样式 */
+.ai-analysis-options {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.analysis-mode-select {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(241, 196, 15, 0.3);
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.analysis-mode-select:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.analysis-mode-select:focus {
+    outline: none;
+    border-color: #f1c40f;
+}
+
 /* 动画效果 */
 @keyframes fadeIn {
     from {

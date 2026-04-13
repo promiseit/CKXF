@@ -317,9 +317,14 @@
                                         <li>支持快速分析和深度思考两种模式</li>
                                         <li>快速分析：简洁明了，快速生成结果</li>
                                         <li>深度思考：深入分析，挖掘更多细节</li>
+                                        <li><strong>注意：</strong>由于浏览器CORS限制，直接调用第三方API可能失败</li>
+                                        <li>建议使用代理服务器或后端API来调用大模型</li>
                                     </ul>
                                 </div>
                                 <div class="form-actions">
+                                    <button type="button" class="action-btn" id="test-api-btn">
+                                        <i class="fas fa-flask"></i> 测试API
+                                    </button>
                                     <button type="button" class="primary-btn" id="save-settings-btn">保存设置</button>
                                 </div>
                             </div>

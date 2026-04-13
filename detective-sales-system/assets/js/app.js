@@ -84,6 +84,9 @@ function initEventListeners() {
     // 保存设置按钮
     document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
     
+    // 测试API按钮
+    document.getElementById('test-api-btn').addEventListener('click', testAPI);
+    
     // 案件搜索
     document.getElementById('case-search').addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
@@ -1028,6 +1031,60 @@ function loadSettingsToForm() {
     document.getElementById('ai-api-url').value = settings.apiUrl || '';
 }
 
+// 测试API连接
+async function testAPI() {
+    const settings = loadSettings();
+    const apiKey = settings.apiKey;
+    const apiUrl = settings.apiUrl;
+    const model = settings.defaultModel || 'wenxin';
+    
+    if (!apiKey) {
+        showToast('请先配置API Key');
+        return;
+    }
+    
+    showToast('正在测试API连接...');
+    console.log('开始测试API，模型:', model);
+    
+    try {
+        const testPrompt = '请回复"API连接成功"';
+        
+        let response;
+        switch (model) {
+            case 'wenxin':
+                response = await callWenxinAPI(apiKey, apiUrl, testPrompt);
+                break;
+            case 'tongyi':
+                response = await callTongyiAPI(apiKey, apiUrl, testPrompt);
+                break;
+            case 'deepseek':
+                response = await callDeepseekAPI(apiKey, apiUrl, testPrompt);
+                break;
+            case 'doubao':
+                response = await callDoubaoAPI(apiKey, apiUrl, testPrompt);
+                break;
+            default:
+                throw new Error('不支持的模型');
+        }
+        
+        if (response) {
+            showToast('API连接成功！');
+            console.log('API测试成功，响应:', response);
+        } else {
+            throw new Error('未获取到响应');
+        }
+    } catch (error) {
+        console.error('API测试失败:', error);
+        
+        let errorMessage = error.message;
+        if (error.message.includes('Failed to fetch')) {
+            errorMessage = '网络错误或CORS限制，请使用代理服务器';
+        }
+        
+        showToast(`API测试失败：${errorMessage}`);
+    }
+}
+
 // 更新状态栏
 function updateStatusBar(status) {
     const statusSteps = document.querySelectorAll('.status-step');
@@ -1181,91 +1238,155 @@ ${cluesText}
 async function callWenxinAPI(apiKey, apiUrl, prompt) {
     const url = apiUrl || 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions';
     
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            messages: [
-                { role: 'user', content: prompt }
-            ],
-            temperature: 0.7
-        })
-    });
+    console.log('调用文心一言API，URL:', url);
     
-    const data = await response.json();
-    return data.result || data.choices?.[0]?.message?.content;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                messages: [
+                    { role: 'user', content: prompt }
+                ],
+                temperature: 0.7
+            })
+        });
+        
+        console.log('文心一言响应状态:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('文心一言错误响应:', errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log('文心一言响应数据:', data);
+        return data.result || data.choices?.[0]?.message?.content;
+    } catch (error) {
+        console.error('文心一言调用失败:', error);
+        throw error;
+    }
 }
 
 // 调用通义千问API
 async function callTongyiAPI(apiKey, apiUrl, prompt) {
     const url = apiUrl || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
     
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model: 'qwen-turbo',
-            messages: [
-                { role: 'user', content: prompt }
-            ],
-            temperature: 0.7
-        })
-    });
+    console.log('调用通义千问API，URL:', url);
     
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'qwen-turbo',
+                messages: [
+                    { role: 'user', content: prompt }
+                ],
+                temperature: 0.7
+            })
+        });
+        
+        console.log('通义千问响应状态:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('通义千问错误响应:', errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log('通义千问响应数据:', data);
+        return data.choices?.[0]?.message?.content;
+    } catch (error) {
+        console.error('通义千问调用失败:', error);
+        throw error;
+    }
 }
 
 // 调用DeepSeek API
 async function callDeepseekAPI(apiKey, apiUrl, prompt) {
     const url = apiUrl || 'https://api.deepseek.com/chat/completions';
     
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model: 'deepseek-chat',
-            messages: [
-                { role: 'user', content: prompt }
-            ],
-            temperature: 0.7
-        })
-    });
+    console.log('调用DeepSeek API，URL:', url);
     
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'user', content: prompt }
+                ],
+                temperature: 0.7
+            })
+        });
+        
+        console.log('DeepSeek响应状态:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('DeepSeek错误响应:', errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log('DeepSeek响应数据:', data);
+        return data.choices?.[0]?.message?.content;
+    } catch (error) {
+        console.error('DeepSeek调用失败:', error);
+        throw error;
+    }
 }
 
 // 调用豆包API
 async function callDoubaoAPI(apiKey, apiUrl, prompt) {
     const url = apiUrl || 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
     
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model: 'ep-20241203163159-7z9xg',
-            messages: [
-                { role: 'user', content: prompt }
-            ],
-            temperature: 0.7
-        })
-    });
+    console.log('调用豆包API，URL:', url);
     
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'ep-20241203163159-7z9xg',
+                messages: [
+                    { role: 'user', content: prompt }
+                ],
+                temperature: 0.7
+            })
+        });
+        
+        console.log('豆包响应状态:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('豆包错误响应:', errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log('豆包响应数据:', data);
+        return data.choices?.[0]?.message?.content;
+    } catch (error) {
+        console.error('豆包调用失败:', error);
+        throw error;
+    }
 }
 
 // 解析AI返回的JSON

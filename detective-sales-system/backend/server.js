@@ -15,7 +15,16 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend server is running' });
 });
 
-// AI分析API
+// AI分析API - GET请求（用于测试）
+app.get('/api/ai-analyze', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'AI分析API正常运行，请使用POST方法调用',
+    usage: 'POST /api/ai-analyze with JSON body: { model, apiKey, prompt, modelId? }'
+  });
+});
+
+// AI分析API - POST请求
 app.post('/api/ai-analyze', async (req, res) => {
   try {
     const {

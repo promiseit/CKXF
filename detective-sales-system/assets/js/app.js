@@ -1242,7 +1242,7 @@ ${cluesText}
 
 // 调用后端API
 async function callBackendAPI(model, apiKey, apiUrl, prompt, modelId) {
-    const backendUrl = apiUrl || 'http://localhost:3001/api/ai-analyze';
+    const backendUrl = 'http://localhost:3001/api/ai-analyze';
     
     console.log('调用后端API，URL:', backendUrl, '模型:', model);
     
@@ -1255,6 +1255,7 @@ async function callBackendAPI(model, apiKey, apiUrl, prompt, modelId) {
             body: JSON.stringify({
                 model,
                 apiKey,
+                apiUrl,
                 prompt,
                 modelId
             })

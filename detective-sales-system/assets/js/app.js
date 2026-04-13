@@ -23,6 +23,9 @@ function initEventListeners() {
     // 新建案件表单
     document.getElementById('new-case-form').addEventListener('submit', handleNewCaseSubmit);
     
+    // 编辑案件表单
+    document.getElementById('edit-case-form').addEventListener('submit', handleEditCaseSubmit);
+    
     // 案件详情页面
     document.getElementById('add-clue-btn').addEventListener('click', showAddClueModal);
     document.getElementById('add-clue-form').addEventListener('submit', handleAddClueSubmit);
@@ -413,6 +416,33 @@ function handleNewCaseSubmit(e) {
     
     // 显示成功提示
     showToast('案件创建成功！');
+}
+
+// 处理编辑案件提交
+function handleEditCaseSubmit(e) {
+    e.preventDefault();
+    
+    if (!currentCase) return;
+    
+    const title = document.getElementById('edit-case-title').value;
+    const clientName = document.getElementById('edit-client-name').value;
+    const description = document.getElementById('edit-case-description').value;
+    
+    // 更新案件数据
+    currentCase.title = title;
+    currentCase.clientName = clientName;
+    currentCase.description = description;
+    currentCase.updatedAt = new Date().toISOString();
+    
+    // 保存数据
+    saveCases();
+    renderCaseList();
+    
+    // 重新加载案件详情页面
+    loadCase(currentCase.id);
+    
+    // 显示成功提示
+    showToast('案件修改成功！');
 }
 
 // 显示添加线索弹窗
@@ -870,8 +900,14 @@ function nextStep() {
 function editCase() {
     if (!currentCase) return;
     
-    // 这里可以实现编辑功能
-    showToast('编辑功能开发中...');
+    // 填充当前案件数据到表单
+    document.getElementById('edit-case-title').value = currentCase.title;
+    document.getElementById('edit-client-name').value = currentCase.clientName;
+    document.getElementById('edit-case-description').value = currentCase.description || '';
+    
+    // 显示编辑案件页面
+    hideAllScreens();
+    document.getElementById('edit-case-screen').classList.add('active');
 }
 
 // 删除案件

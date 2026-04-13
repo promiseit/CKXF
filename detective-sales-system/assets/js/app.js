@@ -817,11 +817,11 @@ function exportPPT() {
 </html>`;
 
     // 创建下载链接
-    const blob = new Blob([pptContent], { type: 'text/html' });
+    const blob = new Blob([pptContent], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${currentCase.title}_PPT.html`;
+    a.download = `${currentCase.title}_PPT.pptx`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

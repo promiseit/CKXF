@@ -1149,196 +1149,218 @@ function showToast(message) {
     }, 3000);
 }
 
+// 构建提示词
+function buildPrompt(clues, caseTitle, clientName) {
+    const cluesText = clues.map(clue => 
+        `- 线索内容：${clue.content}\n  类型：${clue.type}\n  重要性：${clue.importance}星\n  标签：${clue.tags}`
+    ).join('\n\n');
+    
+    return `请分析以下销售线索，为${clientName}的${caseTitle}项目提供分析。
+
+线索信息：
+${cluesText}
+
+请按以下格式返回JSON：
+{
+  "step1": "基础事实梳理",
+  "step2": "关键线索发现",
+  "step3": "潜在需求推断",
+  "step4": "行动方案建议"
+}
+
+请直接返回JSON，不要有其他文字。`;
+}
+
+// 调用文心一言API
+async function callWenxinAPI(apiKey, apiUrl, prompt) {
+    const url = apiUrl || 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions';
+    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            messages: [
+                { role: 'user', content: prompt }
+            ],
+            temperature: 0.7
+        })
+    });
+    
+    const data = await response.json();
+    return data.result || data.choices?.[0]?.message?.content;
+}
+
+// 调用通义千问API
+async function callTongyiAPI(apiKey, apiUrl, prompt) {
+    const url = apiUrl || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
+    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: 'qwen-turbo',
+            messages: [
+                { role: 'user', content: prompt }
+            ],
+            temperature: 0.7
+        })
+    });
+    
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content;
+}
+
+// 调用DeepSeek API
+async function callDeepseekAPI(apiKey, apiUrl, prompt) {
+    const url = apiUrl || 'https://api.deepseek.com/chat/completions';
+    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: 'deepseek-chat',
+            messages: [
+                { role: 'user', content: prompt }
+            ],
+            temperature: 0.7
+        })
+    });
+    
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content;
+}
+
+// 调用豆包API
+async function callDoubaoAPI(apiKey, apiUrl, prompt) {
+    const url = apiUrl || 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
+    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: 'ep-20241203163159-7z9xg',
+            messages: [
+                { role: 'user', content: prompt }
+            ],
+            temperature: 0.7
+        })
+    });
+    
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content;
+}
+
+// 解析AI返回的JSON
+function parseAIResponse(response) {
+    try {
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            return JSON.parse(jsonMatch[0]);
+        }
+        return JSON.parse(response);
+    } catch (e) {
+        const steps = response.split(/\d\.\s*|步骤|基础|关键|潜在|行动/).filter(s => s.trim());
+        return {
+            step1: steps[0]?.trim() || '',
+            step2: steps[1]?.trim() || '',
+            step3: steps[2]?.trim() || '',
+            step4: steps[3]?.trim() || ''
+        };
+    }
+}
+
 // AI分析线索
-function aiAnalyzeClues(model) {
+async function aiAnalyzeClues(model) {
+    if (!currentCase) return;
+    
+    const settings = loadSettings();
+    const apiKey = settings.apiKey;
+    const apiUrl = settings.apiUrl;
+    
+    if (!apiKey) {
+        showToast('请先在设置中配置API Key');
+        return;
+    }
+    
     showToast('AI分析中，请稍候...');
     
-    // 模拟API调用延迟
-    setTimeout(() => {
-        if (!currentCase) return;
-        
+    try {
         // 提取线索信息
-        const clues = currentCase.clues.map(clue => {
-            return {
-                content: clue.content,
-                type: getClueTypeText(clue.type),
-                importance: clue.importance,
-                tags: clue.tags.join(', ')
-            };
-        });
+        const clues = currentCase.clues.map(clue => ({
+            content: clue.content,
+            type: getClueTypeText(clue.type),
+            importance: clue.importance,
+            tags: clue.tags.join(', ')
+        }));
         
-        // 生成分析结果（模拟）
-        const analysisResults = generateAIResults(model, clues, currentCase.title, currentCase.clientName);
+        const prompt = buildPrompt(clues, currentCase.title, currentCase.clientName);
+        
+        let response;
+        switch (model) {
+            case 'wenxin':
+                response = await callWenxinAPI(apiKey, apiUrl, prompt);
+                break;
+            case 'tongyi':
+                response = await callTongyiAPI(apiKey, apiUrl, prompt);
+                break;
+            case 'deepseek':
+                response = await callDeepseekAPI(apiKey, apiUrl, prompt);
+                break;
+            case 'doubao':
+                response = await callDoubaoAPI(apiKey, apiUrl, prompt);
+                break;
+            default:
+                throw new Error('不支持的模型');
+        }
+        
+        if (!response) {
+            throw new Error('未获取到AI响应');
+        }
+        
+        const analysisResults = parseAIResponse(response);
         
         // 更新分析文本框
-        for (let i = 1; i <= 4; i++) {
-            const analysisText = analysisResults[i-1];
-            if (analysisText) {
-                document.getElementById(`analysis-step${i}`).value = analysisText;
-                currentCase.analysis = currentCase.analysis || {};
-                currentCase.analysis[i] = analysisText;
-            }
+        currentCase.analysis = currentCase.analysis || {};
+        
+        if (analysisResults.step1) {
+            document.getElementById('analysis-step1').value = analysisResults.step1;
+            currentCase.analysis[1] = analysisResults.step1;
+        }
+        if (analysisResults.step2) {
+            document.getElementById('analysis-step2').value = analysisResults.step2;
+            currentCase.analysis[2] = analysisResults.step2;
+        }
+        if (analysisResults.step3) {
+            document.getElementById('analysis-step3').value = analysisResults.step3;
+            currentCase.analysis[3] = analysisResults.step3;
+        }
+        if (analysisResults.step4) {
+            document.getElementById('analysis-step4').value = analysisResults.step4;
+            currentCase.analysis[4] = analysisResults.step4;
         }
         
         saveCases();
         showToast('AI分析完成！');
-    }, 1500);
+        
+    } catch (error) {
+        console.error('AI分析错误:', error);
+        showToast(`AI分析失败：${error.message}`);
+    }
 }
 
-// 生成AI分析结果（模拟）
-function generateAIResults(model, clues, caseTitle, clientName) {
-    // 提取所有线索内容
-    const allClueContent = clues.map(c => c.content).join(' ');
-    
-    // 关键词检测
-    const keywords = {
-        budget: ['预算', '价格', '费用', '成本', '便宜', '贵', '性价比'],
-        quality: ['质量', '品质', '性能', '可靠性', '稳定', '耐用'],
-        service: ['服务', '售后', '支持', '响应', '技术', '维护'],
-        time: ['时间', '周期', '交货', '交付', '尽快', '紧急'],
-        competitor: ['竞品', '竞争对手', '其他公司', 'X公司', '同行'],
-        sample: ['样品', '试用', '测试', '演示'],
-        custom: ['定制', '个性化', '特殊', '专门']
-    };
-    
-    const detectedKeywords = {};
-    for (const [key, words] of Object.entries(keywords)) {
-        detectedKeywords[key] = words.some(word => allClueContent.includes(word));
-    }
-    
-    // 随机变体
-    const randomVariation = Math.floor(Math.random() * 3);
-    
-    // 根据检测到的关键词生成个性化分析
-    const generateStep1 = () => {
-        const base = `根据收集到的线索，${clientName}的${caseTitle}项目涉及以下基础事实：`;
-        const variations = [
-            clues.map(clue => `- ${clue.content}`).join('\n'),
-            clues.map((clue, i) => `${i + 1}. ${clue.content} (${clue.importance}星重要)`).join('\n'),
-            clues.map(clue => `• [${clue.type}] ${clue.content}`).join('\n')
-        ];
-        return `${base}\n${variations[randomVariation]}`;
-    };
-    
-    const generateStep2 = () => {
-        let findings = [];
-        if (detectedKeywords.budget && detectedKeywords.quality) {
-            findings.push('客户同时关注价格和质量，寻求高性价比解决方案');
-        } else if (detectedKeywords.budget) {
-            findings.push('预算是客户的核心考虑因素');
-        } else if (detectedKeywords.quality) {
-            findings.push('产品质量是客户最关注的要点');
-        }
-        
-        if (detectedKeywords.service) {
-            findings.push('客户对售后服务和技术支持有较高要求');
-        }
-        if (detectedKeywords.time) {
-            findings.push('项目时间周期是重要考量因素');
-        }
-        if (detectedKeywords.competitor) {
-            findings.push('客户可能正在与其他供应商接触');
-        }
-        
-        if (findings.length === 0) {
-            findings = [
-                '线索之间存在一定的关联性',
-                '需要进一步收集更多信息',
-                '客户需求正在逐步明确'
-            ];
-        }
-        
-        const introVariations = [
-            '通过分析线索之间的关联，发现：',
-            '线索关联分析结果：',
-            '深入分析线索后发现：'
-        ];
-        
-        return `${introVariations[randomVariation]}\n${findings.map((f, i) => `${i + 1}. ${f}`).join('\n')}`;
-    };
-    
-    const generateStep3 = () => {
-        let needs = [];
-        if (detectedKeywords.sample) {
-            needs.push('希望先看到样品或进行测试');
-        }
-        if (detectedKeywords.custom) {
-            needs.push('可能需要定制化的解决方案');
-        }
-        if (detectedKeywords.quality && !detectedKeywords.budget) {
-            needs.push('对产品稳定性和可靠性有较高期待');
-        }
-        if (detectedKeywords.service) {
-            needs.push('重视长期的技术支持和维护服务');
-        }
-        if (detectedKeywords.competitor) {
-            needs.push('可能在比较多家供应商的方案');
-        }
-        if (detectedKeywords.time) {
-            needs.push('可能有较紧急的时间要求');
-        }
-        
-        if (needs.length === 0) {
-            needs = [
-                '需要进一步了解客户的深层需求',
-                '建议与客户进行更深入的沟通',
-                '可能存在未明确表达的需求'
-            ];
-        }
-        
-        const introVariations = [
-            `基于线索分析，${clientName}可能存在以下潜在需求：`,
-            '潜在需求推断：',
-            '客户可能还有以下需求：'
-        ];
-        
-        return `${introVariations[randomVariation]}\n${needs.map((n, i) => `${i + 1}. ${n}`).join('\n')}`;
-    };
-    
-    const generateStep4 = () => {
-        let actions = [];
-        if (detectedKeywords.sample) {
-            actions.push('尽快准备样品供客户测试');
-        }
-        if (detectedKeywords.custom) {
-            actions.push('提供定制化的解决方案');
-        }
-        if (detectedKeywords.quality) {
-            actions.push('重点展示产品的质量优势和可靠性');
-        }
-        if (detectedKeywords.budget) {
-            actions.push('制定有竞争力的价格方案');
-        }
-        if (detectedKeywords.service) {
-            actions.push('提供详细的售后服务方案');
-        }
-        if (detectedKeywords.time) {
-            actions.push('明确项目时间计划和交付周期');
-        }
-        if (detectedKeywords.competitor) {
-            actions.push('突出我们的差异化优势');
-        }
-        
-        if (actions.length === 0) {
-            actions = [
-                '与客户进行深入沟通',
-                '准备详细的产品方案',
-                '安排产品演示',
-                '定期跟进客户反馈'
-            ];
-        }
-        
-        const introVariations = [
-            '建议采取以下行动方案：',
-            '行动建议：',
-            '为了更好地满足客户需求，建议：'
-        ];
-        
-        return `${introVariations[randomVariation]}\n${actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}`;
-    };
-    
-    return [generateStep1(), generateStep2(), generateStep3(), generateStep4()];
-}
+
 
 // 添加提示样式
 const toastStyle = document.createElement('style');

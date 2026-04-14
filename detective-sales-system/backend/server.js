@@ -63,6 +63,9 @@ app.post('/api/ai-analyze', async (req, res) => {
       requestBody.model = 'qwen-turbo';
     } else if (model === 'deepseek') {
       requestBody.model = 'deepseek-chat';
+    } else if (model === 'doubao') {
+      // 豆包需要模型ID，如果没有提供，使用默认值
+      requestBody.model = 'ep-20240101000000-xxxxx';
     }
 
     // 发送请求到AI模型

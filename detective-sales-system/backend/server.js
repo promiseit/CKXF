@@ -80,15 +80,68 @@ app.post('/api/ai-analyze', async (req, res) => {
         ],
         temperature: 0.7
       };
+    } else if (model === 'tongyi') {
+      // 通义千问API格式
+      requestBody = {
+        model: requestBody.model || 'qwen-turbo',
+        input: {
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ]
+        },
+        parameters: {
+          temperature: 0.7
+        }
+      };
     }
 
     // 发送请求到AI模型
-    const response = await axios.post(url, requestBody, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      }
-    });
+    let response;
+    
+    if (model === 'wenxin') {
+      // 文心一言API格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+    } else if (model === 'tongyi') {
+      // 通义千问API格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+    } else if (model === 'deepseek') {
+      // DeepSeek API格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+    } else if (model === 'doubao') {
+      // 豆包API格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+    } else {
+      // 默认格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+    }
 
     // 记录完整响应
     console.log('AI模型完整响应:', JSON.stringify(response.data, null, 2));
@@ -104,6 +157,9 @@ app.post('/api/ai-analyze', async (req, res) => {
     
     if (model === 'wenxin') {
       aiResponse = response.data.result || response.data.choices?.[0]?.message?.content;
+    } else if (model === 'tongyi') {
+      // 通义千问响应格式
+      aiResponse = response.data.output?.text || response.data.choices?.[0]?.message?.content;
     } else if (model === 'doubao') {
       // 豆包可能有不同的响应格式
       aiResponse = response.data.choices?.[0]?.message?.content || response.data.result;

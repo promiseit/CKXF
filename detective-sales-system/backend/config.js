@@ -7,7 +7,7 @@ module.exports = {
       defaultUrl: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions'
     },
     tongyi: {
-      defaultUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions'
+      defaultUrl: 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
     },
     deepseek: {
       defaultUrl: 'https://api.deepseek.com/chat/completions'

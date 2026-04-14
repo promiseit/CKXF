@@ -9,8 +9,8 @@ for d in dirs:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        print("正在访问前端页面 http://localhost:8888 ...")
-        page.goto("http://localhost:8888")
+        print("正在访问前端页面 http://localhost:8080 ...")
+        page.goto("http://localhost:8080")
         page.wait_for_load_state("networkidle")
         print("=" * 60)
         print("前端测试报告")

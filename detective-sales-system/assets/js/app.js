@@ -35,6 +35,10 @@ function initEventListeners() {
     const editCaseForm = document.getElementById('edit-case-form');
     if (editCaseForm) editCaseForm.addEventListener('submit', handleEditCaseSubmit);
     
+    // 编辑线索表单
+    const editClueForm = document.getElementById('edit-clue-form');
+    if (editClueForm) editClueForm.addEventListener('submit', handleEditClueSubmit);
+    
     // 案件详情页面
     const addClueBtn = document.getElementById('add-clue-btn');
     if (addClueBtn) addClueBtn.addEventListener('click', showAddClueModal);
@@ -216,13 +220,21 @@ function loadCase(caseId) {
     
     // 显示案件详情页面
     hideAllScreens();
-    document.getElementById('case-detail-screen').classList.add('active');
+    const caseDetailScreen = document.getElementById('case-detail-screen');
+    if (caseDetailScreen) caseDetailScreen.classList.add('active');
     
     // 更新案件信息
-    document.getElementById('case-detail-title').textContent = currentCase.title;
-    document.getElementById('detail-client-name').textContent = currentCase.clientName;
-    document.getElementById('detail-created-at').textContent = formatDate(currentCase.createdAt);
-    document.getElementById('detail-status').textContent = getStatusText(currentCase.status);
+    const caseDetailTitle = document.getElementById('case-detail-title');
+    if (caseDetailTitle) caseDetailTitle.textContent = currentCase.title;
+    
+    const detailClientName = document.getElementById('detail-client-name');
+    if (detailClientName) detailClientName.textContent = currentCase.clientName;
+    
+    const detailCreatedAt = document.getElementById('detail-created-at');
+    if (detailCreatedAt) detailCreatedAt.textContent = formatDate(currentCase.createdAt);
+    
+    const detailStatus = document.getElementById('detail-status');
+    if (detailStatus) detailStatus.textContent = getStatusText(currentCase.status);
     
     // 更新状态栏
     updateStatusBar(currentCase.status);
@@ -303,22 +315,25 @@ function loadAnalysisData() {
     
     for (let i = 1; i <= 4; i++) {
         const analysisText = currentCase.analysis[i] || '';
-        document.getElementById(`analysis-step${i}`).value = analysisText;
+        const analysisElement = document.getElementById(`analysis-step${i}`);
+        if (analysisElement) analysisElement.value = analysisText;
     }
 }
 
 // 加载报告内容
 function loadReportContent() {
     const reportContent = document.getElementById('report-content');
+    if (!reportContent) return;
+    
     reportContent.innerHTML = '';
 
     if (!currentCase) return;
 
     // 从分析文本框中获取最新内容
-    const analysis1 = document.getElementById('analysis-step1').value;
-    const analysis2 = document.getElementById('analysis-step2').value;
-    const analysis3 = document.getElementById('analysis-step3').value;
-    const analysis4 = document.getElementById('analysis-step4').value;
+    const analysis1 = document.getElementById('analysis-step1') ? document.getElementById('analysis-step1').value : '';
+    const analysis2 = document.getElementById('analysis-step2') ? document.getElementById('analysis-step2').value : '';
+    const analysis3 = document.getElementById('analysis-step3') ? document.getElementById('analysis-step3').value : '';
+    const analysis4 = document.getElementById('analysis-step4') ? document.getElementById('analysis-step4').value : '';
 
     // 更新案件分析数据
     currentCase.analysis = currentCase.analysis || {};
@@ -629,7 +644,7 @@ function showEditClueModal(clueId) {
     if (editClueImportance) editClueImportance.value = clue.importance;
     
     const editClueTags = document.getElementById('edit-clue-tags');
-    if (editClueTags) editClueTags.value = clue.tags.join(', ');
+    if (editClueTags && clue.tags) editClueTags.value = clue.tags.join(', ');
     
     // 显示弹窗
     const editClueModal = document.getElementById('edit-clue-modal');

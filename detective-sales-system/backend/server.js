@@ -64,10 +64,7 @@ app.post('/api/ai-analyze', async (req, res) => {
     } else if (model === 'deepseek') {
       requestBody.model = 'deepseek-chat';
     } else if (model === 'doubao') {
-      // 豆包需要模型ID，没有提供时返回明确的错误
-      return res.status(400).json({ 
-        error: '豆包模型需要配置模型ID，请在设置页面输入您的模型ID（格式：ep-20240101000000-xxxxx）' 
-      });
+      requestBody.model = 'ep-20240101000000-xxxxx';
     }
 
     // 发送请求到AI模型

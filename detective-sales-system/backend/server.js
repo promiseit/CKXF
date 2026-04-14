@@ -67,6 +67,21 @@ app.post('/api/ai-analyze', async (req, res) => {
       requestBody.model = 'ep-20240101000000-xxxxx';
     }
 
+    // 为不同模型设置特定参数
+    if (model === 'doubao') {
+      // 豆包API可能需要不同的请求格式
+      requestBody = {
+        model: requestBody.model,
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7
+      };
+    }
+
     // 发送请求到AI模型
     const response = await axios.post(url, requestBody, {
       headers: {

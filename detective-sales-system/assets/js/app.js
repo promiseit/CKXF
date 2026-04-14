@@ -64,24 +64,41 @@ function initEventListeners() {
     if (deleteCaseBtn) deleteCaseBtn.addEventListener('click', deleteCase);
     
     // 关闭按钮
-    document.querySelectorAll('.close-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            this.closest('.screen').classList.remove('active');
-            document.getElementById('welcome-screen').classList.add('active');
+    const closeBtns = document.querySelectorAll('.close-btn');
+    if (closeBtns.length > 0) {
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const screen = this.closest('.screen');
+                if (screen) {
+                    screen.classList.remove('active');
+                }
+                const modal = this.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                }
+                document.getElementById('welcome-screen').classList.add('active');
+            });
         });
-    });
+    }
     
     // 取消按钮
-    document.querySelectorAll('.cancel-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.closest('.modal')) {
-                this.closest('.modal').classList.remove('active');
-            } else {
-                this.closest('.screen').classList.remove('active');
-                document.getElementById('welcome-screen').classList.add('active');
-            }
+    const cancelBtns = document.querySelectorAll('.cancel-btn');
+    if (cancelBtns.length > 0) {
+        cancelBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                } else {
+                    const screen = this.closest('.screen');
+                    if (screen) {
+                        screen.classList.remove('active');
+                    }
+                    document.getElementById('welcome-screen').classList.add('active');
+                }
+            });
         });
-    });
+    }
     
     // 分析文本框保存
     const analysisTexts = document.querySelectorAll('.analysis-text');
@@ -599,14 +616,24 @@ function showEditClueModal(clueId) {
     if (!clue) return;
     
     // 填充表单数据
-    document.getElementById('edit-clue-id').value = clue.id;
-    document.getElementById('edit-clue-content').value = clue.content;
-    document.getElementById('edit-clue-type').value = clue.type;
-    document.getElementById('edit-clue-importance').value = clue.importance;
-    document.getElementById('edit-clue-tags').value = clue.tags.join(', ');
+    const editClueId = document.getElementById('edit-clue-id');
+    if (editClueId) editClueId.value = clue.id;
+    
+    const editClueContent = document.getElementById('edit-clue-content');
+    if (editClueContent) editClueContent.value = clue.content;
+    
+    const editClueType = document.getElementById('edit-clue-type');
+    if (editClueType) editClueType.value = clue.type;
+    
+    const editClueImportance = document.getElementById('edit-clue-importance');
+    if (editClueImportance) editClueImportance.value = clue.importance;
+    
+    const editClueTags = document.getElementById('edit-clue-tags');
+    if (editClueTags) editClueTags.value = clue.tags.join(', ');
     
     // 显示弹窗
-    document.getElementById('edit-clue-modal').classList.add('active');
+    const editClueModal = document.getElementById('edit-clue-modal');
+    if (editClueModal) editClueModal.classList.add('active');
 }
 
 // 处理编辑线索提交
@@ -615,11 +642,22 @@ function handleEditClueSubmit(e) {
     
     if (!currentCase) return;
     
-    const clueId = document.getElementById('edit-clue-id').value;
-    const content = document.getElementById('edit-clue-content').value;
-    const type = document.getElementById('edit-clue-type').value;
-    const importance = parseInt(document.getElementById('edit-clue-importance').value);
-    const tags = document.getElementById('edit-clue-tags').value
+    const editClueId = document.getElementById('edit-clue-id');
+    const editClueContent = document.getElementById('edit-clue-content');
+    const editClueType = document.getElementById('edit-clue-type');
+    const editClueImportance = document.getElementById('edit-clue-importance');
+    const editClueTags = document.getElementById('edit-clue-tags');
+    
+    if (!editClueId || !editClueContent || !editClueType || !editClueImportance || !editClueTags) {
+        showToast('表单元素缺失，无法编辑线索');
+        return;
+    }
+    
+    const clueId = editClueId.value;
+    const content = editClueContent.value;
+    const type = editClueType.value;
+    const importance = parseInt(editClueImportance.value);
+    const tags = editClueTags.value
         .split(',')
         .map(tag => tag.trim())
         .filter(tag => tag);
@@ -641,10 +679,13 @@ function handleEditClueSubmit(e) {
         renderClueList();
         
         // 关闭弹窗
-        document.getElementById('edit-clue-modal').classList.remove('active');
+        const editClueModal = document.getElementById('edit-clue-modal');
+        if (editClueModal) editClueModal.classList.remove('active');
         
         // 显示成功提示
         showToast('线索修改成功！');
+    } else {
+        showToast('未找到要编辑的线索');
     }
 }
 

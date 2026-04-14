@@ -75,12 +75,12 @@ function initEventListeners() {
                 const screen = this.closest('.screen');
                 if (screen) {
                     screen.classList.remove('active');
+                    document.getElementById('welcome-screen').classList.add('active');
                 }
                 const modal = this.closest('.modal');
                 if (modal) {
                     modal.classList.remove('active');
                 }
-                document.getElementById('welcome-screen').classList.add('active');
             });
         });
     }

@@ -15,28 +15,55 @@ document.addEventListener('DOMContentLoaded', function() {
 // 初始化事件监听
 function initEventListeners() {
     // 导航按钮
-    document.getElementById('case-list-btn').addEventListener('click', showCaseList);
-    document.getElementById('new-case-btn').addEventListener('click', showNewCaseForm);
-    document.getElementById('start-case-btn').addEventListener('click', showNewCaseForm);
-    document.getElementById('settings-btn').addEventListener('click', showSettings);
+    const caseListBtn = document.getElementById('case-list-btn');
+    if (caseListBtn) caseListBtn.addEventListener('click', showCaseList);
+    
+    const newCaseBtn = document.getElementById('new-case-btn');
+    if (newCaseBtn) newCaseBtn.addEventListener('click', showNewCaseForm);
+    
+    const startCaseBtn = document.getElementById('start-case-btn');
+    if (startCaseBtn) startCaseBtn.addEventListener('click', showNewCaseForm);
+    
+    const settingsBtn = document.getElementById('settings-btn');
+    if (settingsBtn) settingsBtn.addEventListener('click', showSettings);
     
     // 新建案件表单
-    document.getElementById('new-case-form').addEventListener('submit', handleNewCaseSubmit);
+    const newCaseForm = document.getElementById('new-case-form');
+    if (newCaseForm) newCaseForm.addEventListener('submit', handleNewCaseSubmit);
     
     // 编辑案件表单
-    document.getElementById('edit-case-form').addEventListener('submit', handleEditCaseSubmit);
+    const editCaseForm = document.getElementById('edit-case-form');
+    if (editCaseForm) editCaseForm.addEventListener('submit', handleEditCaseSubmit);
     
     // 案件详情页面
-    document.getElementById('add-clue-btn').addEventListener('click', showAddClueModal);
-    document.getElementById('add-clue-form').addEventListener('submit', handleAddClueSubmit);
-    document.getElementById('generate-report-btn').addEventListener('click', generateReport);
-    document.getElementById('download-report-btn').addEventListener('click', downloadReport);
-    document.getElementById('export-ppt-btn').addEventListener('click', exportPPT);
-    // 案件操作
-    document.getElementById('prev-step-btn').addEventListener('click', prevStep);
-    document.getElementById('next-step-btn').addEventListener('click', nextStep);
-    document.getElementById('edit-case-btn').addEventListener('click', editCase);
-    document.getElementById('delete-case-btn').addEventListener('click', deleteCase); 关闭按钮
+    const addClueBtn = document.getElementById('add-clue-btn');
+    if (addClueBtn) addClueBtn.addEventListener('click', showAddClueModal);
+    
+    const addClueForm = document.getElementById('add-clue-form');
+    if (addClueForm) addClueForm.addEventListener('submit', handleAddClueSubmit);
+    
+    const generateReportBtn = document.getElementById('generate-report-btn');
+    if (generateReportBtn) generateReportBtn.addEventListener('click', generateReport);
+    
+    const downloadReportBtn = document.getElementById('download-report-btn');
+    if (downloadReportBtn) downloadReportBtn.addEventListener('click', downloadReport);
+    
+    const exportPptBtn = document.getElementById('export-ppt-btn');
+    if (exportPptBtn) exportPptBtn.addEventListener('click', exportPPT);
+    // 案件操作 - 只在元素存在时添加事件监听
+    const prevStepBtn = document.getElementById('prev-step-btn');
+    if (prevStepBtn) prevStepBtn.addEventListener('click', prevStep);
+    
+    const nextStepBtn = document.getElementById('next-step-btn');
+    if (nextStepBtn) nextStepBtn.addEventListener('click', nextStep);
+    
+    const editCaseBtn = document.getElementById('edit-case-btn');
+    if (editCaseBtn) editCaseBtn.addEventListener('click', editCase);
+    
+    const deleteCaseBtn = document.getElementById('delete-case-btn');
+    if (deleteCaseBtn) deleteCaseBtn.addEventListener('click', deleteCase);
+    
+    // 关闭按钮
     document.querySelectorAll('.close-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             this.closest('.screen').classList.remove('active');
@@ -57,19 +84,23 @@ function initEventListeners() {
     });
     
     // 分析文本框保存
-    document.querySelectorAll('.analysis-text').forEach(textarea => {
-        textarea.addEventListener('input', function() {
-            if (currentCase) {
-                const step = this.id.split('-')[2];
-                currentCase.analysis = currentCase.analysis || {};
-                currentCase.analysis[step] = this.value;
-                saveCases();
-            }
+    const analysisTexts = document.querySelectorAll('.analysis-text');
+    if (analysisTexts.length > 0) {
+        analysisTexts.forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                if (currentCase) {
+                    const step = this.id.split('-')[2];
+                    currentCase.analysis = currentCase.analysis || {};
+                    currentCase.analysis[step] = this.value;
+                    saveCases();
+                }
+            });
         });
-    });
+    }
 
     // AI分析按钮
-    document.getElementById('ai-analyze-btn').addEventListener('click', function() {
+    const aiAnalyzeBtn = document.getElementById('ai-analyze-btn');
+    if (aiAnalyzeBtn) aiAnalyzeBtn.addEventListener('click', function() {
         if (!currentCase || !currentCase.clues || currentCase.clues.length === 0) {
             showToast('请先添加线索');
             return;
@@ -82,16 +113,20 @@ function initEventListeners() {
     });
 
     // 编辑线索表单
-    document.getElementById('edit-clue-form').addEventListener('submit', handleEditClueSubmit);
+    const editClueForm = document.getElementById('edit-clue-form');
+    if (editClueForm) editClueForm.addEventListener('submit', handleEditClueSubmit);
 
     // 保存设置按钮
-    document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
+    const saveSettingsBtn = document.getElementById('save-settings-btn');
+    if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
     
     // 测试API按钮
-    document.getElementById('test-api-btn').addEventListener('click', testAPI);
+    const testApiBtn = document.getElementById('test-api-btn');
+    if (testApiBtn) testApiBtn.addEventListener('click', testAPI);
     
     // 案件搜索
-    document.getElementById('case-search').addEventListener('input', function() {
+    const caseSearch = document.getElementById('case-search');
+    if (caseSearch) caseSearch.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
         const caseItems = document.querySelectorAll('.case-item');
         caseItems.forEach(item => {

@@ -32,11 +32,11 @@ function initEventListeners() {
     document.getElementById('generate-report-btn').addEventListener('click', generateReport);
     document.getElementById('download-report-btn').addEventListener('click', downloadReport);
     document.getElementById('export-ppt-btn').addEventListener('click', exportPPT);
+    // 案件操作
+    document.getElementById('prev-step-btn').addEventListener('click', prevStep);
     document.getElementById('next-step-btn').addEventListener('click', nextStep);
     document.getElementById('edit-case-btn').addEventListener('click', editCase);
-    document.getElementById('delete-case-btn').addEventListener('click', deleteCase);
-    
-    // 关闭按钮
+    document.getElementById('delete-case-btn').addEventListener('click', deleteCase); 关闭按钮
     document.querySelectorAll('.close-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             this.closest('.screen').classList.remove('active');
@@ -1015,6 +1015,25 @@ function nextStep() {
         showToast(`案件状态已更新为：${getStatusText(currentCase.status)}`);
     } else {
         showToast('案件已经是最终状态');
+    }
+}
+
+// 上一步
+function prevStep() {
+    if (!currentCase) return;
+    
+    const statusOrder = ['collecting', 'analyzing', 'reporting', 'closed'];
+    const currentIndex = statusOrder.indexOf(currentCase.status);
+    
+    if (currentIndex > 0) {
+        currentCase.status = statusOrder[currentIndex - 1];
+        currentCase.updatedAt = new Date().toISOString();
+        saveCases();
+        updateStatusBar(currentCase.status);
+        document.getElementById('detail-status').textContent = getStatusText(currentCase.status);
+        showToast(`案件状态已回退为：${getStatusText(currentCase.status)}`);
+    } else {
+        showToast('案件已经是初始状态');
     }
 }
 

@@ -1777,20 +1777,27 @@ async function aiAnalyzeClues(model) {
         // 更新分析文本框
         currentCase.analysis = currentCase.analysis || {};
         
-        if (analysisResults.step1) {
-            document.getElementById('analysis-step1').value = analysisResults.step1;
+        const analysisStep1 = document.getElementById('analysis-step1');
+        if (analysisStep1 && analysisResults.step1) {
+            analysisStep1.value = analysisResults.step1;
             currentCase.analysis[1] = analysisResults.step1;
         }
-        if (analysisResults.step2) {
-            document.getElementById('analysis-step2').value = analysisResults.step2;
+        
+        const analysisStep2 = document.getElementById('analysis-step2');
+        if (analysisStep2 && analysisResults.step2) {
+            analysisStep2.value = analysisResults.step2;
             currentCase.analysis[2] = analysisResults.step2;
         }
-        if (analysisResults.step3) {
-            document.getElementById('analysis-step3').value = analysisResults.step3;
+        
+        const analysisStep3 = document.getElementById('analysis-step3');
+        if (analysisStep3 && analysisResults.step3) {
+            analysisStep3.value = analysisResults.step3;
             currentCase.analysis[3] = analysisResults.step3;
         }
-        if (analysisResults.step4) {
-            document.getElementById('analysis-step4').value = analysisResults.step4;
+        
+        const analysisStep4 = document.getElementById('analysis-step4');
+        if (analysisStep4 && analysisResults.step4) {
+            analysisStep4.value = analysisResults.step4;
             currentCase.analysis[4] = analysisResults.step4;
         }
         

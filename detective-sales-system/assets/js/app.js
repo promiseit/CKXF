@@ -122,13 +122,32 @@ function renderCaseList() {
         const statusText = getStatusText(caseItem.status);
         
         li.innerHTML = `
-            <h3>${caseItem.title}</h3>
-            <p>${caseItem.clientName}</p>
-            <span class="case-status ${statusClass}">${statusText}</span>
+            <div class="case-item-content">
+                <h3>${caseItem.title}</h3>
+                <p>${caseItem.clientName}</p>
+                <span class="case-status ${statusClass}">${statusText}</span>
+            </div>
+            <button class="case-delete-btn" data-id="${caseItem.id}">
+                <i class="fas fa-trash"></i>
+            </button>
         `;
         
-        li.addEventListener('click', function() {
+        // 点击案件内容加载详情
+        const content = li.querySelector('.case-item-content');
+        content.addEventListener('click', function() {
             loadCase(caseItem.id);
+        });
+        
+        // 点击删除按钮删除案件
+        const deleteBtn = li.querySelector('.case-delete-btn');
+        deleteBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止事件冒泡
+            if (confirm('确定要删除这个案件吗？此操作不可恢复。')) {
+                cases = cases.filter(c => c.id !== caseItem.id);
+                saveCases();
+                renderCaseList();
+                showToast('案件删除成功！');
+            }
         });
         
         caseList.appendChild(li);

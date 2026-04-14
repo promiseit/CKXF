@@ -133,10 +133,6 @@ function initEventListeners() {
         aiAnalyzeClues(defaultModel);
     });
 
-    // 编辑线索表单
-    const editClueForm = document.getElementById('edit-clue-form');
-    if (editClueForm) editClueForm.addEventListener('submit', handleEditClueSubmit);
-
     // 保存设置按钮
     const saveSettingsBtn = document.getElementById('save-settings-btn');
     if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);

@@ -81,6 +81,9 @@ function initEventListeners() {
         aiAnalyzeClues(defaultModel);
     });
 
+    // 编辑线索表单
+    document.getElementById('edit-clue-form').addEventListener('submit', handleEditClueSubmit);
+
     // 保存设置按钮
     document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
     
@@ -204,6 +207,14 @@ function renderClueList() {
             <div class="clue-header">
                 <span class="clue-type ${typeClass}">${typeText}</span>
                 <span class="clue-importance">${importanceStars}</span>
+                <div class="clue-actions">
+                    <button class="clue-edit-btn" data-id="${clue.id}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="clue-delete-btn" data-id="${clue.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
             <div class="clue-content">${clue.content}</div>
             <div class="clue-tags">
@@ -211,6 +222,24 @@ function renderClueList() {
             </div>
             <div class="clue-time">${formatDate(clue.timestamp)}</div>
         `;
+        
+        // 编辑按钮点击事件
+        const editBtn = clueItem.querySelector('.clue-edit-btn');
+        editBtn.addEventListener('click', function() {
+            showEditClueModal(clue.id);
+        });
+        
+        // 删除按钮点击事件
+        const deleteBtn = clueItem.querySelector('.clue-delete-btn');
+        deleteBtn.addEventListener('click', function() {
+            if (confirm('确定要删除这条线索吗？此操作不可恢复。')) {
+                currentCase.clues = currentCase.clues.filter(c => c.id !== clue.id);
+                currentCase.updatedAt = new Date().toISOString();
+                saveCases();
+                renderClueList();
+                showToast('线索删除成功！');
+            }
+        });
         
         clueList.appendChild(clueItem);
     });
@@ -525,6 +554,63 @@ function handleAddClueSubmit(e) {
     
     // 显示成功提示
     showToast('线索添加成功！');
+}
+
+// 显示编辑线索弹窗
+function showEditClueModal(clueId) {
+    if (!currentCase) return;
+    
+    const clue = currentCase.clues.find(c => c.id === clueId);
+    if (!clue) return;
+    
+    // 填充表单数据
+    document.getElementById('edit-clue-id').value = clue.id;
+    document.getElementById('edit-clue-content').value = clue.content;
+    document.getElementById('edit-clue-type').value = clue.type;
+    document.getElementById('edit-clue-importance').value = clue.importance;
+    document.getElementById('edit-clue-tags').value = clue.tags.join(', ');
+    
+    // 显示弹窗
+    document.getElementById('edit-clue-modal').classList.add('active');
+}
+
+// 处理编辑线索提交
+function handleEditClueSubmit(e) {
+    e.preventDefault();
+    
+    if (!currentCase) return;
+    
+    const clueId = document.getElementById('edit-clue-id').value;
+    const content = document.getElementById('edit-clue-content').value;
+    const type = document.getElementById('edit-clue-type').value;
+    const importance = parseInt(document.getElementById('edit-clue-importance').value);
+    const tags = document.getElementById('edit-clue-tags').value
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag);
+    
+    // 找到并更新线索
+    const clueIndex = currentCase.clues.findIndex(c => c.id === clueId);
+    if (clueIndex !== -1) {
+        currentCase.clues[clueIndex] = {
+            ...currentCase.clues[clueIndex],
+            content,
+            type,
+            importance,
+            tags,
+            timestamp: new Date().toISOString()
+        };
+        currentCase.updatedAt = new Date().toISOString();
+        
+        saveCases();
+        renderClueList();
+        
+        // 关闭弹窗
+        document.getElementById('edit-clue-modal').classList.remove('active');
+        
+        // 显示成功提示
+        showToast('线索修改成功！');
+    }
 }
 
 // 生成报告

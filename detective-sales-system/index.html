@@ -280,6 +280,50 @@
                         </div>
                     </div>
 
+                    <!-- 编辑线索弹窗 -->
+                    <div id="edit-clue-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>编辑线索</h3>
+                                <button class="close-btn"><i class="fas fa-times"></i></button>
+                            </div>
+                            <form id="edit-clue-form">
+                                <input type="hidden" id="edit-clue-id">
+                                <div class="form-group">
+                                    <label for="edit-clue-content">线索内容</label>
+                                    <textarea id="edit-clue-content" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-clue-type">线索类型</label>
+                                    <select id="edit-clue-type">
+                                        <option value="text">文本</option>
+                                        <option value="file">文件</option>
+                                        <option value="image">图片</option>
+                                        <option value="audio">音频</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-clue-importance">重要性</label>
+                                    <select id="edit-clue-importance">
+                                        <option value="1">1星</option>
+                                        <option value="2">2星</option>
+                                        <option value="3">3星</option>
+                                        <option value="4">4星</option>
+                                        <option value="5">5星</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-clue-tags">标签（用逗号分隔）</label>
+                                    <input type="text" id="edit-clue-tags" placeholder="例如：价格,需求,竞品">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="cancel-btn">取消</button>
+                                    <button type="submit" class="primary-btn">保存修改</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                     <!-- 设置页面 -->
                     <div id="settings-screen" class="screen">
                         <div class="screen-header">
@@ -313,9 +357,7 @@
                                 <div class="settings-notice">
                                     <p><i class="fas fa-info-circle"></i> <strong>说明：</strong></p>
                                     <ul>
-                                        <li>支持快速分析和深度思考两种模式</li>
-                                        <li>快速分析：简洁明了，快速生成结果</li>
-                                        <li>深度思考：深入分析，挖掘更多细节</li>
+                                        <li>仅支持AI分析模式</li>
                                         <li><strong>注意：</strong>由于浏览器CORS限制，直接调用第三方API可能失败</li>
                                         <li><strong>智能降级：</strong>API调用失败时会自动使用本地智能分析</li>
                                     </ul>

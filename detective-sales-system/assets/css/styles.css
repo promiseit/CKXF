@@ -568,7 +568,39 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
+}
+
+.clue-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.clue-edit-btn,
+.clue-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.clue-edit-btn {
+    color: #3498db;
+}
+
+.clue-edit-btn:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.clue-delete-btn {
+    color: #e74c3c;
+}
+
+.clue-delete-btn:hover {
+    background-color: rgba(231, 76, 60, 0.1);
 }
 
 .clue-type {

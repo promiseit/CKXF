@@ -214,6 +214,20 @@ function loadReportContent() {
 
     if (!currentCase) return;
 
+    // 从分析文本框中获取最新内容
+    const analysis1 = document.getElementById('analysis-step1').value;
+    const analysis2 = document.getElementById('analysis-step2').value;
+    const analysis3 = document.getElementById('analysis-step3').value;
+    const analysis4 = document.getElementById('analysis-step4').value;
+
+    // 更新案件分析数据
+    currentCase.analysis = currentCase.analysis || {};
+    currentCase.analysis[1] = analysis1;
+    currentCase.analysis[2] = analysis2;
+    currentCase.analysis[3] = analysis3;
+    currentCase.analysis[4] = analysis4;
+    saveCases();
+
     reportContent.innerHTML = `
         <h4>案件概览</h4>
         <p><strong>案件名称：</strong>${currentCase.title}</p>
@@ -225,10 +239,10 @@ function loadReportContent() {
         <p>共收集 ${currentCase.clues ? currentCase.clues.length : 0} 条线索</p>
 
         <h4>分析结果</h4>
-        <p><strong>1. 基础事实梳理：</strong>${currentCase.analysis?.[1] || '未填写'}</p>
-        <p><strong>2. 关联线索发现：</strong>${currentCase.analysis?.[2] || '未填写'}</p>
-        <p><strong>3. 潜在需求推断：</strong>${currentCase.analysis?.[3] || '未填写'}</p>
-        <p><strong>4. 行动方案建议：</strong>${currentCase.analysis?.[4] || '未填写'}</p>
+        <p><strong>1. 基础事实梳理：</strong>${analysis1 || '未填写'}</p>
+        <p><strong>2. 关联线索发现：</strong>${analysis2 || '未填写'}</p>
+        <p><strong>3. 潜在需求推断：</strong>${analysis3 || '未填写'}</p>
+        <p><strong>4. 行动方案建议：</strong>${analysis4 || '未填写'}</p>
     `;
 }
 
@@ -1213,18 +1227,14 @@ function showToast(message) {
 }
 
 // 构建提示词
-function buildPrompt(clues, caseTitle, clientName, mode) {
+function buildPrompt(clues, caseTitle, clientName) {
     const cluesText = clues.map(clue => 
         `- 线索内容：${clue.content}\n  类型：${clue.type}\n  重要性：${clue.importance}星\n  标签：${clue.tags}`
     ).join('\n\n');
     
-    const modeInstruction = mode === 'deep' 
-        ? '请进行深度思考，详细分析每个线索之间的关联，挖掘潜在的深层需求，提供全面而深入的分析。'
-        : '请进行快速分析，简洁明了地总结关键信息，提供直接可用的分析结果。';
-    
     return `请分析以下销售线索，为${clientName}的${caseTitle}项目提供分析。
 
-${modeInstruction}
+请详细分析每个线索之间的关联，挖掘潜在的深层需求，提供全面而深入的分析。
 
 线索信息：
 ${cluesText}
@@ -1323,7 +1333,7 @@ function parseAIResponse(response) {
 }
 
 // 智能本地分析（降级方案）
-function generateLocalAnalysis(clues, caseTitle, clientName, mode) {
+function generateLocalAnalysis(clues, caseTitle, clientName) {
     // 提取所有线索内容
     const allClueContent = clues.map(c => c.content).join(' ');
     
@@ -1490,10 +1500,8 @@ async function aiAnalyzeClues(model) {
     const apiKey = settings.apiKey;
     const apiUrl = settings.apiUrl;
     const modelId = settings.modelId;
-    const analysisMode = document.getElementById('analysis-mode').value;
     
-    const modeText = analysisMode === 'deep' ? '深度思考' : '快速分析';
-    showToast(`AI${modeText}中，请稍候...`);
+    showToast('AI分析中，请稍候...');
     
     try {
         // 提取线索信息
@@ -1509,7 +1517,7 @@ async function aiAnalyzeClues(model) {
         // 如果配置了API Key，先尝试调用真实API
         if (apiKey) {
             try {
-                const prompt = buildPrompt(clues, currentCase.title, currentCase.clientName, analysisMode);
+                const prompt = buildPrompt(clues, currentCase.title, currentCase.clientName);
                 
                 let response;
                 switch (model) {
@@ -1534,18 +1542,18 @@ async function aiAnalyzeClues(model) {
                 }
                 
                 analysisResults = parseAIResponse(response);
-                showToast(`AI${modeText}完成！`);
+                showToast('AI分析完成！');
                 
             } catch (apiError) {
                 console.warn('API调用失败，使用本地智能分析:', apiError);
                 // API调用失败，使用本地智能分析作为降级方案
-                analysisResults = generateLocalAnalysis(clues, currentCase.title, currentCase.clientName, analysisMode);
-                showToast(`AI${modeText}完成（本地智能分析）！`);
+                analysisResults = generateLocalAnalysis(clues, currentCase.title, currentCase.clientName);
+                showToast('AI分析完成（本地智能分析）！');
             }
         } else {
             // 没有配置API Key，直接使用本地智能分析
-            analysisResults = generateLocalAnalysis(clues, currentCase.title, currentCase.clientName, analysisMode);
-            showToast(`AI${modeText}完成（本地智能分析）！`);
+            analysisResults = generateLocalAnalysis(clues, currentCase.title, currentCase.clientName);
+            showToast('AI分析完成（本地智能分析）！');
         }
         
         // 更新分析文本框

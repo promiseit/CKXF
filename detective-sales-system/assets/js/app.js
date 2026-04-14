@@ -1230,11 +1230,21 @@ function loadSettings() {
 
 // 保存设置
 function saveSettings() {
+    const defaultAiModel = document.getElementById('default-ai-model');
+    const aiApiKey = document.getElementById('ai-api-key');
+    const aiApiUrl = document.getElementById('ai-api-url');
+    const aiModelId = document.getElementById('ai-model-id');
+    
+    if (!defaultAiModel || !aiApiKey || !aiApiUrl || !aiModelId) {
+        showToast('设置页面元素缺失，无法保存设置');
+        return;
+    }
+    
     const settings = {
-        defaultModel: document.getElementById('default-ai-model').value,
-        apiKey: encryptData(document.getElementById('ai-api-key').value),
-        apiUrl: encryptData(document.getElementById('ai-api-url').value),
-        modelId: encryptData(document.getElementById('ai-model-id').value)
+        defaultModel: defaultAiModel.value,
+        apiKey: encryptData(aiApiKey.value),
+        apiUrl: encryptData(aiApiUrl.value),
+        modelId: encryptData(aiModelId.value)
     };
     
     localStorage.setItem('detective_settings', JSON.stringify(settings));
@@ -1244,10 +1254,18 @@ function saveSettings() {
 // 加载设置到表单
 function loadSettingsToForm() {
     const settings = loadSettings();
-    document.getElementById('default-ai-model').value = settings.defaultModel || 'wenxin';
-    document.getElementById('ai-api-key').value = settings.apiKey || '';
-    document.getElementById('ai-api-url').value = settings.apiUrl || '';
-    document.getElementById('ai-model-id').value = settings.modelId || '';
+    
+    const defaultAiModel = document.getElementById('default-ai-model');
+    if (defaultAiModel) defaultAiModel.value = settings.defaultModel || 'wenxin';
+    
+    const aiApiKey = document.getElementById('ai-api-key');
+    if (aiApiKey) aiApiKey.value = settings.apiKey || '';
+    
+    const aiApiUrl = document.getElementById('ai-api-url');
+    if (aiApiUrl) aiApiUrl.value = settings.apiUrl || '';
+    
+    const aiModelId = document.getElementById('ai-model-id');
+    if (aiModelId) aiModelId.value = settings.modelId || '';
 }
 
 // 测试API连接

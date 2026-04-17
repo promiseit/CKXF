@@ -14,6 +14,15 @@ module.exports = {
     },
     doubao: {
       defaultUrl: 'https://ark.cn-beijing.volces.com/api/v3/chat/completions'
+    },
+    qianwen: {
+      defaultUrl: 'https://qianwen.aliyun.com/api/v1/chat/completions'
+    },
+    kimi: {
+      defaultUrl: 'https://api.moonshot.cn/v1/chat/completions'
+    },
+    zhipu: {
+      defaultUrl: 'https://open.bigmodel.cn/api/mt/v1/chat/completions'
     }
   }
 };

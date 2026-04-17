@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>性能测试 - 自闭症工作融合工具</title>
+</head>
+<body>
+    <h1>性能测试 - 自闭症工作融合工具</h1>
+    <p>请打开浏览器控制台查看测试结果。</p>
+    
+    <!-- 嵌入原页面内容 -->
+    <div id="app-container"></div>
+    
+    <script>
+        // 加载原页面内容
+        fetch('autism-work-tool-prototype.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('app-container').innerHTML = html;
+                
+                // 加载性能测试脚本
+                const script = document.createElement('script');
+                script.src = 'performance_test.js';
+                document.body.appendChild(script);
+            });
+    </script>
+</body>
+</html>

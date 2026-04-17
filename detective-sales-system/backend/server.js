@@ -24,6 +24,20 @@ app.get('/api/ai-analyze', (req, res) => {
   });
 });
 
+// 数据匿名化处理函数
+function anonymizeData(data) {
+  if (!data) return data;
+  
+  // 替换可能的敏感信息
+  let sanitized = data
+    .replace(/[0-9]{4,}/g, '****') // 替换长数字
+    .replace(/[@\w\.-]+@[\w\.-]+\.\w+/g, 'user@example.com') // 替换邮箱
+    .replace(/客户名称|公司名称|企业名称/g, '客户') // 替换客户相关词汇
+    .replace(/项目名称|产品名称/g, '项目'); // 替换项目相关词汇
+  
+  return sanitized;
+}
+
 // AI分析API - POST请求
 app.post('/api/ai-analyze', async (req, res) => {
   try {
@@ -48,10 +62,13 @@ app.post('/api/ai-analyze', async (req, res) => {
     // 构建请求URL
     const url = apiUrl || modelConfig.defaultUrl;
 
+    // 匿名化处理提示词
+    const anonymizedPrompt = anonymizeData(prompt);
+
     // 构建请求体
     let requestBody = {
       messages: [
-        { role: 'user', content: prompt }
+        { role: 'user', content: anonymizedPrompt }
       ],
       temperature: 0.7
     };
@@ -65,6 +82,12 @@ app.post('/api/ai-analyze', async (req, res) => {
       requestBody.model = 'deepseek-chat';
     } else if (model === 'doubao') {
       requestBody.model = 'ep-20240101000000-xxxxx';
+    } else if (model === 'qianwen') {
+      requestBody.model = 'qianwen-turbo';
+    } else if (model === 'kimi') {
+      requestBody.model = 'kimi';
+    } else if (model === 'zhipu') {
+      requestBody.model = 'glm-4';
     }
 
     // 为不同模型设置特定参数
@@ -75,7 +98,7 @@ app.post('/api/ai-analyze', async (req, res) => {
         messages: [
           {
             role: 'user',
-            content: prompt
+            content: anonymizedPrompt
           }
         ],
         temperature: 0.7
@@ -88,7 +111,7 @@ app.post('/api/ai-analyze', async (req, res) => {
           messages: [
             {
               role: 'user',
-              content: prompt
+              content: anonymizedPrompt
             }
           ]
         },
@@ -133,6 +156,30 @@ app.post('/api/ai-analyze', async (req, res) => {
           'Authorization': `Bearer ${apiKey}`
         }
       });
+    } else if (model === 'qianwen') {
+      // 千问百炼API格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+    } else if (model === 'kimi') {
+      // Kimi API格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+    } else if (model === 'zhipu') {
+      // 智谱AI API格式
+      response = await axios.post(url, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
     } else {
       // 默认格式
       response = await axios.post(url, requestBody, {
@@ -143,15 +190,19 @@ app.post('/api/ai-analyze', async (req, res) => {
       });
     }
 
-    // 记录完整响应
-    console.log('AI模型完整响应:', JSON.stringify(response.data, null, 2));
+    // 记录响应摘要（不记录完整响应，保护隐私）
+    console.log('AI模型响应摘要:', {
+      model: model,
+      responseLength: response.data ? JSON.stringify(response.data).length : 0,
+      status: response.status
+    });
 
     // 处理响应
     let aiResponse;
     
     // 检查响应类型
     if (typeof response.data === 'string' && response.data.includes('<html>')) {
-      console.error('AI模型返回了HTML响应，可能是错误页面或重定向:', response.data.substring(0, 500) + '...');
+      console.error('AI模型返回了HTML响应，可能是错误页面或重定向');
       throw new Error('AI model returned HTML response instead of JSON');
     }
     
@@ -163,19 +214,28 @@ app.post('/api/ai-analyze', async (req, res) => {
     } else if (model === 'doubao') {
       // 豆包可能有不同的响应格式
       aiResponse = response.data.choices?.[0]?.message?.content || response.data.result;
+    } else if (model === 'qianwen') {
+      // 千问百炼响应格式
+      aiResponse = response.data.choices?.[0]?.message?.content;
+    } else if (model === 'kimi') {
+      // Kimi响应格式
+      aiResponse = response.data.choices?.[0]?.message?.content;
+    } else if (model === 'zhipu') {
+      // 智谱AI响应格式
+      aiResponse = response.data.choices?.[0]?.message?.content;
     } else {
       aiResponse = response.data.choices?.[0]?.message?.content;
     }
 
     if (!aiResponse) {
-      console.error('无法提取AI响应，完整响应:', response.data);
+      console.error('无法提取AI响应');
       throw new Error('No response from AI model');
     }
 
     res.json({ success: true, response: aiResponse });
 
   } catch (error) {
-    console.error('AI analysis error:', error);
+    console.error('AI analysis error:', error.message);
     res.status(500).json({ 
       success: false, 
       error: error.message || 'Failed to analyze with AI model' 

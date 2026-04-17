@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>神探销售系统 - 客户分析探案平台</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/css/assessment.css">
+    <!-- 移除CDN依赖，确保离线可用 -->
 </head>
 <body>
     <div class="detective-container">
@@ -22,6 +22,9 @@
                 </button>
                 <button id="new-case-btn" class="nav-btn">
                     <i class="fas fa-plus"></i> 新建案件
+                </button>
+                <button id="assessment-btn" class="nav-btn">
+                    <i class="fas fa-star"></i> 能力评估
                 </button>
                 <button id="settings-btn" class="nav-btn">
                     <i class="fas fa-cog"></i> 设置
@@ -162,6 +165,10 @@
                             <div class="info-item">
                                 <label>状态：</label>
                                 <span id="detail-status"></span>
+                            </div>
+                            <div class="info-item">
+                                <label>游戏难度：</label>
+                                <span id="detail-difficulty"></span>
                             </div>
                         </div>
 
@@ -339,11 +346,23 @@
                                 <div class="form-group">
                                     <label for="default-ai-model">默认大模型</label>
                                     <select id="default-ai-model" class="ai-model-select">
+                                        <option value="local">本地模型（GGUF）</option>
                                         <option value="wenxin">文心一言</option>
                                         <option value="tongyi">通义千问</option>
+                                        <option value="qianwen">千问百炼</option>
+                                        <option value="kimi">Kimi</option>
+                                        <option value="zhipu">智谱AI</option>
                                         <option value="deepseek">DeepSeek</option>
                                         <option value="doubao">豆包</option>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="local-model-path">本地模型路径</label>
+                                    <input type="url" id="local-model-path" placeholder="例如：https://huggingface.co/models/gguf-model.gguf">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cloud-models-enabled">启用云端模型</label>
+                                    <input type="checkbox" id="cloud-models-enabled">
                                 </div>
                                 <div class="form-group">
                                     <label for="ai-api-key">API Key</label>
@@ -360,9 +379,11 @@
                                 <div class="settings-notice">
                                     <p><i class="fas fa-info-circle"></i> <strong>说明：</strong></p>
                                     <ul>
-                                        <li>仅支持AI分析模式</li>
+                                        <li>默认使用本地模型（GGUF格式），确保离线环境正常工作</li>
+                                        <li>本地模型需要通过URL加载，推荐使用Hugging Face等平台的模型链接</li>
+                                        <li>云端模型默认关闭，需要手动开启并配置API Key</li>
                                         <li><strong>注意：</strong>由于浏览器CORS限制，直接调用第三方API可能失败</li>
-                                        <li><strong>智能降级：</strong>API调用失败时会自动使用本地智能分析</li>
+                                        <li><strong>智能降级：</strong>本地模型失败且启用了云端模型时，会自动切换到云端模型</li>
                                     </ul>
                                 </div>
                                 <div class="settings-notice">
@@ -383,11 +404,25 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 职场能力评估页面 -->
+                    <div id="assessment-screen" class="screen">
+                        <div class="screen-header">
+                            <h2>职场能力评估</h2>
+                            <button class="close-btn"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="assessment-content">
+                            <div id="assessment-container">
+                                <!-- 评估内容将通过JS动态生成 -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
     </div>
 
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/capability-assessment.js"></script>
 </body>
 </html>

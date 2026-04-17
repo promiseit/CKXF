@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职场青年用户实测 - 自闭症工作融合工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: #FFF8DC;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+        
+        .header p {
+            font-size: 18px;
+            color: #666666;
+        }
+        
+        .content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .app-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .feedback-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .rating {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .rating input {
+            display: none;
+        }
+        
+        .rating label {
+            cursor: pointer;
+            font-size: 30px;
+            color: #ddd;
+        }
+        
+        .rating input:checked ~ label {
+            color: #FFD700;
+        }
+        
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>职场青年用户实测 - 自闭症工作融合工具</h1>
+            <p>邀请自闭症患者参与测试，帮助我们改进产品</p>
+        </div>
+        
+        <div class="content">
+            <!-- 应用展示区域 -->
+            <div class="app-section">
+                <h2>工具使用</h2>
+                <div id="app-container"></div>
+            </div>
+            
+            <!-- 反馈表单区域 -->
+            <div class="feedback-section">
+                <h2>使用反馈</h2>
+                <form id="feedback-form">
+                    <div class="form-group">
+                        <label for="age">年龄</label>
+                        <input type="number" id="age" name="age" min="18" max="60" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">性别</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">请选择</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="autism-level">自闭症程度</label>
+                        <select id="autism-level" name="autism-level" required>
+                            <option value="">请选择</option>
+                            <option value="mild">轻度</option>
+                            <option value="moderate">中度</option>
+                            <option value="severe">重度</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>整体使用体验</label>
+                        <div class="rating">
+                            <input type="radio" id="star5" name="rating" value="5" required>
+                            <label for="star5">★</label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4">★</label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3">★</label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2">★</label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1">★</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="easy-to-use">易用性评价</label>
+                        <select id="easy-to-use" name="easy-to-use" required>
+                            <option value="">请选择</option>
+                            <option value="very-easy">非常容易</option>
+                            <option value="easy">容易</option>
+                            <option value="neutral">一般</option>
+                            <option value="difficult">困难</option>
+                            <option value="very-difficult">非常困难</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="favorite-feature">最喜欢的功能</label>
+                        <select id="favorite-feature" name="favorite-feature" required>
+                            <option value="">请选择</option>
+                            <option value="text-sort">文字排序</option>
+                            <option value="number-calc">数字计算</option>
+                            <option value="english-splice">英文拼接</option>
+                            <option value="coding">简单编程</option>
+                            <option value="chat">日常交流</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="suggestions">改进建议</label>
+                        <textarea id="suggestions" name="suggestions" placeholder="请输入您的改进建议..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comments">其他评论</label>
+                        <textarea id="comments" name="comments" placeholder="请输入您的其他评论..."></textarea>
+                    </div>
+                    
+                    <button type="submit">提交反馈</button>
+                </form>
+                
+                <div class="success-message" id="success-message">
+                    感谢您的反馈！我们会认真考虑您的建议，不断改进产品。
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 加载原页面内容
+        fetch('autism-work-tool-prototype.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('app-container').innerHTML = html;
+            });
+        
+        // 处理表单提交
+        document.getElementById('feedback-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 收集表单数据
+            const formData = new FormData(this);
+            const feedback = Object.fromEntries(formData);
+            
+            // 显示成功消息
+            document.getElementById('success-message').style.display = 'block';
+            
+            // 清空表单
+            this.reset();
+            
+            // 打印反馈数据（实际应用中可以发送到服务器）
+            console.log('用户反馈:', feedback);
+        });
+    </script>
+</body>
+</html>

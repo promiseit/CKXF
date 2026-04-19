@@ -152,11 +152,22 @@
             justify-content: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
         
         .accessibility-btn:hover {
             background-color: #DEE2E6;
             transform: scale(1.1);
+        }
+        
+        .accessibility-btn:focus {
+            outline: 3px solid #0066CC;
+            outline-offset: 2px;
+        }
+        
+        .accessibility-btn.active {
+            background-color: #0066CC;
+            color: white;
         }
         
         .difficulty-selector {
@@ -611,9 +622,10 @@
 <body>
     <!-- 辅助功能按钮 -->
     <div class="accessibility-controls">
-        <button class="accessibility-btn" id="text-to-speech-btn" title="文字朗读">🔊</button>
+        <button class="accessibility-btn active" id="text-to-speech-btn" title="文字朗读">🔊</button>
         <button class="accessibility-btn" id="high-contrast-btn" title="高对比度模式">◐</button>
         <button class="accessibility-btn" id="tutorial-btn" title="使用教程">❓</button>
+        <button class="accessibility-btn" id="sound-effects-btn" title="音效开关">🔉</button>
     </div>
     
     <!-- 字体大小控制 -->
@@ -733,6 +745,9 @@
         let currentMode = 'text';
         let currentLevel = 'L1';
         let fontSize = 16;
+        let textToSpeechEnabled = true;
+        let highContrastEnabled = false;
+        let soundEffectsEnabled = true;
         
         const gameContent = {
             text: {
@@ -1028,6 +1043,7 @@
             const textToSpeechBtn = document.getElementById('text-to-speech-btn');
             const highContrastBtn = document.getElementById('high-contrast-btn');
             const tutorialBtn = document.getElementById('tutorial-btn');
+            const soundEffectsBtn = document.getElementById('sound-effects-btn');
             const tutorialSkip = document.getElementById('tutorial-skip');
             const tutorialStart = document.getElementById('tutorial-start');
             const fontDecrease = document.getElementById('font-decrease');
@@ -1045,10 +1061,22 @@
             });
             
             // 按钮事件
-            checkBtn.addEventListener('click', checkAnswer);
-            hintBtn.addEventListener('click', showHint);
-            resetBtn.addEventListener('click', resetGame);
-            nextScenarioBtn.addEventListener('click', nextScenario);
+            checkBtn.addEventListener('click', function() {
+                checkAnswer();
+                playSound('click');
+            });
+            hintBtn.addEventListener('click', function() {
+                showHint();
+                playSound('click');
+            });
+            resetBtn.addEventListener('click', function() {
+                resetGame();
+                playSound('click');
+            });
+            nextScenarioBtn.addEventListener('click', function() {
+                nextScenario();
+                playSound('click');
+            });
             
             // 导航按钮事件
             navBtns.forEach(btn => {
@@ -1058,6 +1086,7 @@
                     currentMode = this.getAttribute('data-mode');
                     updateGame();
                     speakText(`已切换到${this.textContent}模式`);
+                    playSound('click');
                 });
             });
             
@@ -1070,6 +1099,7 @@
                     document.querySelectorAll('.score-value')[2].textContent = currentLevel;
                     updateGame();
                     speakText(`已切换到${this.textContent}级别`);
+                    playSound('click');
                 });
             });
             
@@ -1078,7 +1108,9 @@
             highContrastBtn.addEventListener('click', toggleHighContrast);
             tutorialBtn.addEventListener('click', function() {
                 document.getElementById('tutorial').style.display = 'flex';
+                playSound('click');
             });
+            soundEffectsBtn.addEventListener('click', toggleSoundEffects);
             
             // 教程按钮事件
             tutorialSkip.addEventListener('click', function() {
@@ -1132,6 +1164,7 @@
                 feedback.textContent = '很好！继续加油';
                 feedback.className = 'feedback info';
                 speakText('很好！继续加油');
+                playSound('click');
             }
         }
         
@@ -1152,10 +1185,12 @@
                 feedback.className = 'feedback success';
                 updateScore(100);
                 speakText('太棒了！回答正确！');
+                playSound('correct');
             } else {
                 feedback.textContent = '再试一次，你可以的！';
                 feedback.className = 'feedback error';
                 speakText('再试一次，你可以的！');
+                playSound('error');
             }
         }
         
@@ -1342,7 +1377,7 @@
         
         // 文字朗读功能
         function speakText(text) {
-            if ('speechSynthesis' in window) {
+            if ('speechSynthesis' in window && textToSpeechEnabled) {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'zh-CN';
                 utterance.rate = 0.9;
@@ -1351,13 +1386,88 @@
         }
         
         function toggleTextToSpeech() {
-            speakText('文字朗读功能已启用');
+            textToSpeechEnabled = !textToSpeechEnabled;
+            const btn = document.getElementById('text-to-speech-btn');
+            if (textToSpeechEnabled) {
+                btn.classList.add('active');
+                speakText('文字朗读功能已启用');
+            } else {
+                btn.classList.remove('active');
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel();
+                }
+            }
         }
         
         function toggleHighContrast() {
-            document.body.classList.toggle('high-contrast');
-            const isHighContrast = document.body.classList.contains('high-contrast');
-            speakText(isHighContrast ? '高对比度模式已启用' : '高对比度模式已关闭');
+            highContrastEnabled = !highContrastEnabled;
+            const btn = document.getElementById('high-contrast-btn');
+            if (highContrastEnabled) {
+                document.body.classList.add('high-contrast');
+                btn.classList.add('active');
+                speakText('高对比度模式已启用');
+                playSound('click');
+            } else {
+                document.body.classList.remove('high-contrast');
+                btn.classList.remove('active');
+                speakText('高对比度模式已关闭');
+                playSound('click');
+            }
+        }
+        
+        function toggleSoundEffects() {
+            soundEffectsEnabled = !soundEffectsEnabled;
+            const btn = document.getElementById('sound-effects-btn');
+            if (soundEffectsEnabled) {
+                btn.classList.add('active');
+                playSound('click');
+                speakText('音效已启用');
+            } else {
+                btn.classList.remove('active');
+                speakText('音效已关闭');
+            }
+        }
+        
+        function playSound(type) {
+            if (soundEffectsEnabled) {
+                // 使用Web Audio API创建简单的音效
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                switch(type) {
+                    case 'correct':
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.3);
+                        break;
+                    case 'error':
+                        oscillator.type = 'sawtooth';
+                        oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.3);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.3);
+                        break;
+                    case 'click':
+                    default:
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.1);
+                        break;
+                }
+            }
         }
         
         document.addEventListener('DOMContentLoaded', init);

@@ -1391,10 +1391,16 @@
             if (textToSpeechEnabled) {
                 btn.classList.add('active');
                 speakText('文字朗读功能已启用');
+                if (soundEffectsEnabled) {
+                    playSound('click');
+                }
             } else {
                 btn.classList.remove('active');
                 if ('speechSynthesis' in window) {
                     speechSynthesis.cancel();
+                }
+                if (soundEffectsEnabled) {
+                    playSound('click');
                 }
             }
         }
@@ -1406,12 +1412,16 @@
                 document.body.classList.add('high-contrast');
                 btn.classList.add('active');
                 speakText('高对比度模式已启用');
-                playSound('click');
+                if (soundEffectsEnabled) {
+                    playSound('click');
+                }
             } else {
                 document.body.classList.remove('high-contrast');
                 btn.classList.remove('active');
                 speakText('高对比度模式已关闭');
-                playSound('click');
+                if (soundEffectsEnabled) {
+                    playSound('click');
+                }
             }
         }
         
@@ -1421,10 +1431,14 @@
             if (soundEffectsEnabled) {
                 btn.classList.add('active');
                 playSound('click');
-                speakText('音效已启用');
+                if (textToSpeechEnabled) {
+                    speakText('音效已启用');
+                }
             } else {
                 btn.classList.remove('active');
-                speakText('音效已关闭');
+                if (textToSpeechEnabled) {
+                    speakText('音效已关闭');
+                }
             }
         }
         

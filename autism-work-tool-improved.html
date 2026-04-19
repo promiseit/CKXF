@@ -12,11 +12,93 @@
         }
         
         body {
-            font-family: 'Segoe UI, Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #FFFFFF;
             color: #333333;
             line-height: 1.8;
             transition: all 0.3s ease;
+        }
+        
+        /* 高对比度模式 */
+        body.high-contrast {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+        
+        body.high-contrast .header {
+            background-color: #333333;
+            color: #FFFFFF;
+        }
+        
+        body.high-contrast .difficulty-selector,
+        body.high-contrast .game-area,
+        body.high-contrast .chat-area {
+            background-color: #222222;
+            color: #FFFFFF;
+        }
+        
+        body.high-contrast .blocks-container {
+            background-color: #111111;
+        }
+        
+        body.high-contrast .block {
+            background-color: #004080;
+            border-color: #0066CC;
+            color: #FFFFFF;
+        }
+        
+        body.high-contrast .target-area {
+            background-color: #004000;
+            border-color: #008000;
+        }
+        
+        body.high-contrast .feedback {
+            background-color: #333333;
+            color: #FFFFFF;
+        }
+        
+        body.high-contrast .score-area {
+            background-color: #333333;
+            color: #FFFFFF;
+        }
+        
+        body.high-contrast .score-value {
+            color: #FFD700;
+        }
+        
+        body.high-contrast .nav-btn {
+            background-color: #444444;
+            color: #FFFFFF;
+        }
+        
+        body.high-contrast .nav-btn.active {
+            background-color: #0066CC;
+        }
+        
+        body.high-contrast .difficulty-btn {
+            background-color: #444444;
+            color: #FFFFFF;
+            border-color: #666666;
+        }
+        
+        body.high-contrast .difficulty-btn.active {
+            background-color: #0066CC;
+            border-color: #0066CC;
+        }
+        
+        body.high-contrast .control-btn {
+            filter: brightness(0.8);
+        }
+        
+        body.high-contrast .option-btn {
+            background-color: #444444;
+            color: #FFFFFF;
+            border-color: #666666;
+        }
+        
+        body.high-contrast .option-btn:hover {
+            background-color: #555555;
+            border-color: #0066CC;
         }
         
         .container {
@@ -26,7 +108,7 @@
         }
         
         .header {
-            background-color: #FFF8DC;
+            background-color: #F8F9FA;
             padding: 30px;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -46,8 +128,39 @@
             color: #666666;
         }
         
+        /* 辅助功能按钮 */
+        .accessibility-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .accessibility-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 50%;
+            background-color: #E9ECEF;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .accessibility-btn:hover {
+            background-color: #DEE2E6;
+            transform: scale(1.1);
+        }
+        
         .difficulty-selector {
-            background-color: #F5F5F5;
+            background-color: #F8F9FA;
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 25px;
@@ -70,23 +183,31 @@
             padding: 12px 24px;
             font-size: 16px;
             font-weight: 600;
-            border: 2px solid #DDDDDD;
+            border: 2px solid #DEE2E6;
             border-radius: 25px;
             background-color: white;
             color: #333;
             cursor: pointer;
             transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
         .difficulty-btn:hover {
-            border-color: #FFA500;
-            transform: translateY(-2px);
+            border-color: #0066CC;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .difficulty-btn.active {
-            background-color: #FFA500;
+            background-color: #0066CC;
             color: white;
-            border-color: #FFA500;
+            border-color: #0066CC;
+        }
+        
+        .difficulty-btn:focus {
+            outline: 3px solid #0066CC;
+            outline-offset: 2px;
         }
         
         .nav {
@@ -103,27 +224,33 @@
             font-weight: 600;
             border: none;
             border-radius: 25px;
-            background-color: #FFE4B5;
+            background-color: #E9ECEF;
             color: #333333;
             cursor: pointer;
             transition: all 0.3s ease;
             min-width: 140px;
             outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
         .nav-btn:hover {
-            background-color: #FFD700;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background-color: #DEE2E6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .nav-btn.active {
-            background-color: #FFA500;
+            background-color: #0066CC;
             color: white;
         }
         
+        .nav-btn:focus {
+            outline: 3px solid #0066CC;
+            outline-offset: 2px;
+        }
+        
         .game-area {
-            background-color: #F5F5F5;
+            background-color: #F8F9FA;
             padding: 30px;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -161,24 +288,35 @@
         .block {
             padding: 18px 22px;
             border-radius: 10px;
-            background-color: #E6F3FF;
-            border: 2px solid #B3D9FF;
+            background-color: #E3F2FD;
+            border: 2px solid #BBDEFB;
             font-size: 18px;
             font-weight: 600;
             cursor: grab;
             min-width: 100px;
             text-align: center;
             transition: all 0.3s ease;
+            outline: none;
+            user-select: none;
         }
         
         .block:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .block:focus {
+            outline: 3px solid #0066CC;
+            outline-offset: 2px;
+        }
+        
+        .block:active {
+            cursor: grabbing;
         }
         
         .target-area {
-            background-color: #F0FFF0;
-            border: 2px dashed #90EE90;
+            background-color: #E8F5E9;
+            border: 2px dashed #C8E6C9;
             border-radius: 12px;
             padding: 25px;
             min-height: 120px;
@@ -186,6 +324,17 @@
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .target-area:focus {
+            outline: 3px solid #4CAF50;
+            outline-offset: 2px;
+        }
+        
+        .target-area.drag-over {
+            background-color: #C8E6C9;
+            border-style: solid;
         }
         
         .controls {
@@ -204,6 +353,8 @@
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .btn-primary {
@@ -221,6 +372,16 @@
             color: white;
         }
         
+        .control-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .control-btn:focus {
+            outline: 3px solid rgba(0,0,0,0.2);
+            outline-offset: 2px;
+        }
+        
         .feedback {
             text-align: center;
             margin-top: 20px;
@@ -229,11 +390,31 @@
             min-height: 35px;
             padding: 15px;
             border-radius: 10px;
-            background-color: #FFF8DC;
+            background-color: #F8F9FA;
+            transition: all 0.3s ease;
+            border: 1px solid #DEE2E6;
+        }
+        
+        .feedback.success {
+            background-color: #E8F5E9;
+            border-color: #C8E6C9;
+            color: #2E7D32;
+        }
+        
+        .feedback.error {
+            background-color: #FFEBEE;
+            border-color: #FFCDD2;
+            color: #C62828;
+        }
+        
+        .feedback.info {
+            background-color: #E3F2FD;
+            border-color: #BBDEFB;
+            color: #1565C0;
         }
         
         .score-area {
-            background-color: #FFF8DC;
+            background-color: #F8F9FA;
             padding: 25px;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -251,11 +432,11 @@
         .score-value {
             font-weight: 700;
             font-size: 20px;
-            color: #FF6347;
+            color: #1976D2;
         }
         
         .chat-area {
-            background-color: #F5F5F5;
+            background-color: #F8F9FA;
             padding: 25px;
             border-radius: 12px;
             margin-top: 30px;
@@ -265,9 +446,15 @@
             width: 100%;
             padding: 15px 20px;
             font-size: 17px;
-            border: 2px solid #DDDDDD;
+            border: 2px solid #DEE2E6;
             border-radius: 25px;
             margin-bottom: 15px;
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: #0066CC;
+            outline: 3px solid rgba(0, 102, 204, 0.2);
         }
         
         .chat-messages {
@@ -305,17 +492,33 @@
         .option-btn {
             padding: 15px 20px;
             font-size: 16px;
-            border: 2px solid #DDDDDD;
+            border: 2px solid #DEE2E6;
             border-radius: 10px;
             background-color: white;
             cursor: pointer;
             text-align: left;
             transition: all 0.3s ease;
+            outline: none;
         }
         
         .option-btn:hover {
-            border-color: #FFA500;
-            background-color: #FFF8DC;
+            border-color: #0066CC;
+            background-color: #E3F2FD;
+        }
+        
+        .option-btn:focus {
+            outline: 3px solid #0066CC;
+            outline-offset: 2px;
+        }
+        
+        .option-btn.correct {
+            background-color: #E8F5E9;
+            border-color: #4CAF50;
+        }
+        
+        .option-btn.incorrect {
+            background-color: #FFEBEE;
+            border-color: #F44336;
         }
         
         .explanation {
@@ -324,10 +527,136 @@
             background-color: #E8F5E9;
             border-radius: 10px;
             border-left: 4px solid #4CAF50;
+            transition: all 0.3s ease;
+        }
+        
+        .explanation.error {
+            background-color: #FFF3E0;
+            border-left-color: #FF9800;
+        }
+        
+        /* 引导教程 */
+        .tutorial {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .tutorial-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .tutorial h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .tutorial-step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #F8F9FA;
+            border-radius: 8px;
+        }
+        
+        .tutorial-step h3 {
+            margin-bottom: 10px;
+            color: #0066CC;
+        }
+        
+        .tutorial-controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* 字体大小控制 */
+        .font-size-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .font-size-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #E9ECEF;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .font-size-btn:hover {
+            background-color: #DEE2E6;
         }
     </style>
 </head>
 <body>
+    <!-- 辅助功能按钮 -->
+    <div class="accessibility-controls">
+        <button class="accessibility-btn" id="text-to-speech-btn" title="文字朗读">🔊</button>
+        <button class="accessibility-btn" id="high-contrast-btn" title="高对比度模式">◐</button>
+        <button class="accessibility-btn" id="tutorial-btn" title="使用教程">❓</button>
+    </div>
+    
+    <!-- 字体大小控制 -->
+    <div class="font-size-controls">
+        <button class="font-size-btn" id="font-decrease">A-</button>
+        <button class="font-size-btn" id="font-default">A</button>
+        <button class="font-size-btn" id="font-increase">A+</button>
+    </div>
+    
+    <!-- 引导教程 -->
+    <div class="tutorial" id="tutorial" style="display: none;">
+        <div class="tutorial-content">
+            <h2>使用教程</h2>
+            <div class="tutorial-step">
+                <h3>1. 选择难度级别</h3>
+                <p>根据你的职场经验选择合适的难度级别，从 L1（职场入门）到 L5（职场独立）。</p>
+            </div>
+            <div class="tutorial-step">
+                <h3>2. 选择练习模式</h3>
+                <p>有五种练习模式：职场文字、职场计算、职场英语、职场编程和社交应对。</p>
+            </div>
+            <div class="tutorial-step">
+                <h3>3. 进行练习</h3>
+                <p><strong>对于拖拽练习：</strong>将上方的积木拖放到下方的目标区域，排列成正确的顺序。</p>
+                <p><strong>对于社交场景：</strong>选择最合适的应对方式。</p>
+            </div>
+            <div class="tutorial-step">
+                <h3>4. 使用辅助功能</h3>
+                <p>右上角的按钮可以帮助你：</p>
+                <ul>
+                    <li>🔊 文字朗读</li>
+                    <li>◐ 高对比度模式</li>
+                    <li>❓ 查看教程</li>
+                </ul>
+                <p>左下角可以调整字体大小。</p>
+            </div>
+            <div class="tutorial-controls">
+                <button class="control-btn btn-secondary" id="tutorial-skip">跳过</button>
+                <button class="control-btn btn-primary" id="tutorial-start">开始练习</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="container">
         <div class="header">
             <h1>自闭症工作融合工具</h1>
@@ -374,7 +703,7 @@
                 <p>将打乱的文字重新排列成正确的职场句子</p>
             </div>
             <div class="blocks-container" id="blocks"></div>
-            <div class="target-area" id="target"></div>
+            <div class="target-area" id="target" tabindex="0"></div>
             <div class="feedback" id="feedback">请将积木拖放到下方区域</div>
             <div class="controls">
                 <button class="control-btn btn-primary" id="check-btn">检查答案</button>
@@ -403,6 +732,7 @@
         let draggedElement = null;
         let currentMode = 'text';
         let currentLevel = 'L1';
+        let fontSize = 16;
         
         const gameContent = {
             text: {
@@ -572,6 +902,14 @@
                         { text: '说："这没什么，本来就应该的。"', correct: false, explanation: '这样显得不够自信，也没有接受表扬的礼貌。' },
                         { text: '说："是啊，我也觉得自己很棒！"', correct: false, explanation: '这样显得有些自大，不够谦虚。' }
                     ]
+                },
+                {
+                    scenario: '同事借了你的笔，忘记归还。',
+                    options: [
+                        { text: '礼貌地说："你好，请问你看到我的笔了吗？我刚才在用。"', correct: true, explanation: '这样既提醒了同事，又不会让对方感到尴尬。' },
+                        { text: '直接从同事手中夺回笔', correct: false, explanation: '这样做会让同事感到不舒服，影响关系。' },
+                        { text: '什么都不说，自己再买一支', correct: false, explanation: '这样虽然避免了冲突，但问题没有解决，可能会再次发生。' }
+                    ]
                 }
             ],
             L2: [
@@ -581,6 +919,14 @@
                         { text: '如果有想法就说出来，如果没有就安静坐着', correct: true, explanation: '诚实表达自己的想法是好的，但如果没有想法也不需要勉强。' },
                         { text: '不管有没有想法都要发言', correct: false, explanation: '没有想法还硬要说会浪费大家的时间。' },
                         { text: '一直低头看手机', correct: false, explanation: '这样显得不尊重会议和其他人。' }
+                    ]
+                },
+                {
+                    scenario: '你需要请假一天去看医生。',
+                    options: [
+                        { text: '提前一天向主管申请："明天我需要请假去看医生，可以吗？"', correct: true, explanation: '提前申请是职场基本礼仪，给主管足够的时间安排工作。' },
+                        { text: '当天早上才告诉主管', correct: false, explanation: '这样会给主管和团队带来不便，影响工作安排。' },
+                        { text: '直接不来，事后再说', correct: false, explanation: '这是不负责任的行为，会影响你的职业形象。' }
                     ]
                 }
             ],
@@ -592,6 +938,14 @@
                         { text: '直接拒绝说："不行，我太忙了。"', correct: false, explanation: '这样太直接了，可能会让同事感到不舒服。' },
                         { text: '勉强答应，但心里很不情愿', correct: false, explanation: '这样自己会让自己不开心，工作也可能帮不好。' }
                     ]
+                },
+                {
+                    scenario: '你发现同事在工作中犯了一个错误。',
+                    options: [
+                        { text: '私下里礼貌地提醒同事："我注意到这个地方可能有点问题，你要不要检查一下？"', correct: true, explanation: '私下提醒既帮助了同事，又维护了对方的面子。' },
+                        { text: '在团队会议上当众指出', correct: false, explanation: '这样会让同事感到尴尬，可能影响你们的关系。' },
+                        { text: '假装没看见', correct: false, explanation: '这样可能会导致更大的问题，不是负责任的做法。' }
+                    ]
                 }
             ],
             L4: [
@@ -602,6 +956,14 @@
                         { text: '直接说："你说得不对，应该是..."', correct: false, explanation: '这样太直接了，可能会让对方感到被攻击。' },
                         { text: '不说出来，但心里不同意', correct: false, explanation: '这样不利于团队沟通，问题也得不到解决。' }
                     ]
+                },
+                {
+                    scenario: '客户对你的工作提出了批评。',
+                    options: [
+                        { text: '认真倾听，然后说："感谢您的反馈，我会努力改进。"', correct: true, explanation: '认真对待客户反馈，表达改进的意愿，有助于维护客户关系。' },
+                        { text: '辩解："这不是我的错，是..."', correct: false, explanation: '辩解会让客户感到你在推卸责任，可能加剧矛盾。' },
+                        { text: '沉默不语', correct: false, explanation: '这样会让客户觉得你不重视他们的反馈。' }
+                    ]
                 }
             ],
             L5: [
@@ -611,6 +973,14 @@
                         { text: '及时向主管汇报，并说明情况和可能的影响', correct: true, explanation: '及时沟通问题是负责任的表现，可以让团队一起想办法解决。' },
                         { text: '自己悄悄解决，不说出来', correct: false, explanation: '这样风险太大，如果解决不好会造成更大的问题。' },
                         { text: '假装没看见', correct: false, explanation: '这是不负责任的表现，可能会造成严重后果。' }
+                    ]
+                },
+                {
+                    scenario: '你需要与其他部门合作完成一个项目，但对方配合度不高。',
+                    options: [
+                        { text: '主动沟通："我们需要一起完成这个项目，有什么困难可以一起解决。"', correct: true, explanation: '主动沟通可以了解对方的困难，共同寻找解决方案。' },
+                        { text: '向主管投诉对方不配合', correct: false, explanation: '直接投诉可能会激化矛盾，不是最佳解决方式。' },
+                        { text: '自己一个人完成所有工作', correct: false, explanation: '这样会增加自己的负担，也不利于团队合作。' }
                     ]
                 }
             ]
@@ -624,6 +994,14 @@
             initEventListeners();
             updateGame();
             loadSocialScenarios();
+            showTutorial();
+        }
+        
+        function showTutorial() {
+            const tutorialShown = localStorage.getItem('tutorialShown');
+            if (!tutorialShown) {
+                document.getElementById('tutorial').style.display = 'flex';
+            }
         }
         
         function loadSavedScore() {
@@ -647,24 +1025,43 @@
             const navBtns = document.querySelectorAll('.nav-btn');
             const difficultyBtns = document.querySelectorAll('.difficulty-btn');
             const nextScenarioBtn = document.getElementById('next-scenario');
+            const textToSpeechBtn = document.getElementById('text-to-speech-btn');
+            const highContrastBtn = document.getElementById('high-contrast-btn');
+            const tutorialBtn = document.getElementById('tutorial-btn');
+            const tutorialSkip = document.getElementById('tutorial-skip');
+            const tutorialStart = document.getElementById('tutorial-start');
+            const fontDecrease = document.getElementById('font-decrease');
+            const fontDefault = document.getElementById('font-default');
+            const fontIncrease = document.getElementById('font-increase');
             
+            // 目标区域事件
             target.addEventListener('dragover', handleDragOver);
             target.addEventListener('drop', handleDrop);
+            target.addEventListener('focus', function() {
+                this.style.outline = '3px solid #4CAF50';
+            });
+            target.addEventListener('blur', function() {
+                this.style.outline = 'none';
+            });
             
+            // 按钮事件
             checkBtn.addEventListener('click', checkAnswer);
             hintBtn.addEventListener('click', showHint);
             resetBtn.addEventListener('click', resetGame);
             nextScenarioBtn.addEventListener('click', nextScenario);
             
+            // 导航按钮事件
             navBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     navBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentMode = this.getAttribute('data-mode');
                     updateGame();
+                    speakText(`已切换到${this.textContent}模式`);
                 });
             });
             
+            // 难度按钮事件
             difficultyBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     difficultyBtns.forEach(b => b.classList.remove('active'));
@@ -672,20 +1069,69 @@
                     currentLevel = this.getAttribute('data-level');
                     document.querySelectorAll('.score-value')[2].textContent = currentLevel;
                     updateGame();
+                    speakText(`已切换到${this.textContent}级别`);
                 });
+            });
+            
+            // 辅助功能按钮事件
+            textToSpeechBtn.addEventListener('click', toggleTextToSpeech);
+            highContrastBtn.addEventListener('click', toggleHighContrast);
+            tutorialBtn.addEventListener('click', function() {
+                document.getElementById('tutorial').style.display = 'flex';
+            });
+            
+            // 教程按钮事件
+            tutorialSkip.addEventListener('click', function() {
+                document.getElementById('tutorial').style.display = 'none';
+                localStorage.setItem('tutorialShown', 'true');
+            });
+            
+            tutorialStart.addEventListener('click', function() {
+                document.getElementById('tutorial').style.display = 'none';
+                localStorage.setItem('tutorialShown', 'true');
+                speakText('教程已完成，开始练习吧！');
+            });
+            
+            // 字体大小控制
+            fontDecrease.addEventListener('click', function() {
+                if (fontSize > 12) {
+                    fontSize -= 2;
+                    document.body.style.fontSize = fontSize + 'px';
+                    speakText('字体已减小');
+                }
+            });
+            
+            fontDefault.addEventListener('click', function() {
+                fontSize = 16;
+                document.body.style.fontSize = fontSize + 'px';
+                speakText('字体已恢复默认大小');
+            });
+            
+            fontIncrease.addEventListener('click', function() {
+                if (fontSize < 24) {
+                    fontSize += 2;
+                    document.body.style.fontSize = fontSize + 'px';
+                    speakText('字体已增大');
+                }
             });
         }
         
         function handleDragOver(e) {
             e.preventDefault();
+            const target = document.getElementById('target');
+            target.classList.add('drag-over');
         }
         
         function handleDrop(e) {
             e.preventDefault();
+            const target = document.getElementById('target');
+            target.classList.remove('drag-over');
             if (draggedElement) {
-                this.appendChild(draggedElement);
-                document.getElementById('feedback').textContent = '很好！继续加油';
-                document.getElementById('feedback').style.color = '#333333';
+                target.appendChild(draggedElement);
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = '很好！继续加油';
+                feedback.className = 'feedback info';
+                speakText('很好！继续加油');
             }
         }
         
@@ -703,11 +1149,13 @@
             
             if (JSON.stringify(userOrder) === JSON.stringify(correctOrder)) {
                 feedback.textContent = '太棒了！回答正确！';
-                feedback.style.color = '#4CAF50';
+                feedback.className = 'feedback success';
                 updateScore(100);
+                speakText('太棒了！回答正确！');
             } else {
                 feedback.textContent = '再试一次，你可以的！';
-                feedback.style.color = '#FF9800';
+                feedback.className = 'feedback error';
+                speakText('再试一次，你可以的！');
             }
         }
         
@@ -715,7 +1163,8 @@
             const feedback = document.getElementById('feedback');
             const correctSentence = gameContent[currentMode][currentLevel].correctSentence;
             feedback.textContent = '提示：正确的句子是「' + correctSentence + '」';
-            feedback.style.color = '#2196F3';
+            feedback.className = 'feedback info';
+            speakText('提示：正确的句子是「' + correctSentence + '」');
         }
         
         function resetGame() {
@@ -729,7 +1178,7 @@
             
             const feedback = document.getElementById('feedback');
             feedback.textContent = '请将积木拖放到下方区域';
-            feedback.style.color = '#333333';
+            feedback.className = 'feedback';
         }
         
         function updateGame() {
@@ -759,6 +1208,7 @@
             blocksContainer.innerHTML = '';
             document.getElementById('target').innerHTML = '';
             document.getElementById('feedback').textContent = '请将积木拖放到下方区域';
+            document.getElementById('feedback').className = 'feedback';
             
             createBlocks(content.items);
         }
@@ -771,6 +1221,7 @@
                 const block = document.createElement('div');
                 block.className = 'block';
                 block.draggable = true;
+                block.tabIndex = 0;
                 block.textContent = item;
                 
                 block.addEventListener('dragstart', function(e) {
@@ -781,6 +1232,18 @@
                 block.addEventListener('dragend', function() {
                     this.style.opacity = '1';
                     draggedElement = null;
+                });
+                
+                // 键盘支持
+                block.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const target = document.getElementById('target');
+                        target.appendChild(this);
+                        const feedback = document.getElementById('feedback');
+                        feedback.textContent = '很好！继续加油';
+                        feedback.className = 'feedback info';
+                    }
                 });
                 
                 blocksContainer.appendChild(block);
@@ -795,7 +1258,9 @@
         
         function displayScenario() {
             const scenario = currentScenarios[currentScenarioIndex];
-            document.getElementById('scenario-text').textContent = scenario.scenario;
+            const scenarioText = document.getElementById('scenario-text');
+            scenarioText.textContent = scenario.scenario;
+            speakText(scenario.scenario);
             
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
@@ -804,7 +1269,15 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.textContent = option.text;
+                btn.tabIndex = 0;
                 btn.addEventListener('click', () => checkSocialAnswer(option, index));
+                // 键盘支持
+                btn.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        checkSocialAnswer(option, index);
+                    }
+                });
                 optionsContainer.appendChild(btn);
             });
             
@@ -816,8 +1289,7 @@
             options.forEach((btn, i) => {
                 btn.disabled = true;
                 if (i === index) {
-                    btn.style.backgroundColor = option.correct ? '#E8F5E9' : '#FFEBEE';
-                    btn.style.borderColor = option.correct ? '#4CAF50' : '#F44336';
+                    btn.className = `option-btn ${option.correct ? 'correct' : 'incorrect'}`;
                 }
             });
             
@@ -826,12 +1298,14 @@
                 <strong>${option.correct ? '正确！' : '再想想...'}</strong><br><br>
                 ${option.explanation}
             `;
+            explanation.className = `explanation ${option.correct ? '' : 'error'}`;
             explanation.style.display = 'block';
-            explanation.style.backgroundColor = option.correct ? '#E8F5E9' : '#FFF3E0';
-            explanation.style.borderLeftColor = option.correct ? '#4CAF50' : '#FF9800';
             
             if (option.correct) {
                 updateScore(100);
+                speakText('正确！' + option.explanation);
+            } else {
+                speakText('再想想...' + option.explanation);
             }
         }
         
@@ -864,6 +1338,26 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
+        }
+        
+        // 文字朗读功能
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function toggleTextToSpeech() {
+            speakText('文字朗读功能已启用');
+        }
+        
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+            const isHighContrast = document.body.classList.contains('high-contrast');
+            speakText(isHighContrast ? '高对比度模式已启用' : '高对比度模式已关闭');
         }
         
         document.addEventListener('DOMContentLoaded', init);

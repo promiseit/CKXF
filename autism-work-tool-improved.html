@@ -787,6 +787,7 @@
             <button class="nav-btn" data-mode="coding">职场编程</button>
             <button class="nav-btn" data-mode="social">社交应对</button>
             <button class="nav-btn" data-mode="shop">积分商城</button>
+            <button class="nav-btn" data-mode="my-items">我的商品</button>
         </div>
         
         <div class="score-area">
@@ -846,6 +847,16 @@
                 <button class="control-btn btn-secondary" id="refresh-shop">刷新商品</button>
             </div>
         </div>
+        
+        <div class="chat-area" id="my-items-area" style="display: none;">
+            <div class="game-header">
+                <h2>我的商品</h2>
+                <p>查看和领取已购买的商品</p>
+            </div>
+            <div id="my-items-content">
+                <div class="shop-items" id="my-items-container"></div>
+            </div>
+        </div>
     </div>
     
     <script>
@@ -856,6 +867,9 @@
         let textToSpeechEnabled = true;
         let highContrastEnabled = false;
         let soundEffectsEnabled = true;
+        
+        // 存储已购买的商品
+        let purchasedItems = [];
         
         const gameContent = {
             text: {
@@ -1160,6 +1174,7 @@
         
         function init() {
             loadSavedScore();
+            loadPurchasedItems();
             initEventListeners();
             updateGame();
             loadSocialScenarios();
@@ -1183,6 +1198,13 @@
             
             if (savedTodayScore) {
                 document.querySelectorAll('.score-value')[1].textContent = savedTodayScore;
+            }
+        }
+        
+        function loadPurchasedItems() {
+            const savedPurchasedItems = localStorage.getItem('purchasedItems');
+            if (savedPurchasedItems) {
+                purchasedItems = JSON.parse(savedPurchasedItems);
             }
         }
         
@@ -1384,21 +1406,31 @@
             const gameArea = document.querySelector('.game-area');
             const socialArea = document.getElementById('social-area');
             const shopArea = document.getElementById('shop-area');
+            const myItemsArea = document.getElementById('my-items-area');
             
             if (currentMode === 'social') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'block';
                 shopArea.style.display = 'none';
+                myItemsArea.style.display = 'none';
                 loadSocialScenarios();
             } else if (currentMode === 'shop') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'block';
+                myItemsArea.style.display = 'none';
                 loadShopContent();
+            } else if (currentMode === 'my-items') {
+                gameArea.style.display = 'none';
+                socialArea.style.display = 'none';
+                shopArea.style.display = 'none';
+                myItemsArea.style.display = 'block';
+                loadMyItemsContent();
             } else {
                 gameArea.style.display = 'block';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'none';
+                myItemsArea.style.display = 'none';
                 loadGameContent();
             }
         }
@@ -1554,6 +1586,84 @@
             });
         }
         
+        function loadMyItemsContent() {
+            const myItemsContainer = document.getElementById('my-items-container');
+            myItemsContainer.innerHTML = '';
+            
+            if (purchasedItems.length === 0) {
+                myItemsContainer.innerHTML = `
+                    <div class="shop-item" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <div style="font-size: 64px; margin-bottom: 20px;">📦</div>
+                        <h3>还没有商品</h3>
+                        <p>您还没有购买任何商品</p>
+                        <p style="color: #888;">去积分商城兑换一些商品吧！</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            purchasedItems.forEach(purchasedItem => {
+                const item = shopItems.find(i => i.id === purchasedItem.itemId);
+                if (!item) return;
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'shop-item';
+                itemElement.innerHTML = `
+                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${item.image}</div>
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                    <div style="margin-bottom: 10px; color: #666;">
+                        购买时间：${new Date(purchasedItem.purchasedAt).toLocaleString()}
+                    </div>
+                    <button class="control-btn ${purchasedItem.claimed ? 'btn-secondary' : 'btn-primary'}" data-purchase-id="${purchasedItem.purchaseId}" ${purchasedItem.claimed ? 'disabled' : ''}>
+                        ${purchasedItem.claimed ? '已领取' : '领取商品'}
+                    </button>
+                `;
+                myItemsContainer.appendChild(itemElement);
+            });
+            
+            // 添加领取事件监听
+            document.querySelectorAll('#my-items-container button').forEach(btn => {
+                if (!btn.disabled) {
+                    btn.addEventListener('click', function() {
+                        const purchaseId = this.getAttribute('data-purchase-id');
+                        claimItem(purchaseId);
+                    });
+                }
+            });
+        }
+        
+        function claimItem(purchaseId) {
+            const purchasedItem = purchasedItems.find(item => item.purchaseId === purchaseId);
+            if (!purchasedItem || purchasedItem.claimed) return;
+            
+            purchasedItem.claimed = true;
+            localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems));
+            
+            // 显示领取成功提示
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback success';
+            feedback.textContent = '商品领取成功！';
+            feedback.style.position = 'fixed';
+            feedback.style.top = '20px';
+            feedback.style.left = '50%';
+            feedback.style.transform = 'translateX(-50%)';
+            feedback.style.zIndex = '3000';
+            feedback.style.padding = '15px 30px';
+            document.body.appendChild(feedback);
+            
+            // 播放成功音效
+            playSound('correct');
+            speakText('商品领取成功！');
+            
+            // 3秒后移除提示
+            setTimeout(() => {
+                feedback.remove();
+                // 重新加载我的商品内容
+                loadMyItemsContent();
+            }, 3000);
+        }
+        
         function buyItem(itemId) {
             const item = shopItems.find(item => item.id === itemId);
             if (!item) return;
@@ -1566,10 +1676,21 @@
                 scoreElement.textContent = currentScore;
                 localStorage.setItem('score', currentScore.toString());
                 
+                // 保存购买记录
+                const purchaseId = Date.now().toString();
+                const purchasedItem = {
+                    purchaseId: purchaseId,
+                    itemId: itemId,
+                    purchasedAt: Date.now(),
+                    claimed: false
+                };
+                purchasedItems.push(purchasedItem);
+                localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems));
+                
                 // 显示购买成功提示
                 const feedback = document.createElement('div');
                 feedback.className = 'feedback success';
-                feedback.textContent = `成功兑换 ${item.name}！`;
+                feedback.textContent = `成功兑换 ${item.name}！去我的商品领取吧！`;
                 feedback.style.position = 'fixed';
                 feedback.style.top = '20px';
                 feedback.style.left = '50%';
@@ -1580,7 +1701,7 @@
                 
                 // 播放成功音效
                 playSound('correct');
-                speakText(`成功兑换 ${item.name}！`);
+                speakText(`成功兑换 ${item.name}！去我的商品领取吧！`);
                 
                 // 3秒后移除提示
                 setTimeout(() => {

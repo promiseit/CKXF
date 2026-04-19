@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自闭症工作融合工具 - 改进版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI, Arial, sans-serif;
+            background-color: #FFFFFF;
+            color: #333333;
+            line-height: 1.8;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: #FFF8DC;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #333333;
+        }
+        
+        .header p {
+            font-size: 18px;
+            color: #666666;
+        }
+        
+        .difficulty-selector {
+            background-color: #F5F5F5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .difficulty-label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .difficulty-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid #DDDDDD;
+            border-radius: 25px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .difficulty-btn:hover {
+            border-color: #FFA500;
+            transform: translateY(-2px);
+        }
+        
+        .difficulty-btn.active {
+            background-color: #FFA500;
+            color: white;
+            border-color: #FFA500;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 25px;
+            background-color: #FFE4B5;
+            color: #333333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+            outline: none;
+        }
+        
+        .nav-btn:hover {
+            background-color: #FFD700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .nav-btn.active {
+            background-color: #FFA500;
+            color: white;
+        }
+        
+        .game-area {
+            background-color: #F5F5F5;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .game-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .game-header p {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .blocks-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            min-height: 120px;
+            padding: 25px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
+        }
+        
+        .block {
+            padding: 18px 22px;
+            border-radius: 10px;
+            background-color: #E6F3FF;
+            border: 2px solid #B3D9FF;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: grab;
+            min-width: 100px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .target-area {
+            background-color: #F0FFF0;
+            border: 2px dashed #90EE90;
+            border-radius: 12px;
+            padding: 25px;
+            min-height: 120px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 14px 28px;
+            font-size: 17px;
+            font-weight: 600;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: #FF9800;
+            color: white;
+        }
+        
+        .feedback {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 19px;
+            font-weight: 600;
+            min-height: 35px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #FFF8DC;
+        }
+        
+        .score-area {
+            background-color: #FFF8DC;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+        
+        .score-value {
+            font-weight: 700;
+            font-size: 20px;
+            color: #FF6347;
+        }
+        
+        .chat-area {
+            background-color: #F5F5F5;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 17px;
+            border: 2px solid #DDDDDD;
+            border-radius: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .chat-messages {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 150px;
+            margin-bottom: 15px;
+        }
+        
+        .message {
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            border-radius: 15px;
+            max-width: 85%;
+        }
+        
+        .user-message {
+            background-color: #E3F2FD;
+            margin-left: auto;
+        }
+        
+        .ai-message {
+            background-color: #F1F1F1;
+            margin-right: auto;
+        }
+        
+        .scenario-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .option-btn {
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #DDDDDD;
+            border-radius: 10px;
+            background-color: white;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn:hover {
+            border-color: #FFA500;
+            background-color: #FFF8DC;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #E8F5E9;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>自闭症工作融合工具</h1>
+            <p>提升职场能力，从真实场景开始</p>
+        </div>
+        
+        <div class="difficulty-selector">
+            <div class="difficulty-label">选择难度级别：</div>
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn active" data-level="L1">L1 - 职场入门</button>
+                <button class="difficulty-btn" data-level="L2">L2 - 职场基础</button>
+                <button class="difficulty-btn" data-level="L3">L3 - 职场进阶</button>
+                <button class="difficulty-btn" data-level="L4">L4 - 职场熟练</button>
+                <button class="difficulty-btn" data-level="L5">L5 - 职场独立</button>
+            </div>
+        </div>
+        
+        <div class="nav">
+            <button class="nav-btn active" data-mode="text">职场文字</button>
+            <button class="nav-btn" data-mode="number">职场计算</button>
+            <button class="nav-btn" data-mode="english">职场英语</button>
+            <button class="nav-btn" data-mode="coding">职场编程</button>
+            <button class="nav-btn" data-mode="social">社交应对</button>
+        </div>
+        
+        <div class="score-area">
+            <div class="score-item">
+                <span>当前积分</span>
+                <span class="score-value">500</span>
+            </div>
+            <div class="score-item">
+                <span>今日获得</span>
+                <span class="score-value">0</span>
+            </div>
+            <div class="score-item">
+                <span>当前等级</span>
+                <span class="score-value">L1</span>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="game-header">
+                <h2>职场文字排序</h2>
+                <p>将打乱的文字重新排列成正确的职场句子</p>
+            </div>
+            <div class="blocks-container" id="blocks"></div>
+            <div class="target-area" id="target"></div>
+            <div class="feedback" id="feedback">请将积木拖放到下方区域</div>
+            <div class="controls">
+                <button class="control-btn btn-primary" id="check-btn">检查答案</button>
+                <button class="control-btn btn-secondary" id="hint-btn">提示</button>
+                <button class="control-btn btn-warning" id="reset-btn">重置</button>
+            </div>
+        </div>
+        
+        <div class="chat-area" id="social-area" style="display: none;">
+            <div class="game-header">
+                <h2>社交场景应对</h2>
+                <p>选择最合适的应对方式</p>
+            </div>
+            <div id="scenario-content">
+                <div class="message ai-message" id="scenario-text">同事向你打招呼："早上好！今天过得怎么样？"</div>
+                <div class="scenario-options" id="options-container"></div>
+                <div class="explanation" id="explanation" style="display: none;"></div>
+            </div>
+            <div class="controls">
+                <button class="control-btn btn-warning" id="next-scenario">下一个场景</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let draggedElement = null;
+        let currentMode = 'text';
+        let currentLevel = 'L1';
+        
+        const gameContent = {
+            text: {
+                L1: {
+                    title: '职场文字排序',
+                    description: '将打乱的文字重新排列成正确的职场句子',
+                    items: ['请', '在', '下午', '三点', '前', '完成', '这份', '报告', '。'],
+                    correctOrder: ['请', '在', '下午', '三点', '前', '完成', '这份', '报告', '。'],
+                    correctSentence: '请在下午三点前完成这份报告。'
+                },
+                L2: {
+                    title: '职场文字排序',
+                    description: '将打乱的文字重新排列成正确的邮件回复',
+                    items: ['好的', '，', '我会', '在', '明天', '之前', '完成', '这项', '工作', '。'],
+                    correctOrder: ['好的', '，', '我会', '在', '明天', '之前', '完成', '这项', '工作', '。'],
+                    correctSentence: '好的，我会在明天之前完成这项工作。'
+                },
+                L3: {
+                    title: '职场文字排序',
+                    description: '将打乱的文字重新排列成工作汇报',
+                    items: ['本周', '我', '完成', '了', '三个', '项目', '，', '下周', '计划', '开始', '第四个', '。'],
+                    correctOrder: ['本周', '我', '完成', '了', '三个', '项目', '，', '下周', '计划', '开始', '第四个', '。'],
+                    correctSentence: '本周我完成了三个项目，下周计划开始第四个。'
+                },
+                L4: {
+                    title: '职场文字排序',
+                    description: '将打乱的文字重新排列成职场沟通句子',
+                    items: ['请问', '这份', '文件', '需要', '复印', '几份', '？', '我', '现在', '就', '去', '处理', '。'],
+                    correctOrder: ['请问', '这份', '文件', '需要', '复印', '几份', '？', '我', '现在', '就', '去', '处理', '。'],
+                    correctSentence: '请问这份文件需要复印几份？我现在就去处理。'
+                },
+                L5: {
+                    title: '职场文字排序',
+                    description: '将打乱的文字重新排列成复杂工作安排',
+                    items: ['根据', '项目', '进度', '，', '我们', '需要', '在', '下周五', '之前', '完成', '第一', '阶段', '。'],
+                    correctOrder: ['根据', '项目', '进度', '，', '我们', '需要', '在', '下周五', '之前', '完成', '第一', '阶段', '。'],
+                    correctSentence: '根据项目进度，我们需要在下周五之前完成第一阶段。'
+                }
+            },
+            number: {
+                L1: {
+                    title: '职场数字计算',
+                    description: '将打乱的数字和符号重新排列成正确的职场计算',
+                    items: ['12', '个', '员工', '×', '50', '元', '午餐', '午餐费', '=', '600', '元'],
+                    correctOrder: ['12', '个', '员工', '×', '50', '元', '午餐', '午餐费', '=', '600', '元'],
+                    correctSentence: '12个员工×50元午餐费=600元'
+                },
+                L2: {
+                    title: '职场数字计算',
+                    description: '将打乱的数字和符号重新排列成时间管理计算',
+                    items: ['上午', '9', '点', '到', '下午', '5', '点', '，', '扣除', '1', '小时', '午休', '，', '共', '工作', '7', '小时'],
+                    correctOrder: ['上午', '9', '点', '到', '下午', '5', '点', '，', '扣除', '1', '小时', '午休', '，', '共', '工作', '7', '小时'],
+                    correctSentence: '上午9点到下午5点，扣除1小时午休，共工作7小时'
+                },
+                L3: {
+                    title: '职场数字计算',
+                    description: '将打乱的数字和符号重新排列成财务计算',
+                    items: ['产品', '单价', '25', '元', '×', '销售', '数量', '120', '个', '=', '总', '销售额', '3000', '元'],
+                    correctOrder: ['产品', '单价', '25', '元', '×', '销售', '数量', '120', '个', '=', '总', '销售额', '3000', '元'],
+                    correctSentence: '产品单价25元×销售数量120个=总销售额3000元'
+                },
+                L4: {
+                    title: '职场数字计算',
+                    description: '将打乱的数字和符号重新排列成任务分配计算',
+                    items: ['共有', '50', '份', '文件', '需要', '整理', '，', '分给', '5', '个', '同事', '，', '每人', '10', '份'],
+                    correctOrder: ['共有', '50', '份', '文件', '需要', '整理', '，', '分给', '5', '个', '同事', '，', '每人', '10', '份'],
+                    correctSentence: '共有50份文件需要整理，分给5个同事，每人10份'
+                },
+                L5: {
+                    title: '职场数字计算',
+                    description: '将打乱的数字和符号重新排列成综合职场计算',
+                    items: ['本月', '任务', '：', '完成', '4', '个', '项目', '，', '已', '完成', '2', '个', '，', '还', '剩', '50%'],
+                    correctOrder: ['本月', '任务', '：', '完成', '4', '个', '项目', '，', '已', '完成', '2', '个', '，', '还', '剩', '50%'],
+                    correctSentence: '本月任务：完成4个项目，已完成2个，还剩50%'
+                }
+            },
+            english: {
+                L1: {
+                    title: '职场英语拼接',
+                    description: '将打乱的英文单词重新排列成正确的职场句子',
+                    items: ['Good', 'morning', ',', 'how', 'can', 'I', 'help', 'you', '?'],
+                    correctOrder: ['Good', 'morning', ',', 'how', 'can', 'I', 'help', 'you', '?'],
+                    correctSentence: 'Good morning, how can I help you?'
+                },
+                L2: {
+                    title: '职场英语拼接',
+                    description: '将打乱的英文单词重新排列成工作沟通句子',
+                    items: ['I', 'will', 'finish', 'this', 'task', 'by', 'tomorrow', '.'],
+                    correctOrder: ['I', 'will', 'finish', 'this', 'task', 'by', 'tomorrow', '.'],
+                    correctSentence: 'I will finish this task by tomorrow.'
+                },
+                L3: {
+                    title: '职场英语拼接',
+                    description: '将打乱的英文单词重新排列成邮件常用语',
+                    items: ['Could', 'you', 'please', 'send', 'me', 'the', 'latest', 'report', '?'],
+                    correctOrder: ['Could', 'you', 'please', 'send', 'me', 'the', 'latest', 'report', '?'],
+                    correctSentence: 'Could you please send me the latest report?'
+                },
+                L4: {
+                    title: '职场英语拼接',
+                    description: '将打乱的英文单词重新排列成工作汇报',
+                    items: ['This', 'week', ',', 'I', 'completed', 'three', 'projects', 'and', 'started', 'the', 'fourth', 'one', '.'],
+                    correctOrder: ['This', 'week', ',', 'I', 'completed', 'three', 'projects', 'and', 'started', 'the', 'fourth', 'one', '.'],
+                    correctSentence: 'This week, I completed three projects and started the fourth one.'
+                },
+                L5: {
+                    title: '职场英语拼接',
+                    description: '将打乱的英文单词重新排列成商务英语句子',
+                    items: ['According', 'to', 'the', 'project', 'timeline', ',', 'we', 'need', 'to', 'finish', 'by', 'Friday', '.'],
+                    correctOrder: ['According', 'to', 'the', 'project', 'timeline', ',', 'we', 'need', 'to', 'finish', 'by', 'Friday', '.'],
+                    correctSentence: 'According to the project timeline, we need to finish by Friday.'
+                }
+            },
+            coding: {
+                L1: {
+                    title: '职场编程练习',
+                    description: '将打乱的代码片段重新排列成打印每日任务的脚本',
+                    items: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
+                    correctOrder: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
+                    correctSentence: 'tasks = ["整理文件", "回复邮件", "准备会议"] for task in tasks: print(task)'
+                },
+                L2: {
+                    title: '职场编程练习',
+                    description: '将打乱的代码片段重新排列成计算销售数据的脚本',
+                    items: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
+                    correctOrder: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
+                    correctSentence: 'sales = [100, 150, 200, 180] total = sum(sales) print(f"总销售额:", total)'
+                },
+                L3: {
+                    title: '职场编程练习',
+                    description: '将打乱的代码片段重新排列成检查文件的脚本',
+                    items: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
+                    correctOrder: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
+                    correctSentence: 'import os documents = ["report.docx", "data.xlsx"] if os.path.exists(doc): print(f"已找到")'
+                },
+                L4: {
+                    title: '职场编程练习',
+                    description: '将打乱的代码片段重新排列成发送提醒的脚本',
+                    items: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
+                    correctOrder: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
+                    correctSentence: 'from datetime import datetime if current_time.hour == 17: print("下班前请检查任务！")'
+                },
+                L5: {
+                    title: '职场编程练习',
+                    description: '将打乱的代码片段重新排列成项目进度追踪脚本',
+                    items: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
+                    correctOrder: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
+                    correctSentence: 'project_progress = {"phase1": 100, "phase2": 75} for phase, progress in project_progress.items(): print(f"{phase}:", progress)'
+                }
+            }
+        };
+        
+        const socialScenarios = {
+            L1: [
+                {
+                    scenario: '同事向你打招呼："早上好！今天过得怎么样？"',
+                    options: [
+                        { text: '点头微笑说："早上好！我挺好的，谢谢。"', correct: true, explanation: '这是一个友好且恰当的回应，既回答了问题又保持了礼貌。' },
+                        { text: '不理他，直接走开', correct: false, explanation: '这样会让同事感到被忽视，不利于建立良好的工作关系。' },
+                        { text: '说："关你什么事？"', correct: false, explanation: '这样回答太粗鲁了，会伤害同事的感情。' }
+                    ]
+                },
+                {
+                    scenario: '主管对你说："辛苦了，今天的工作做得不错！"',
+                    options: [
+                        { text: '说："谢谢！我会继续努力的。"', correct: true, explanation: '这是一个谦虚且积极的回应，表达了感谢和上进心。' },
+                        { text: '说："这没什么，本来就应该的。"', correct: false, explanation: '这样显得不够自信，也没有接受表扬的礼貌。' },
+                        { text: '说："是啊，我也觉得自己很棒！"', correct: false, explanation: '这样显得有些自大，不够谦虚。' }
+                    ]
+                }
+            ],
+            L2: [
+                {
+                    scenario: '会议中，主管问："有人对这个方案有什么想法吗？"',
+                    options: [
+                        { text: '如果有想法就说出来，如果没有就安静坐着', correct: true, explanation: '诚实表达自己的想法是好的，但如果没有想法也不需要勉强。' },
+                        { text: '不管有没有想法都要发言', correct: false, explanation: '没有想法还硬要说会浪费大家的时间。' },
+                        { text: '一直低头看手机', correct: false, explanation: '这样显得不尊重会议和其他人。' }
+                    ]
+                }
+            ],
+            L3: [
+                {
+                    scenario: '同事请你帮忙，但你手头工作很忙。',
+                    options: [
+                        { text: '说："我现在手头有点忙，等我20分钟后帮你可以吗？"', correct: true, explanation: '既表达了愿意帮忙的态度，也说明了自己的情况，给了一个明确的时间。' },
+                        { text: '直接拒绝说："不行，我太忙了。"', correct: false, explanation: '这样太直接了，可能会让同事感到不舒服。' },
+                        { text: '勉强答应，但心里很不情愿', correct: false, explanation: '这样自己会让自己不开心，工作也可能帮不好。' }
+                    ]
+                }
+            ],
+            L4: [
+                {
+                    scenario: '在团队讨论中，你不同意某人的观点。',
+                    options: [
+                        { text: '说："我理解你的想法，不过我有不同的看法..."然后解释', correct: true, explanation: '先肯定对方，再表达自己的观点，这样更容易被接受。' },
+                        { text: '直接说："你说得不对，应该是..."', correct: false, explanation: '这样太直接了，可能会让对方感到被攻击。' },
+                        { text: '不说出来，但心里不同意', correct: false, explanation: '这样不利于团队沟通，问题也得不到解决。' }
+                    ]
+                }
+            ],
+            L5: [
+                {
+                    scenario: '工作中发现了一个严重的错误，可能会影响项目进度。',
+                    options: [
+                        { text: '及时向主管汇报，并说明情况和可能的影响', correct: true, explanation: '及时沟通问题是负责任的表现，可以让团队一起想办法解决。' },
+                        { text: '自己悄悄解决，不说出来', correct: false, explanation: '这样风险太大，如果解决不好会造成更大的问题。' },
+                        { text: '假装没看见', correct: false, explanation: '这是不负责任的表现，可能会造成严重后果。' }
+                    ]
+                }
+            ]
+        };
+        
+        let currentScenarioIndex = 0;
+        let currentScenarios = [];
+        
+        function init() {
+            loadSavedScore();
+            initEventListeners();
+            updateGame();
+            loadSocialScenarios();
+        }
+        
+        function loadSavedScore() {
+            const savedScore = localStorage.getItem('score');
+            const savedTodayScore = localStorage.getItem('todayScore');
+            
+            if (savedScore) {
+                document.querySelector('.score-value').textContent = savedScore;
+            }
+            
+            if (savedTodayScore) {
+                document.querySelectorAll('.score-value')[1].textContent = savedTodayScore;
+            }
+        }
+        
+        function initEventListeners() {
+            const target = document.getElementById('target');
+            const checkBtn = document.getElementById('check-btn');
+            const hintBtn = document.getElementById('hint-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+            const nextScenarioBtn = document.getElementById('next-scenario');
+            
+            target.addEventListener('dragover', handleDragOver);
+            target.addEventListener('drop', handleDrop);
+            
+            checkBtn.addEventListener('click', checkAnswer);
+            hintBtn.addEventListener('click', showHint);
+            resetBtn.addEventListener('click', resetGame);
+            nextScenarioBtn.addEventListener('click', nextScenario);
+            
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMode = this.getAttribute('data-mode');
+                    updateGame();
+                });
+            });
+            
+            difficultyBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    difficultyBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentLevel = this.getAttribute('data-level');
+                    document.querySelectorAll('.score-value')[2].textContent = currentLevel;
+                    updateGame();
+                });
+            });
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            if (draggedElement) {
+                this.appendChild(draggedElement);
+                document.getElementById('feedback').textContent = '很好！继续加油';
+                document.getElementById('feedback').style.color = '#333333';
+            }
+        }
+        
+        function checkAnswer() {
+            const target = document.getElementById('target');
+            const targetBlocks = target.querySelectorAll('.block');
+            let userOrder = [];
+            
+            targetBlocks.forEach(block => {
+                userOrder.push(block.textContent);
+            });
+            
+            const feedback = document.getElementById('feedback');
+            const correctOrder = gameContent[currentMode][currentLevel].correctOrder;
+            
+            if (JSON.stringify(userOrder) === JSON.stringify(correctOrder)) {
+                feedback.textContent = '太棒了！回答正确！';
+                feedback.style.color = '#4CAF50';
+                updateScore(100);
+            } else {
+                feedback.textContent = '再试一次，你可以的！';
+                feedback.style.color = '#FF9800';
+            }
+        }
+        
+        function showHint() {
+            const feedback = document.getElementById('feedback');
+            const correctSentence = gameContent[currentMode][currentLevel].correctSentence;
+            feedback.textContent = '提示：正确的句子是「' + correctSentence + '」';
+            feedback.style.color = '#2196F3';
+        }
+        
+        function resetGame() {
+            const blocksContainer = document.getElementById('blocks');
+            const target = document.getElementById('target');
+            const targetBlocks = target.querySelectorAll('.block');
+            
+            targetBlocks.forEach(block => {
+                blocksContainer.appendChild(block);
+            });
+            
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = '请将积木拖放到下方区域';
+            feedback.style.color = '#333333';
+        }
+        
+        function updateGame() {
+            const gameArea = document.querySelector('.game-area');
+            const socialArea = document.getElementById('social-area');
+            
+            if (currentMode === 'social') {
+                gameArea.style.display = 'none';
+                socialArea.style.display = 'block';
+                loadSocialScenarios();
+            } else {
+                gameArea.style.display = 'block';
+                socialArea.style.display = 'none';
+                loadGameContent();
+            }
+        }
+        
+        function loadGameContent() {
+            const content = gameContent[currentMode][currentLevel];
+            const gameHeader = document.querySelector('.game-header h2');
+            const gameDescription = document.querySelector('.game-header p');
+            const blocksContainer = document.getElementById('blocks');
+            
+            gameHeader.textContent = content.title;
+            gameDescription.textContent = content.description;
+            
+            blocksContainer.innerHTML = '';
+            document.getElementById('target').innerHTML = '';
+            document.getElementById('feedback').textContent = '请将积木拖放到下方区域';
+            
+            createBlocks(content.items);
+        }
+        
+        function createBlocks(items) {
+            const blocksContainer = document.getElementById('blocks');
+            const shuffledItems = shuffleArray([...items]);
+            
+            shuffledItems.forEach(item => {
+                const block = document.createElement('div');
+                block.className = 'block';
+                block.draggable = true;
+                block.textContent = item;
+                
+                block.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    setTimeout(() => this.style.opacity = '0.5', 0);
+                });
+                
+                block.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                    draggedElement = null;
+                });
+                
+                blocksContainer.appendChild(block);
+            });
+        }
+        
+        function loadSocialScenarios() {
+            currentScenarios = socialScenarios[currentLevel] || socialScenarios.L1;
+            currentScenarioIndex = 0;
+            displayScenario();
+        }
+        
+        function displayScenario() {
+            const scenario = currentScenarios[currentScenarioIndex];
+            document.getElementById('scenario-text').textContent = scenario.scenario;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            scenario.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option.text;
+                btn.addEventListener('click', () => checkSocialAnswer(option, index));
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('explanation').style.display = 'none';
+        }
+        
+        function checkSocialAnswer(option, index) {
+            const options = document.querySelectorAll('.option-btn');
+            options.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === index) {
+                    btn.style.backgroundColor = option.correct ? '#E8F5E9' : '#FFEBEE';
+                    btn.style.borderColor = option.correct ? '#4CAF50' : '#F44336';
+                }
+            });
+            
+            const explanation = document.getElementById('explanation');
+            explanation.innerHTML = `
+                <strong>${option.correct ? '正确！' : '再想想...'}</strong><br><br>
+                ${option.explanation}
+            `;
+            explanation.style.display = 'block';
+            explanation.style.backgroundColor = option.correct ? '#E8F5E9' : '#FFF3E0';
+            explanation.style.borderLeftColor = option.correct ? '#4CAF50' : '#FF9800';
+            
+            if (option.correct) {
+                updateScore(100);
+            }
+        }
+        
+        function nextScenario() {
+            currentScenarioIndex++;
+            if (currentScenarioIndex >= currentScenarios.length) {
+                currentScenarioIndex = 0;
+            }
+            displayScenario();
+        }
+        
+        function updateScore(points) {
+            const scoreElement = document.querySelector('.score-value');
+            let currentScore = parseInt(scoreElement.textContent) || 0;
+            currentScore += points;
+            scoreElement.textContent = currentScore;
+            
+            const todayScoreElement = document.querySelectorAll('.score-value')[1];
+            let todayScore = parseInt(todayScoreElement.textContent) || 0;
+            todayScore += points;
+            todayScoreElement.textContent = todayScore;
+            
+            localStorage.setItem('score', currentScore.toString());
+            localStorage.setItem('todayScore', todayScore.toString());
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

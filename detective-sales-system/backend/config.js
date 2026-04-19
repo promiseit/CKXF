@@ -13,16 +13,16 @@ module.exports = {
       defaultUrl: 'https://api.deepseek.com/chat/completions'
     },
     doubao: {
-      defaultUrl: 'https://ark.cn-beijing.volces.com/api/v3/chat/completions'
+      defaultUrl: 'https://ark.cn-beijing.volces.com/api/v1/chat/completions'
     },
     qianwen: {
-      defaultUrl: 'https://qianwen.aliyun.com/api/v1/chat/completions'
+      defaultUrl: 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
     },
     kimi: {
       defaultUrl: 'https://api.moonshot.cn/v1/chat/completions'
     },
     zhipu: {
-      defaultUrl: 'https://open.bigmodel.cn/api/mt/v1/chat/completions'
+      defaultUrl: 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
     }
   }
 };

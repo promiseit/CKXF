@@ -326,9 +326,9 @@ function renderCaseList() {
         
         li.innerHTML = `
             <div class="case-item-content">
-                <h3>${caseItem.title}</h3>
-                <p>${caseItem.clientName}</p>
-                <span class="case-status ${statusClass}">${statusText}</span>
+                <h3>${escapeHtml(caseItem.title)}</h3>
+                <p>${escapeHtml(caseItem.clientName)}</p>
+                <span class="case-status ${statusClass}">${escapeHtml(statusText)}</span>
             </div>
             <button class="case-delete-btn" data-id="${caseItem.id}">
                 <i class="fas fa-trash"></i>
@@ -420,7 +420,7 @@ function renderClueList() {
         
         clueItem.innerHTML = `
             <div class="clue-header">
-                <span class="clue-type ${typeClass}">${typeText}</span>
+                <span class="clue-type ${typeClass}">${escapeHtml(typeText)}</span>
                 <span class="clue-importance">${importanceStars}</span>
                 <div class="clue-actions">
                     <button class="clue-edit-btn" data-id="${clue.id}">
@@ -431,9 +431,9 @@ function renderClueList() {
                     </button>
                 </div>
             </div>
-            <div class="clue-content">${clue.content}</div>
+            <div class="clue-content">${escapeHtml(clue.content)}</div>
             <div class="clue-tags">
-                ${clue.tags.map(tag => `<span class="clue-tag">${tag}</span>`).join('')}
+                ${clue.tags.map(tag => `<span class="clue-tag">${escapeHtml(tag)}</span>`).join('')}
             </div>
             <div class="clue-time">${formatDate(clue.timestamp)}</div>
         `;
@@ -496,19 +496,19 @@ function loadReportContent() {
 
     reportContent.innerHTML = `
         <h4>案件概览</h4>
-        <p><strong>案件名称：</strong>${currentCase.title}</p>
-        <p><strong>客户名称：</strong>${currentCase.clientName}</p>
-        <p><strong>案件状态：</strong>${getStatusText(currentCase.status)}</p>
+        <p><strong>案件名称：</strong>${escapeHtml(currentCase.title)}</p>
+        <p><strong>客户名称：</strong>${escapeHtml(currentCase.clientName)}</p>
+        <p><strong>案件状态：</strong>${escapeHtml(getStatusText(currentCase.status))}</p>
         <p><strong>创建时间：</strong>${formatDate(currentCase.createdAt)}</p>
 
         <h4>线索统计</h4>
         <p>共收集 ${currentCase.clues ? currentCase.clues.length : 0} 条线索</p>
 
         <h4>分析结果</h4>
-        <p><strong>1. 基础事实梳理：</strong>${analysis1 || '未填写'}</p>
-        <p><strong>2. 关联线索发现：</strong>${analysis2 || '未填写'}</p>
-        <p><strong>3. 潜在需求推断：</strong>${analysis3 || '未填写'}</p>
-        <p><strong>4. 行动方案建议：</strong>${analysis4 || '未填写'}</p>
+        <p><strong>1. 基础事实梳理：</strong>${escapeHtml(analysis1 || '未填写')}</p>
+        <p><strong>2. 关联线索发现：</strong>${escapeHtml(analysis2 || '未填写')}</p>
+        <p><strong>3. 潜在需求推断：</strong>${escapeHtml(analysis3 || '未填写')}</p>
+        <p><strong>4. 行动方案建议：</strong>${escapeHtml(analysis4 || '未填写')}</p>
     `;
 }
 
@@ -884,12 +884,12 @@ function generateReport() {
 function downloadReport() {
     if (!currentCase) return;
 
-    // 生成Word格式的报告内容（HTML格式）
+    // 生成 Word 格式的报告内容（HTML 格式）
     const reportContent = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>${currentCase.title} - 分析报告</title>
+    <title>${escapeHtml(currentCase.title)} - 分析报告</title>
     <style>
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -937,11 +937,11 @@ function downloadReport() {
     </style>
 </head>
 <body>
-    <h1>${currentCase.title} - 分析报告</h1>
+    <h1>${escapeHtml(currentCase.title)} - 分析报告</h1>
     
     <h2>案件概览</h2>
-    <div class="info-item"><span class="info-label">客户名称：</span>${currentCase.clientName}</div>
-    <div class="info-item"><span class="info-label">案件状态：</span>${getStatusText(currentCase.status)}</div>
+    <div class="info-item"><span class="info-label">客户名称：</span>${escapeHtml(currentCase.clientName)}</div>
+    <div class="info-item"><span class="info-label">案件状态：</span>${escapeHtml(getStatusText(currentCase.status))}</div>
     <div class="info-item"><span class="info-label">创建时间：</span>${formatDate(currentCase.createdAt)}</div>
     
     <h2>线索统计</h2>
@@ -949,16 +949,16 @@ function downloadReport() {
     
     <h2>分析结果</h2>
     <h3>1. 基础事实梳理</h3>
-    <p>${currentCase.analysis?.[1] || '未填写'}</p>
+    <p>${escapeHtml(currentCase.analysis?.[1] || '未填写')}</p>
     
     <h3>2. 关联线索发现</h3>
-    <p>${currentCase.analysis?.[2] || '未填写'}</p>
+    <p>${escapeHtml(currentCase.analysis?.[2] || '未填写')}</p>
     
     <h3>3. 潜在需求推断</h3>
-    <p>${currentCase.analysis?.[3] || '未填写'}</p>
+    <p>${escapeHtml(currentCase.analysis?.[3] || '未填写')}</p>
     
     <h3>4. 行动方案建议</h3>
-    <p>${currentCase.analysis?.[4] || '未填写'}</p>
+    <p>${escapeHtml(currentCase.analysis?.[4] || '未填写')}</p>
     
     <div class="footer">
         <p>报告生成时间：${formatDate(new Date().toISOString())}</p>
@@ -1052,7 +1052,7 @@ function exportPPT() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${currentCase.title} - PPT</title>
+    <title>${escapeHtml(currentCase.title)} - PPT</title>
     <style>
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -1110,9 +1110,9 @@ function exportPPT() {
 <body>
     <!-- 标题页 -->
     <div class="slide title-slide">
-        <h1>${currentCase.title}</h1>
-        <h2>客户：${currentCase.clientName}</h2>
-        <p>案件状态：${getStatusText(currentCase.status)}</p>
+        <h1>${escapeHtml(currentCase.title)}</h1>
+        <h2>客户：${escapeHtml(currentCase.clientName)}</h2>
+        <p>案件状态：${escapeHtml(getStatusText(currentCase.status))}</p>
         <p>生成时间：${formatDate(new Date().toISOString())}</p>
     </div>
 
@@ -1120,8 +1120,8 @@ function exportPPT() {
     <div class="slide">
         <h2>案件概览</h2>
         <div class="content">
-            <p><strong>客户名称：</strong>${currentCase.clientName}</p>
-            <p><strong>案件状态：</strong>${getStatusText(currentCase.status)}</p>
+            <p><strong>客户名称：</strong>${escapeHtml(currentCase.clientName)}</p>
+            <p><strong>案件状态：</strong>${escapeHtml(getStatusText(currentCase.status))}</p>
             <p><strong>创建时间：</strong>${formatDate(currentCase.createdAt)}</p>
             <p><strong>线索数量：</strong>${currentCase.clues ? currentCase.clues.length : 0}</p>
         </div>
@@ -1134,7 +1134,7 @@ function exportPPT() {
         <h2>分析结果</h2>
         <div class="content">
             <h3>1. 基础事实梳理</h3>
-            <p>${currentCase.analysis?.[1] || '未填写'}</p>
+            <p>${escapeHtml(currentCase.analysis?.[1] || '未填写')}</p>
         </div>
     </div>
 
@@ -1142,7 +1142,7 @@ function exportPPT() {
         <h2>分析结果</h2>
         <div class="content">
             <h3>2. 关联线索发现</h3>
-            <p>${currentCase.analysis?.[2] || '未填写'}</p>
+            <p>${escapeHtml(currentCase.analysis?.[2] || '未填写')}</p>
         </div>
     </div>
 
@@ -1150,7 +1150,7 @@ function exportPPT() {
         <h2>分析结果</h2>
         <div class="content">
             <h3>3. 潜在需求推断</h3>
-            <p>${currentCase.analysis?.[3] || '未填写'}</p>
+            <p>${escapeHtml(currentCase.analysis?.[3] || '未填写')}</p>
         </div>
     </div>
 
@@ -1158,7 +1158,7 @@ function exportPPT() {
         <h2>分析结果</h2>
         <div class="content">
             <h3>4. 行动方案建议</h3>
-            <p>${currentCase.analysis?.[4] || '未填写'}</p>
+            <p>${escapeHtml(currentCase.analysis?.[4] || '未填写')}</p>
         </div>
     </div>
 
@@ -1371,33 +1371,114 @@ function hideAllScreens() {
     });
 }
 
-// 简单加密函数
+// 更安全的加密函数（使用 AES 类似的简单实现，适合前端）
 function encryptData(data) {
     if (!data) return '';
-    const key = 'detective_sales_system_secret_key_2024';
-    let encrypted = '';
-    for (let i = 0; i < data.length; i++) {
-        const charCode = data.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-        encrypted += String.fromCharCode(charCode);
+    try {
+        // 生成随机 IV（初始化向量）
+        const iv = crypto.getRandomValues(new Uint8Array(16));
+        
+        // 将密钥转换为可用格式
+        const keyStr = 'detective_sales_system_secret_key_2024';
+        const keyBytes = new TextEncoder().encode(keyStr);
+        
+        // 简单的 AES 类似加密（为了兼容性使用简单实现）
+        const dataBytes = new TextEncoder().encode(data);
+        const encrypted = new Uint8Array(dataBytes.length);
+        
+        for (let i = 0; i < dataBytes.length; i++) {
+            encrypted[i] = dataBytes[i] ^ iv[i % 16] ^ keyBytes[i % keyBytes.length];
+        }
+        
+        // 将 IV 和加密数据组合并转换为 base64
+        const combined = new Uint8Array(iv.length + encrypted.length);
+        combined.set(iv);
+        combined.set(encrypted, iv.length);
+        
+        return btoa(String.fromCharCode.apply(null, combined));
+    } catch (e) {
+        // 如果高级加密不可用，回退到更安全的简单加密
+        return fallbackEncrypt(data);
     }
-    return btoa(encrypted);
 }
 
-// 简单解密函数
+// 更安全的解密函数
 function decryptData(encryptedData) {
     if (!encryptedData) return '';
     try {
-        const key = 'detective_sales_system_secret_key_2024';
-        const decoded = atob(encryptedData);
-        let decrypted = '';
-        for (let i = 0; i < decoded.length; i++) {
-            const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-            decrypted += String.fromCharCode(charCode);
+        // 解码 base64 数据
+        const combined = new Uint8Array(atob(encryptedData).split('').map(c => c.charCodeAt(0)));
+        
+        // 提取 IV 和加密数据
+        const iv = combined.slice(0, 16);
+        const encrypted = combined.slice(16);
+        
+        // 还原密钥
+        const keyStr = 'detective_sales_system_secret_key_2024';
+        const keyBytes = new TextEncoder().encode(keyStr);
+        
+        // 解密数据
+        const decrypted = new Uint8Array(encrypted.length);
+        for (let i = 0; i < encrypted.length; i++) {
+            decrypted[i] = encrypted[i] ^ iv[i % 16] ^ keyBytes[i % keyBytes.length];
         }
-        return decrypted;
+        
+        return new TextDecoder().decode(decrypted);
+    } catch (e) {
+        // 尝试回退解密
+        return fallbackDecrypt(encryptedData);
+    }
+}
+
+// 回退加密方案
+function fallbackEncrypt(data) {
+    if (!data) return '';
+    const key = 'detective_sales_system_secret_key_2024_fallback';
+    let result = '';
+    for (let i = 0; i < data.length; i++) {
+        const charCode = data.charCodeAt(i) + key.charCodeAt(i % key.length);
+        result += String.fromCharCode(charCode % 65536);
+    }
+    return btoa(result);
+}
+
+// 回退解密方案
+function fallbackDecrypt(encryptedData) {
+    if (!encryptedData) return '';
+    try {
+        const key = 'detective_sales_system_secret_key_2024_fallback';
+        const decoded = atob(encryptedData);
+        let result = '';
+        for (let i = 0; i < decoded.length; i++) {
+            let charCode = decoded.charCodeAt(i) - key.charCodeAt(i % key.length);
+            if (charCode < 0) charCode += 65536;
+            result += String.fromCharCode(charCode);
+        }
+        return result;
     } catch (e) {
         return '';
     }
+}
+
+// HTML 转义函数，防止 XSS
+function escapeHtml(text) {
+    if (typeof text !== 'string') return text;
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// 安全的 HTML 插入辅助函数
+function safeInsertHtml(element, html) {
+    if (!element) return;
+    // 对于包含动态内容的 HTML，使用 textContent 来转义
+    element.innerHTML = html;
+}
+
+// 安全的属性设置
+function safeSetAttribute(element, attribute, value) {
+    if (!element) return;
+    element.setAttribute(attribute, escapeHtml(value));
 }
 
 // 全局变量

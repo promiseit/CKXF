@@ -711,6 +711,98 @@
         body.high-contrast .shop-item .buy-btn:hover {
             background-color: #555555;
         }
+        
+        /* 虚拟键盘 */
+        .virtual-keyboard {
+            background-color: #F5F5F5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        /* 隐私政策 */
+        .privacy-policy {
+            background-color: #F5F5F5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .privacy-policy h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333333;
+        }
+        
+        .privacy-policy p {
+            margin-bottom: 10px;
+            color: #666666;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 震动动画 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .key {
+            padding: 15px 20px;
+            border: 1px solid #DDDDDD;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 50px;
+            text-align: center;
+            transition: all 0.3s ease;
+            user-select: none;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .key:hover {
+            background-color: #E3F2FD;
+            border-color: #2196F3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .key:active {
+            background-color: #BBDEFB;
+            transform: scale(0.95);
+        }
+        
+        .key:focus {
+            outline: 3px solid rgba(33, 150, 243, 0.3);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
@@ -786,6 +878,7 @@
             <button class="nav-btn" data-mode="english">职场英语</button>
             <button class="nav-btn" data-mode="coding">职场编程</button>
             <button class="nav-btn" data-mode="social">社交应对</button>
+            <button class="nav-btn" data-mode="ai-assistant">AI助手</button>
             <button class="nav-btn" data-mode="shop">积分商城</button>
             <button class="nav-btn" data-mode="my-items">我的商品</button>
         </div>
@@ -817,6 +910,45 @@
                 <button class="control-btn btn-primary" id="check-btn">检查答案</button>
                 <button class="control-btn btn-secondary" id="hint-btn">提示</button>
                 <button class="control-btn btn-warning" id="reset-btn">重置</button>
+            </div>
+        </div>
+        
+        <!-- 虚拟键盘 -->
+        <div class="virtual-keyboard">
+            <h3 style="text-align: center; margin-bottom: 20px; font-size: 20px; color: #333;">虚拟键盘</h3>
+            <div class="keyboard-row">
+                <div class="key" tabindex="0">Q</div>
+                <div class="key" tabindex="0">W</div>
+                <div class="key" tabindex="0">E</div>
+                <div class="key" tabindex="0">R</div>
+                <div class="key" tabindex="0">T</div>
+                <div class="key" tabindex="0">Y</div>
+                <div class="key" tabindex="0">U</div>
+                <div class="key" tabindex="0">I</div>
+                <div class="key" tabindex="0">O</div>
+                <div class="key" tabindex="0">P</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key" tabindex="0">A</div>
+                <div class="key" tabindex="0">S</div>
+                <div class="key" tabindex="0">D</div>
+                <div class="key" tabindex="0">F</div>
+                <div class="key" tabindex="0">G</div>
+                <div class="key" tabindex="0">H</div>
+                <div class="key" tabindex="0">J</div>
+                <div class="key" tabindex="0">K</div>
+                <div class="key" tabindex="0">L</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key" tabindex="0">Z</div>
+                <div class="key" tabindex="0">X</div>
+                <div class="key" tabindex="0">C</div>
+                <div class="key" tabindex="0">V</div>
+                <div class="key" tabindex="0">B</div>
+                <div class="key" tabindex="0">N</div>
+                <div class="key" tabindex="0">M</div>
+                <div class="key" style="min-width: 100px;" tabindex="0">空格</div>
+                <div class="key" tabindex="0">删除</div>
             </div>
         </div>
         
@@ -856,6 +988,32 @@
             <div id="my-items-content">
                 <div class="shop-items" id="my-items-container"></div>
             </div>
+        </div>
+        
+        <div class="chat-area" id="ai-assistant-area" style="display: none;">
+            <div class="game-header">
+                <h2>AI助手</h2>
+                <p>有任何职场问题，随时问我</p>
+            </div>
+            <div class="chat-messages" id="ai-chat-messages">
+                <div class="message ai-message">你好！我是你的AI职场助手，有什么可以帮你的吗？</div>
+            </div>
+            <input type="text" class="chat-input" id="ai-chat-input" placeholder="输入你的问题...">
+            <div class="controls">
+                <button class="control-btn btn-primary" id="ai-send-btn">发送</button>
+                <button class="control-btn btn-secondary" id="ai-voice-btn">语音输入</button>
+                <button class="control-btn btn-warning" id="ai-clear-btn">清空</button>
+            </div>
+        </div>
+        
+        <!-- 隐私政策 -->
+        <div class="privacy-policy">
+            <h3>隐私政策</h3>
+            <p>1. 我们重视您的隐私，所有数据均存储在本地，不会上传到云端。</p>
+            <p>2. 我们不会收集、存储或分享您的个人信息。</p>
+            <p>3. 所有学习数据仅保存在您的本地设备上，您可以随时清除。</p>
+            <p>4. 我们致力于保护您的数据安全，采用本地存储方式确保数据不会被泄露。</p>
+            <p>5. 如果您有任何隐私问题，请联系我们。</p>
         </div>
     </div>
     
@@ -1709,6 +1867,70 @@
                     speakText('字体已增大');
                 }
             });
+            
+            // 虚拟键盘事件
+            const keys = document.querySelectorAll('.key');
+            keys.forEach(key => {
+                key.addEventListener('click', function() {
+                    const keyText = this.textContent;
+                    const aiChatInput = document.getElementById('ai-chat-input');
+                    
+                    if (aiChatInput) {
+                        if (keyText === '空格') {
+                            aiChatInput.value += ' ';
+                        } else if (keyText === '删除') {
+                            aiChatInput.value = aiChatInput.value.slice(0, -1);
+                        } else {
+                            aiChatInput.value += keyText;
+                        }
+                        aiChatInput.focus();
+                    }
+                });
+                
+                // 键盘支持
+                key.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+            
+            // AI助手事件
+            const aiSendBtn = document.getElementById('ai-send-btn');
+            const aiVoiceBtn = document.getElementById('ai-voice-btn');
+            const aiClearBtn = document.getElementById('ai-clear-btn');
+            const aiChatInput = document.getElementById('ai-chat-input');
+            
+            if (aiSendBtn) {
+                aiSendBtn.addEventListener('click', function() {
+                    sendAiMessage();
+                    playSound('click');
+                });
+            }
+            
+            if (aiChatInput) {
+                aiChatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendAiMessage();
+                        playSound('click');
+                    }
+                });
+            }
+            
+            if (aiVoiceBtn) {
+                aiVoiceBtn.addEventListener('click', function() {
+                    startVoiceInput();
+                    playSound('click');
+                });
+            }
+            
+            if (aiClearBtn) {
+                aiClearBtn.addEventListener('click', function() {
+                    document.getElementById('ai-chat-messages').innerHTML = '<div class="message ai-message">你好！我是你的AI职场助手，有什么可以帮你的吗？</div>';
+                    playSound('click');
+                });
+            }
         }
         
         function handleDragOver(e) {
@@ -1811,30 +2033,41 @@
             const socialArea = document.getElementById('social-area');
             const shopArea = document.getElementById('shop-area');
             const myItemsArea = document.getElementById('my-items-area');
+            const aiAssistantArea = document.getElementById('ai-assistant-area');
             
             if (currentMode === 'social') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'block';
                 shopArea.style.display = 'none';
                 myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'none';
                 loadSocialScenarios();
             } else if (currentMode === 'shop') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'block';
                 myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'none';
                 loadShopContent();
             } else if (currentMode === 'my-items') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'none';
                 myItemsArea.style.display = 'block';
+                aiAssistantArea.style.display = 'none';
                 loadMyItemsContent();
+            } else if (currentMode === 'ai-assistant') {
+                gameArea.style.display = 'none';
+                socialArea.style.display = 'none';
+                shopArea.style.display = 'none';
+                myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'block';
             } else {
                 gameArea.style.display = 'block';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'none';
                 myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'none';
                 loadGameContent();
             }
         }
@@ -2253,6 +2486,122 @@
                         oscillator.stop(audioContext.currentTime + 0.1);
                         break;
                 }
+            }
+        }
+        
+        // AI助手函数
+        function sendAiMessage() {
+            const aiChatInput = document.getElementById('ai-chat-input');
+            const aiChatMessages = document.getElementById('ai-chat-messages');
+            const text = aiChatInput.value.trim();
+            
+            if (text) {
+                // 添加用户消息
+                addMessage(text, 'user');
+                
+                // 清空输入
+                aiChatInput.value = '';
+                
+                // 显示加载动画
+                const loadingMessage = document.createElement('div');
+                loadingMessage.className = 'message ai-message';
+                loadingMessage.innerHTML = '<div class="loading"></div> 正在思考...';
+                aiChatMessages.appendChild(loadingMessage);
+                scrollToBottom();
+                
+                // 获取AI响应
+                setTimeout(() => {
+                    loadingMessage.remove();
+                    const response = getAiResponse(text);
+                    addMessage(response, 'ai');
+                }, 1000);
+            }
+        }
+        
+        function addMessage(text, type) {
+            const aiChatMessages = document.getElementById('ai-chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type === 'user' ? 'user-message' : 'ai-message'}`;
+            messageDiv.textContent = text;
+            aiChatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        function scrollToBottom() {
+            const aiChatMessages = document.getElementById('ai-chat-messages');
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+        }
+        
+        function getAiResponse(text) {
+            // 简单的AI响应逻辑
+            const responses = [
+                '好的，我理解你的意思。',
+                '这是一个很好的问题！',
+                '我建议你可以这样做...',
+                '我明白你的困惑，让我帮你分析一下。',
+                '这是一个常见的职场问题，很多人都会遇到。',
+                '你的想法很有创意！',
+                '我可以帮你解决这个问题。',
+                '让我想想，最好的方法是...'
+            ];
+            
+            // 根据关键词生成更相关的响应
+            if (text.includes('面试')) {
+                return '面试时要保持自信，提前准备常见问题，展示你的技能和经验。';
+            } else if (text.includes('沟通')) {
+                return '有效的沟通是职场成功的关键，要学会倾听和表达自己的想法。';
+            } else if (text.includes('压力')) {
+                return '职场压力是正常的，要学会合理安排时间，适当放松，保持工作与生活的平衡。';
+            } else if (text.includes('同事')) {
+                return '与同事相处要尊重他人，学会合作，遇到问题及时沟通解决。';
+            } else if (text.includes('领导')) {
+                return '与领导沟通要清晰表达自己的想法，及时汇报工作进展，接受反馈并不断改进。';
+            }
+            
+            // 随机选择一个响应
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+        
+        function startVoiceInput() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                
+                recognition.lang = 'zh-CN';
+                recognition.interimResults = false;
+                
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = '正在聆听...';
+                feedback.className = 'feedback info';
+                
+                recognition.onstart = function() {
+                    feedback.textContent = '正在聆听...';
+                    feedback.className = 'feedback info';
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    const aiChatInput = document.getElementById('ai-chat-input');
+                    aiChatInput.value = transcript;
+                    feedback.textContent = '语音输入成功';
+                    feedback.className = 'feedback success';
+                };
+                
+                recognition.onerror = function(event) {
+                    feedback.textContent = '语音输入失败，请重试';
+                    feedback.className = 'feedback error';
+                };
+                
+                recognition.onend = function() {
+                    feedback.textContent = '请将积木拖放到下方区域';
+                    feedback.className = 'feedback';
+                };
+                
+                recognition.start();
+            } else {
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = '您的浏览器不支持语音输入';
+                feedback.className = 'feedback error';
             }
         }
         

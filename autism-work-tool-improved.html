@@ -1788,6 +1788,9 @@
             const randomIndex = Math.floor(Math.random() * contentArray.length);
             const content = contentArray[randomIndex];
             
+            // 存储当前题目
+            currentQuestion = content;
+            
             const gameHeader = document.querySelector('.game-header h2');
             const gameDescription = document.querySelector('.game-header p');
             const blocksContainer = document.getElementById('blocks');

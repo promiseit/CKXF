@@ -17,6 +17,162 @@
             color: #333333;
             line-height: 1.8;
             transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        /* 移动端响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 16px;
+            }
+            
+            .accessibility-controls {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .accessibility-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            
+            .font-size-controls {
+                bottom: 10px;
+                left: 10px;
+            }
+            
+            .font-size-btn {
+                padding: 8px 12px;
+            }
+            
+            .difficulty-buttons {
+                gap: 8px;
+            }
+            
+            .difficulty-btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+            
+            .nav {
+                gap: 8px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+                min-width: auto;
+            }
+            
+            .game-area {
+                padding: 20px;
+            }
+            
+            .game-header h2 {
+                font-size: 20px;
+            }
+            
+            .game-header p {
+                font-size: 15px;
+            }
+            
+            .blocks-container {
+                padding: 15px;
+                gap: 8px;
+            }
+            
+            .block {
+                padding: 12px 16px;
+                font-size: 16px;
+                min-width: 80px;
+            }
+            
+            .target-area {
+                padding: 15px;
+                gap: 8px;
+            }
+            
+            .controls {
+                gap: 10px;
+            }
+            
+            .control-btn {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+            
+            .feedback {
+                font-size: 17px;
+                padding: 12px;
+            }
+            
+            .shop-items {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .shop-item {
+                padding: 15px;
+            }
+            
+            .scenario-options {
+                gap: 8px;
+            }
+            
+            .option-btn {
+                padding: 12px 16px;
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+            
+            .difficulty-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .nav-btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+            
+            .block {
+                padding: 10px 12px;
+                font-size: 14px;
+                min-width: 70px;
+            }
+            
+            .control-btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
         }
         
         /* 高对比度模式 */
@@ -786,6 +942,7 @@
             <button class="nav-btn" data-mode="english">职场英语</button>
             <button class="nav-btn" data-mode="coding">职场编程</button>
             <button class="nav-btn" data-mode="social">社交应对</button>
+            <button class="nav-btn" data-mode="ai-assistant">AI助手</button>
             <button class="nav-btn" data-mode="shop">积分商城</button>
             <button class="nav-btn" data-mode="my-items">我的商品</button>
         </div>
@@ -857,6 +1014,21 @@
                 <div class="shop-items" id="my-items-container"></div>
             </div>
         </div>
+        
+        <div class="chat-area" id="ai-assistant-area" style="display: none;">
+            <div class="game-header">
+                <h2>AI助手</h2>
+                <p>有任何职场问题，随时问我</p>
+            </div>
+            <div class="chat-messages" id="ai-chat-messages">
+                <div class="message ai-message">你好！我是你的AI职场助手，有什么可以帮你的吗？</div>
+            </div>
+            <input type="text" class="chat-input" id="ai-chat-input" placeholder="输入你的问题...">
+            <div class="controls">
+                <button class="control-btn btn-primary" id="ai-send-btn">发送</button>
+                <button class="control-btn btn-secondary" id="ai-clear-btn">清空</button>
+            </div>
+        </div>
     </div>
     
     <script>
@@ -870,6 +1042,15 @@
         
         // 存储已购买的商品
         let purchasedItems = [];
+        
+        // 学习数据记录
+        let learningData = {
+            completedExercises: [],
+            correctCount: 0,
+            totalAttempts: 0,
+            lastPractice: new Date().toISOString(),
+            preferredModes: {}
+        };
         
         const gameContent = {
             text: {
@@ -1495,7 +1676,9 @@
         function init() {
             loadSavedScore();
             loadPurchasedItems();
+            loadLearningData();
             initEventListeners();
+            initTouchEvents();
             updateGame();
             loadSocialScenarios();
             showTutorial();
@@ -1583,6 +1766,110 @@
             } catch (e) {
                 console.error('Failed to save purchased items:', e);
             }
+        }
+        
+        // 加载学习数据
+        function loadLearningData() {
+            const saved = localStorage.getItem('learningData');
+            if (saved) {
+                try {
+                    learningData = JSON.parse(saved);
+                } catch (e) {
+                    console.error('加载学习数据失败:', e);
+                    learningData = {
+                        completedExercises: [],
+                        correctCount: 0,
+                        totalAttempts: 0,
+                        lastPractice: new Date().toISOString(),
+                        preferredModes: {}
+                    };
+                }
+            }
+        }
+        
+        // 保存学习数据
+        function saveLearningData() {
+            try {
+                learningData.lastPractice = new Date().toISOString();
+                localStorage.setItem('learningData', JSON.stringify(learningData));
+            } catch (e) {
+                console.error('保存学习数据失败:', e);
+            }
+        }
+        
+        // 记录练习结果
+        function recordExerciseResult(mode, level, correct) {
+            learningData.totalAttempts++;
+            if (correct) {
+                learningData.correctCount++;
+            }
+            
+            // 记录完成的练习
+            learningData.completedExercises.push({
+                mode: mode,
+                level: level,
+                correct: correct,
+                timestamp: new Date().toISOString()
+            });
+            
+            // 更新偏好模式统计
+            if (!learningData.preferredModes[mode]) {
+                learningData.preferredModes[mode] = 0;
+            }
+            learningData.preferredModes[mode]++;
+            
+            saveLearningData();
+        }
+        
+        // 生成个性化推荐
+        function generateRecommendations() {
+            // 分析学习数据
+            const modeCounts = learningData.preferredModes;
+            const sortedModes = Object.entries(modeCounts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([mode]) => mode);
+            
+            // 计算准确率
+            const accuracy = learningData.totalAttempts > 0 
+                ? (learningData.correctCount / learningData.totalAttempts * 100).toFixed(1)
+                : '0.0';
+            
+            // 生成推荐
+            let recommendations = [];
+            
+            // 推荐最常练习的模式
+            if (sortedModes.length > 0) {
+                recommendations.push(`你最近经常练习 ${getModeName(sortedModes[0])}，继续保持！`);
+            }
+            
+            // 推荐准确率低的模式
+            if (parseFloat(accuracy) < 70) {
+                recommendations.push('建议多练习基础题目，提高准确率。');
+            }
+            
+            // 推荐多样化练习
+            if (sortedModes.length < 3) {
+                recommendations.push('尝试不同的练习模式，全面提升职场技能。');
+            }
+            
+            // 推荐适当提高难度
+            if (parseFloat(accuracy) > 80 && currentLevel !== 'L5') {
+                recommendations.push('你的表现很好，可以尝试更高难度的挑战。');
+            }
+            
+            return recommendations.length > 0 ? recommendations : ['继续加油，保持练习！'];
+        }
+        
+        // 获取模式名称
+        function getModeName(mode) {
+            const modeNames = {
+                'text': '职场文字',
+                'number': '职场计算',
+                'english': '职场英语',
+                'coding': '职场编程',
+                'social': '社交应对'
+            };
+            return modeNames[mode] || mode;
         }
         
         function initEventListeners() {
@@ -1709,6 +1996,29 @@
                     speakText('字体已增大');
                 }
             });
+            
+            // AI助手按钮事件
+            const aiSendBtn = document.getElementById('ai-send-btn');
+            const aiChatInput = document.getElementById('ai-chat-input');
+            const aiClearBtn = document.getElementById('ai-clear-btn');
+            
+            if (aiSendBtn) {
+                aiSendBtn.addEventListener('click', sendAiMessage);
+            }
+            
+            if (aiChatInput) {
+                aiChatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendAiMessage();
+                    }
+                });
+            }
+            
+            if (aiClearBtn) {
+                aiClearBtn.addEventListener('click', function() {
+                    document.getElementById('ai-chat-messages').innerHTML = '<div class="message ai-message">你好！我是你的AI职场助手，有什么可以帮你的吗？</div>';
+                });
+            }
         }
         
         function handleDragOver(e) {
@@ -1729,6 +2039,33 @@
                 speakText('很好！继续加油');
                 playSound('click');
             }
+        }
+        
+        // 移动端触摸事件处理
+        function initTouchEvents() {
+            const target = document.getElementById('target');
+            
+            // 为目标区域添加触摸事件
+            target.addEventListener('touchstart', function(e) {
+                if (draggedElement) {
+                    this.classList.add('drag-over');
+                }
+                e.preventDefault();
+            });
+            
+            target.addEventListener('touchend', function(e) {
+                this.classList.remove('drag-over');
+                if (draggedElement) {
+                    this.appendChild(draggedElement);
+                    const feedback = document.getElementById('feedback');
+                    feedback.textContent = '很好！继续加油';
+                    feedback.className = 'feedback info';
+                    speakText('很好！继续加油');
+                    playSound('click');
+                    draggedElement = null;
+                }
+                e.preventDefault();
+            });
         }
         
         // 存储当前题目信息
@@ -1770,7 +2107,9 @@
             const feedback = document.getElementById('feedback');
             const correctOrder = currentQuestion.correctOrder;
             
-            if (JSON.stringify(userOrder) === JSON.stringify(correctOrder)) {
+            const isCorrect = JSON.stringify(userOrder) === JSON.stringify(correctOrder);
+            
+            if (isCorrect) {
                 feedback.textContent = '太棒了！回答正确！';
                 feedback.className = 'feedback success';
                 updateScore(100);
@@ -1782,6 +2121,9 @@
                 speakText('再试一次，你可以的！');
                 playSound('error');
             }
+            
+            // 记录练习结果
+            recordExerciseResult(currentMode, currentLevel, isCorrect);
         }
         
         function showHint() {
@@ -1811,30 +2153,41 @@
             const socialArea = document.getElementById('social-area');
             const shopArea = document.getElementById('shop-area');
             const myItemsArea = document.getElementById('my-items-area');
+            const aiAssistantArea = document.getElementById('ai-assistant-area');
             
             if (currentMode === 'social') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'block';
                 shopArea.style.display = 'none';
                 myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'none';
                 loadSocialScenarios();
             } else if (currentMode === 'shop') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'block';
                 myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'none';
                 loadShopContent();
             } else if (currentMode === 'my-items') {
                 gameArea.style.display = 'none';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'none';
                 myItemsArea.style.display = 'block';
+                aiAssistantArea.style.display = 'none';
                 loadMyItemsContent();
+            } else if (currentMode === 'ai-assistant') {
+                gameArea.style.display = 'none';
+                socialArea.style.display = 'none';
+                shopArea.style.display = 'none';
+                myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'block';
             } else {
                 gameArea.style.display = 'block';
                 socialArea.style.display = 'none';
                 shopArea.style.display = 'none';
                 myItemsArea.style.display = 'none';
+                aiAssistantArea.style.display = 'none';
                 loadGameContent();
             }
         }
@@ -1874,6 +2227,7 @@
                 block.tabIndex = 0;
                 block.textContent = item;
                 
+                // 鼠标拖拽事件
                 block.addEventListener('dragstart', function(e) {
                     draggedElement = this;
                     setTimeout(() => this.style.opacity = '0.5', 0);
@@ -1882,6 +2236,19 @@
                 block.addEventListener('dragend', function() {
                     this.style.opacity = '1';
                     draggedElement = null;
+                });
+                
+                // 触摸拖拽事件（移动端支持）
+                block.addEventListener('touchstart', function(e) {
+                    draggedElement = this;
+                    this.style.opacity = '0.5';
+                    e.preventDefault();
+                });
+                
+                block.addEventListener('touchend', function(e) {
+                    this.style.opacity = '1';
+                    draggedElement = null;
+                    e.preventDefault();
                 });
                 
                 // 键盘支持
@@ -1957,6 +2324,9 @@
             } else {
                 speakText('再想想...' + option.explanation);
             }
+            
+            // 记录练习结果
+            recordExerciseResult('social', currentLevel, option.correct);
         }
         
         function nextScenario() {
@@ -2253,6 +2623,116 @@
                         oscillator.stop(audioContext.currentTime + 0.1);
                         break;
                 }
+            }
+        }
+        
+        // AI助手核心功能
+        function sendAiMessage() {
+            const input = document.getElementById('ai-chat-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                // 添加用户消息
+                addMessage('user', message);
+                input.value = '';
+                
+                // 显示正在输入
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'message ai-message typing';
+                typingIndicator.textContent = '正在思考...';
+                typingIndicator.id = 'typing-indicator';
+                document.getElementById('ai-chat-messages').appendChild(typingIndicator);
+                
+                // 滚动到底部
+                scrollToBottom('ai-chat-messages');
+                
+                // 模拟AI回复
+                setTimeout(() => {
+                    document.getElementById('typing-indicator').remove();
+                    const response = getAiResponse(message);
+                    addMessage('ai', response);
+                    scrollToBottom('ai-chat-messages');
+                }, 1000);
+            }
+        }
+        
+        function addMessage(type, content) {
+            const messagesContainer = document.getElementById('ai-chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            messageDiv.textContent = content;
+            messagesContainer.appendChild(messageDiv);
+        }
+        
+        function scrollToBottom(elementId) {
+            const element = document.getElementById(elementId);
+            element.scrollTop = element.scrollHeight;
+        }
+        
+        function getAiResponse(message) {
+            message = message.toLowerCase();
+            
+            if (message.includes('你好') || message.includes('嗨') || message.includes('hello')) {
+                const recommendations = generateRecommendations();
+                let response = '你好！很高兴为你服务。有什么职场相关的问题可以问我。';
+                if (recommendations.length > 0) {
+                    response += '\n\n根据你的学习情况，我有一些建议：\n';
+                    recommendations.forEach((rec, index) => {
+                        response += `${index + 1}. ${rec}\n`;
+                    });
+                }
+                return response;
+            } else if (message.includes('推荐') || message.includes('建议') || message.includes('学习')) {
+                const recommendations = generateRecommendations();
+                if (recommendations.length > 0) {
+                    let response = '根据你的学习情况，我为你准备了以下建议：\n';
+                    recommendations.forEach((rec, index) => {
+                        response += `${index + 1}. ${rec}\n`;
+                    });
+                    return response;
+                } else {
+                    return '继续加油，保持练习！你正在不断进步。';
+                }
+            } else if (message.includes('如何') && message.includes('面试')) {
+                return '面试时要保持自信，提前准备常见问题的答案，穿着得体，准时到达。记得展示你的优势和对公司的了解。';
+            } else if (message.includes('如何') && message.includes('沟通')) {
+                return '有效沟通的关键是：倾听对方、清晰表达自己的想法、保持礼貌和耐心、注意非语言沟通（如眼神接触）。';
+            } else if (message.includes('如何') && message.includes('时间管理')) {
+                return '时间管理的技巧：制定每日计划、设置优先级、避免 multitasking、使用番茄工作法、定期休息。';
+            } else if (message.includes('如何') && message.includes('团队合作')) {
+                return '团队合作的要点：明确分工、有效沟通、尊重他人意见、共同解决问题、庆祝团队成功。';
+            } else if (message.includes('压力') || message.includes('焦虑')) {
+                return '面对职场压力，可以尝试：深呼吸、短暂休息、运动、与同事或朋友交流、设置合理的工作目标。';
+            } else if (message.includes('简历') || message.includes('cv')) {
+                return '简历应该简洁明了，突出你的技能和经验，针对应聘职位定制，使用行动动词，避免拼写错误。';
+            } else if (message.includes('谢谢') || message.includes('感谢')) {
+                return '不客气！如果还有其他问题，随时告诉我。';
+            } else if (message.includes('加班') || message.includes('工作时间')) {
+                return '合理安排工作时间很重要。如果需要加班，要确保得到适当的休息，同时与上级沟通工作负荷的问题。';
+            } else if (message.includes('同事') || message.includes('人际关系')) {
+                return '与同事相处的秘诀：尊重他人、保持专业、积极沟通、学会团队合作、适当的社交互动。';
+            } else if (message.includes('晋升') || message.includes('职业发展')) {
+                return '职业发展建议：设定明确的目标、持续学习、建立专业网络、寻找导师、主动承担更多责任。';
+            } else if (message.includes('学习数据') || message.includes('练习记录')) {
+                const accuracy = learningData.totalAttempts > 0 
+                    ? (learningData.correctCount / learningData.totalAttempts * 100).toFixed(1)
+                    : '0.0';
+                const modeCounts = learningData.preferredModes;
+                const sortedModes = Object.entries(modeCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([mode, count]) => `${getModeName(mode)} (${count}次)`);
+                
+                let response = `你的学习数据：\n`;
+                response += `总练习次数：${learningData.totalAttempts}\n`;
+                response += `正确次数：${learningData.correctCount}\n`;
+                response += `准确率：${accuracy}%\n`;
+                if (sortedModes.length > 0) {
+                    response += `练习最多的模式：${sortedModes.join('、')}\n`;
+                }
+                response += `最后练习时间：${new Date(learningData.lastPractice).toLocaleString()}`;
+                return response;
+            } else {
+                return '谢谢你的问题！这是一个很好的话题。在职场中，我们可以通过不断学习和实践来提升自己。如果你有更具体的问题，我很乐意帮助你。';
             }
         }
         

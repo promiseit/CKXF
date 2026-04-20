@@ -774,6 +774,214 @@
             background-color: #DEE2E6;
         }
         
+        /* 简洁模式样式 */
+        body.simple-mode .accessibility-controls {
+            display: none;
+        }
+        
+        body.simple-mode .header {
+            padding: 15px;
+        }
+        
+        body.simple-mode .header h1 {
+            font-size: 24px;
+        }
+        
+        body.simple-mode .difficulty-selector,
+        body.simple-mode .game-area {
+            padding: 15px;
+        }
+        
+        /* 无动画模式 */
+        body.no-animation * {
+            transition: none !important;
+        }
+        
+        body.no-animation .block:hover {
+            transform: none;
+        }
+        
+        body.no-animation .nav-btn:hover {
+            transform: none;
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #E9ECEF;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 音量控制样式 */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volume-slider {
+            width: 100px;
+            cursor: pointer;
+        }
+        
+        /* 保存状态提示 */
+        .save-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 3000;
+            display: none;
+        }
+        
+        /* 设置面板样式 */
+        .settings-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            z-index: 4000;
+            display: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .settings-panel h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #E9ECEF;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .setting-toggle {
+            width: 50px;
+            height: 26px;
+            background-color: #ccc;
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .setting-toggle.active {
+            background-color: #4CAF50;
+        }
+        
+        .setting-toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        
+        .setting-toggle.active::after {
+            transform: translateX(24px);
+        }
+        
+        /* 设置面板关闭按钮 */
+        .settings-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .settings-close:hover {
+            color: #333;
+        }
+        
+        /* 统计图表容器 */
+        .stats-container {
+            background-color: #F8F9FA;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #E9ECEF;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0066CC;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* 高对比度简洁模式 */
+        body.high-contrast.simple-mode .setting-item {
+            border-bottom-color: #666;
+        }
+        
         /* 积分商城样式 */
         .shop-items {
             display: grid;
@@ -876,6 +1084,7 @@
         <button class="accessibility-btn" id="high-contrast-btn" title="高对比度模式">◐</button>
         <button class="accessibility-btn" id="tutorial-btn" title="使用教程">❓</button>
         <button class="accessibility-btn" id="sound-effects-btn" title="音效开关">🔊</button>
+        <button class="accessibility-btn" id="settings-btn" title="设置">⚙️</button>
     </div>
     
     <!-- 字体大小控制 -->
@@ -884,6 +1093,31 @@
         <button class="font-size-btn" id="font-default">A</button>
         <button class="font-size-btn" id="font-increase">A+</button>
     </div>
+    
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settings-panel">
+        <button class="settings-close" id="settings-close">×</button>
+        <h2>设置</h2>
+        <div class="setting-item">
+            <span class="setting-label">简洁模式</span>
+            <div class="setting-toggle" id="simple-mode-toggle"></div>
+        </div>
+        <div class="setting-item">
+            <span class="setting-label">无动画模式</span>
+            <div class="setting-toggle" id="no-animation-toggle"></div>
+        </div>
+        <div class="setting-item">
+            <span class="setting-label">音效音量</span>
+            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50">
+        </div>
+        <div class="setting-item">
+            <span class="setting-label">AI简化回复</span>
+            <div class="setting-toggle" id="ai-simple-toggle"></div>
+        </div>
+    </div>
+    
+    <!-- 保存状态提示 -->
+    <div class="save-status" id="save-status">✓ 已保存</div>
     
     <!-- 引导教程 -->
     <div class="tutorial" id="tutorial" style="display: none;">
@@ -960,6 +1194,37 @@
                 <span>当前等级</span>
                 <span class="score-value">L1</span>
             </div>
+        </div>
+        
+        <!-- 统计数据显示 -->
+        <div class="stats-container" id="stats-container">
+            <h3 style="text-align: center; color: #333;">我的学习数据</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">总练习次数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-correct">0</div>
+                    <div class="stat-label">正确次数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-accuracy">0%</div>
+                    <div class="stat-label">正确率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-streak">0</div>
+                    <div class="stat-label">连续正确</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 进度条 -->
+        <div class="progress-container" id="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0 / 10 题目</div>
         </div>
         
         <div class="game-area">
@@ -1049,8 +1314,22 @@
             correctCount: 0,
             totalAttempts: 0,
             lastPractice: new Date().toISOString(),
-            preferredModes: {}
+            preferredModes: {},
+            streakCount: 0,
+            currentExerciseCount: 0,
+            targetExerciseCount: 10
         };
+        
+        // 设置状态
+        let settings = {
+            simpleMode: false,
+            noAnimation: false,
+            volume: 50,
+            aiSimpleMode: false
+        };
+        
+        // 当前连续正确次数
+        let currentStreak = 0;
         
         const gameContent = {
             text: {
@@ -1528,25 +1807,25 @@
                 {
                     scenario: '同事向你打招呼："早上好！今天过得怎么样？"',
                     options: [
-                        { text: '点头微笑说："早上好！我挺好的，谢谢。"', correct: true, explanation: '这是一个友好且恰当的回应，既回答了问题又保持了礼貌。' },
-                        { text: '不理他，直接走开', correct: false, explanation: '这样会让同事感到被忽视，不利于建立良好的工作关系。' },
-                        { text: '说："关你什么事？"', correct: false, explanation: '这样回答太粗鲁了，会伤害同事的感情。' }
+                        { text: '点头微笑说："早上好！我挺好的，谢谢。"', correct: true, explanation: '✅ 这个回应很好！它友好、礼貌，回答了问题，同时让同事感到被重视。' },
+                        { text: '不理他，直接走开', correct: false, explanation: '❌ 这样会让同事感到被忽视，可能会让对方觉得你不喜欢他。' },
+                        { text: '说："关你什么事？"', correct: false, explanation: '❌ 这样回答太粗鲁了，会伤害同事的感情，破坏工作关系。' }
                     ]
                 },
                 {
                     scenario: '主管对你说："辛苦了，今天的工作做得不错！"',
                     options: [
-                        { text: '说："谢谢！我会继续努力的。"', correct: true, explanation: '这是一个谦虚且积极的回应，表达了感谢和上进心。' },
-                        { text: '说："这没什么，本来就应该的。"', correct: false, explanation: '这样显得不够自信，也没有接受表扬的礼貌。' },
-                        { text: '说："是啊，我也觉得自己很棒！"', correct: false, explanation: '这样显得有些自大，不够谦虚。' }
+                        { text: '说："谢谢！我会继续努力的。"', correct: true, explanation: '✅ 这个回应很好！它表达了感谢，同时展示了你的上进心。' },
+                        { text: '说："这没什么，本来就应该的。"', correct: false, explanation: '❌ 这样会否定对方的表扬，显得不够自信，也不太礼貌。' },
+                        { text: '说："是啊，我也觉得自己很棒！"', correct: false, explanation: '❌ 这样显得有些自大，不够谦虚，可能会让别人不舒服。' }
                     ]
                 },
                 {
                     scenario: '同事借了你的笔，忘记归还。',
                     options: [
-                        { text: '礼貌地说："你好，请问你看到我的笔了吗？我刚才在用。"', correct: true, explanation: '这样既提醒了同事，又不会让对方感到尴尬。' },
-                        { text: '直接从同事手中夺回笔', correct: false, explanation: '这样做会让同事感到不舒服，影响关系。' },
-                        { text: '什么都不说，自己再买一支', correct: false, explanation: '这样虽然避免了冲突，但问题没有解决，可能会再次发生。' }
+                        { text: '礼貌地说："你好，请问你看到我的笔了吗？我刚才在用。"', correct: true, explanation: '✅ 这个方法很好！既提醒了同事，又不会让对方感到尴尬，给对方台阶下。' },
+                        { text: '直接从同事手中夺回笔', correct: false, explanation: '❌ 这样做会让同事感到不舒服，显得没有礼貌。' },
+                        { text: '什么都不说，自己再买一支', correct: false, explanation: '❌ 这样虽然避免了冲突，但问题没有解决，下次可能还会发生。' }
                     ]
                 }
             ],
@@ -1554,17 +1833,17 @@
                 {
                     scenario: '会议中，主管问："有人对这个方案有什么想法吗？"',
                     options: [
-                        { text: '如果有想法就说出来，如果没有就安静坐着', correct: true, explanation: '诚实表达自己的想法是好的，但如果没有想法也不需要勉强。' },
-                        { text: '不管有没有想法都要发言', correct: false, explanation: '没有想法还硬要说会浪费大家的时间。' },
-                        { text: '一直低头看手机', correct: false, explanation: '这样显得不尊重会议和其他人。' }
+                        { text: '如果有想法就说出来，如果没有就安静坐着', correct: true, explanation: '✅ 这样很好！有想法就诚实表达，没有想法就安静倾听，都是合适的。' },
+                        { text: '不管有没有想法都要发言', correct: false, explanation: '❌ 没有想法还硬要说会浪费大家的时间，也会让自己不舒服。' },
+                        { text: '一直低头看手机', correct: false, explanation: '❌ 这样显得不尊重会议和其他人，会给人不好的印象。' }
                     ]
                 },
                 {
                     scenario: '你需要请假一天去看医生。',
                     options: [
-                        { text: '提前一天向主管申请："明天我需要请假去看医生，可以吗？"', correct: true, explanation: '提前申请是职场基本礼仪，给主管足够的时间安排工作。' },
-                        { text: '当天早上才告诉主管', correct: false, explanation: '这样会给主管和团队带来不便，影响工作安排。' },
-                        { text: '直接不来，事后再说', correct: false, explanation: '这是不负责任的行为，会影响你的职业形象。' }
+                        { text: '提前一天向主管申请："明天我需要请假去看医生，可以吗？"', correct: true, explanation: '✅ 这样很好！提前申请是职场礼仪，给主管时间安排工作，也显得负责任。' },
+                        { text: '当天早上才告诉主管', correct: false, explanation: '❌ 这样会给主管和团队带来不便，因为没有时间安排替代的人。' },
+                        { text: '直接不来，事后再说', correct: false, explanation: '❌ 这是不负责任的行为，会让大家担心，也影响你的职业形象。' }
                     ]
                 }
             ],
@@ -1572,17 +1851,17 @@
                 {
                     scenario: '同事请你帮忙，但你手头工作很忙。',
                     options: [
-                        { text: '说："我现在手头有点忙，等我20分钟后帮你可以吗？"', correct: true, explanation: '既表达了愿意帮忙的态度，也说明了自己的情况，给了一个明确的时间。' },
-                        { text: '直接拒绝说："不行，我太忙了。"', correct: false, explanation: '这样太直接了，可能会让同事感到不舒服。' },
-                        { text: '勉强答应，但心里很不情愿', correct: false, explanation: '这样自己会让自己不开心，工作也可能帮不好。' }
+                        { text: '说："我现在手头有点忙，等我20分钟后帮你可以吗？"', correct: true, explanation: '✅ 这样很好！既表达了愿意帮忙的态度，也说明自己的情况，给了明确时间。' },
+                        { text: '直接拒绝说："不行，我太忙了。"', correct: false, explanation: '❌ 这样太直接了，可能会让同事感到不舒服，影响关系。' },
+                        { text: '勉强答应，但心里很不情愿', correct: false, explanation: '❌ 这样会让自己不开心，而且因为不情愿，可能帮不好忙。' }
                     ]
                 },
                 {
                     scenario: '你发现同事在工作中犯了一个错误。',
                     options: [
-                        { text: '私下里礼貌地提醒同事："我注意到这个地方可能有点问题，你要不要检查一下？"', correct: true, explanation: '私下提醒既帮助了同事，又维护了对方的面子。' },
-                        { text: '在团队会议上当众指出', correct: false, explanation: '这样会让同事感到尴尬，可能影响你们的关系。' },
-                        { text: '假装没看见', correct: false, explanation: '这样可能会导致更大的问题，不是负责任的做法。' }
+                        { text: '私下里礼貌地提醒同事："我注意到这个地方可能有点问题，你要不要检查一下？"', correct: true, explanation: '✅ 这样很好！私下提醒既帮助了同事，又维护了对方的面子，对方会感谢你。' },
+                        { text: '在团队会议上当众指出', correct: false, explanation: '❌ 这样会让同事感到尴尬，没面子，可能会恨你。' },
+                        { text: '假装没看见', correct: false, explanation: '❌ 这样可能会导致更大的问题，不是负责任的做法，也会影响整个团队。' }
                     ]
                 }
             ],
@@ -1590,17 +1869,17 @@
                 {
                     scenario: '在团队讨论中，你不同意某人的观点。',
                     options: [
-                        { text: '说："我理解你的想法，不过我有不同的看法..."然后解释', correct: true, explanation: '先肯定对方，再表达自己的观点，这样更容易被接受。' },
-                        { text: '直接说："你说得不对，应该是..."', correct: false, explanation: '这样太直接了，可能会让对方感到被攻击。' },
-                        { text: '不说出来，但心里不同意', correct: false, explanation: '这样不利于团队沟通，问题也得不到解决。' }
+                        { text: '说："我理解你的想法，不过我有不同的看法..."然后解释', correct: true, explanation: '✅ 这样很好！先肯定对方，再表达自己的观点，对方更容易接受。' },
+                        { text: '直接说："你说得不对，应该是..."', correct: false, explanation: '❌ 这样太直接了，可能会让对方感到被攻击，引起冲突。' },
+                        { text: '不说出来，但心里不同意', correct: false, explanation: '❌ 这样不利于团队沟通，问题得不到解决，大家效率都会低。' }
                     ]
                 },
                 {
                     scenario: '客户对你的工作提出了批评。',
                     options: [
-                        { text: '认真倾听，然后说："感谢您的反馈，我会努力改进。"', correct: true, explanation: '认真对待客户反馈，表达改进的意愿，有助于维护客户关系。' },
-                        { text: '辩解："这不是我的错，是..."', correct: false, explanation: '辩解会让客户感到你在推卸责任，可能加剧矛盾。' },
-                        { text: '沉默不语', correct: false, explanation: '这样会让客户觉得你不重视他们的反馈。' }
+                        { text: '认真倾听，然后说："感谢您的反馈，我会努力改进。"', correct: true, explanation: '✅ 这样很好！认真对待客户反馈，表达改进意愿，有助于维护客户关系。' },
+                        { text: '辩解："这不是我的错，是..."', correct: false, explanation: '❌ 辩解会让客户觉得你在推卸责任，可能会更生气。' },
+                        { text: '沉默不语', correct: false, explanation: '❌ 这样会让客户觉得你不重视他们的反馈，他们会不满意。' }
                     ]
                 }
             ],
@@ -1608,17 +1887,17 @@
                 {
                     scenario: '工作中发现了一个严重的错误，可能会影响项目进度。',
                     options: [
-                        { text: '及时向主管汇报，并说明情况和可能的影响', correct: true, explanation: '及时沟通问题是负责任的表现，可以让团队一起想办法解决。' },
-                        { text: '自己悄悄解决，不说出来', correct: false, explanation: '这样风险太大，如果解决不好会造成更大的问题。' },
-                        { text: '假装没看见', correct: false, explanation: '这是不负责任的表现，可能会造成严重后果。' }
+                        { text: '及时向主管汇报，并说明情况和可能的影响', correct: true, explanation: '✅ 这样很好！及时沟通问题是负责任的表现，团队可以一起想办法解决。' },
+                        { text: '自己悄悄解决，不说出来', correct: false, explanation: '❌ 这样风险太大，如果解决不好会造成更大的问题，影响整个项目。' },
+                        { text: '假装没看见', correct: false, explanation: '❌ 这是不负责任的表现，可能会造成严重后果，公司会受损失。' }
                     ]
                 },
                 {
                     scenario: '你需要与其他部门合作完成一个项目，但对方配合度不高。',
                     options: [
-                        { text: '主动沟通："我们需要一起完成这个项目，有什么困难可以一起解决。"', correct: true, explanation: '主动沟通可以了解对方的困难，共同寻找解决方案。' },
-                        { text: '向主管投诉对方不配合', correct: false, explanation: '直接投诉可能会激化矛盾，不是最佳解决方式。' },
-                        { text: '自己一个人完成所有工作', correct: false, explanation: '这样会增加自己的负担，也不利于团队合作。' }
+                        { text: '主动沟通："我们需要一起完成这个项目，有什么困难可以一起解决。"', correct: true, explanation: '✅ 这样很好！主动沟通可以了解对方的困难，共同寻找解决方案。' },
+                        { text: '向主管投诉对方不配合', correct: false, explanation: '❌ 直接投诉可能会激化矛盾，让对方更不配合，关系更糟。' },
+                        { text: '自己一个人完成所有工作', correct: false, explanation: '❌ 这样会增加自己的负担，也不利于团队合作，下次他们可能还这样。' }
                     ]
                 }
             ]
@@ -1677,8 +1956,10 @@
             loadSavedScore();
             loadPurchasedItems();
             loadLearningData();
+            loadSettings();
             initEventListeners();
             initTouchEvents();
+            updateStatsDisplay();
             updateGame();
             loadSocialScenarios();
             showTutorial();
@@ -1774,6 +2055,10 @@
             if (saved) {
                 try {
                     learningData = JSON.parse(saved);
+                    // 确保新字段存在
+                    if (!learningData.streakCount) learningData.streakCount = 0;
+                    if (!learningData.currentExerciseCount) learningData.currentExerciseCount = 0;
+                    if (!learningData.targetExerciseCount) learningData.targetExerciseCount = 10;
                 } catch (e) {
                     console.error('加载学习数据失败:', e);
                     learningData = {
@@ -1781,7 +2066,10 @@
                         correctCount: 0,
                         totalAttempts: 0,
                         lastPractice: new Date().toISOString(),
-                        preferredModes: {}
+                        preferredModes: {},
+                        streakCount: 0,
+                        currentExerciseCount: 0,
+                        targetExerciseCount: 10
                     };
                 }
             }
@@ -1792,16 +2080,89 @@
             try {
                 learningData.lastPractice = new Date().toISOString();
                 localStorage.setItem('learningData', JSON.stringify(learningData));
+                showSaveStatus();
             } catch (e) {
                 console.error('保存学习数据失败:', e);
+            }
+        }
+        
+        // 显示保存状态
+        function showSaveStatus() {
+            const statusEl = document.getElementById('save-status');
+            statusEl.style.display = 'block';
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 2000);
+        }
+        
+        // 加载设置
+        function loadSettings() {
+            const saved = localStorage.getItem('appSettings');
+            if (saved) {
+                try {
+                    settings = JSON.parse(saved);
+                    applySettings();
+                    updateToggleButtons();
+                } catch (e) {
+                    console.error('加载设置失败:', e);
+                }
+            }
+        }
+        
+        // 保存设置
+        function saveSettings() {
+            try {
+                localStorage.setItem('appSettings', JSON.stringify(settings));
+            } catch (e) {
+                console.error('保存设置失败:', e);
+            }
+        }
+        
+        // 应用设置
+        function applySettings() {
+            if (settings.simpleMode) {
+                document.body.classList.add('simple-mode');
+            } else {
+                document.body.classList.remove('simple-mode');
+            }
+            
+            if (settings.noAnimation) {
+                document.body.classList.add('no-animation');
+            } else {
+                document.body.classList.remove('no-animation');
+            }
+        }
+        
+        // 更新切换按钮状态
+        function updateToggleButtons() {
+            const simpleModeToggle = document.getElementById('simple-mode-toggle');
+            const noAnimationToggle = document.getElementById('no-animation-toggle');
+            const aiSimpleToggle = document.getElementById('ai-simple-toggle');
+            
+            if (simpleModeToggle) {
+                simpleModeToggle.classList.toggle('active', settings.simpleMode);
+            }
+            if (noAnimationToggle) {
+                noAnimationToggle.classList.toggle('active', settings.noAnimation);
+            }
+            if (aiSimpleToggle) {
+                aiSimpleToggle.classList.toggle('active', settings.aiSimpleMode);
             }
         }
         
         // 记录练习结果
         function recordExerciseResult(mode, level, correct) {
             learningData.totalAttempts++;
+            learningData.currentExerciseCount++;
+            
             if (correct) {
                 learningData.correctCount++;
+                currentStreak++;
+                if (currentStreak > learningData.streakCount) {
+                    learningData.streakCount = currentStreak;
+                }
+            } else {
+                currentStreak = 0;
             }
             
             // 记录完成的练习
@@ -1819,6 +2180,47 @@
             learningData.preferredModes[mode]++;
             
             saveLearningData();
+            updateStatsDisplay();
+            updateProgressBar();
+        }
+        
+        // 更新统计数据显示
+        function updateStatsDisplay() {
+            const totalEl = document.getElementById('stat-total');
+            const correctEl = document.getElementById('stat-correct');
+            const accuracyEl = document.getElementById('stat-accuracy');
+            const streakEl = document.getElementById('stat-streak');
+            
+            if (totalEl) totalEl.textContent = learningData.totalAttempts;
+            if (correctEl) correctEl.textContent = learningData.correctCount;
+            
+            const accuracy = learningData.totalAttempts > 0 
+                ? (learningData.correctCount / learningData.totalAttempts * 100).toFixed(1)
+                : '0.0';
+            if (accuracyEl) accuracyEl.textContent = accuracy + '%';
+            
+            if (streakEl) streakEl.textContent = learningData.streakCount;
+        }
+        
+        // 更新进度条
+        function updateProgressBar() {
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            
+            if (!progressContainer || !progressFill || !progressText) return;
+            
+            // 只在练习模式下显示进度条
+            const practiceModes = ['text', 'number', 'english', 'coding', 'social'];
+            if (practiceModes.includes(currentMode)) {
+                progressContainer.style.display = 'block';
+                
+                const progress = Math.min(100, (learningData.currentExerciseCount / learningData.targetExerciseCount) * 100);
+                progressFill.style.width = progress + '%';
+                progressText.textContent = `${learningData.currentExerciseCount} / ${learningData.targetExerciseCount} 题目`;
+            } else {
+                progressContainer.style.display = 'none';
+            }
         }
         
         // 生成个性化推荐
@@ -2017,6 +2419,72 @@
             if (aiClearBtn) {
                 aiClearBtn.addEventListener('click', function() {
                     document.getElementById('ai-chat-messages').innerHTML = '<div class="message ai-message">你好！我是你的AI职场助手，有什么可以帮你的吗？</div>';
+                });
+            }
+            
+            // 设置面板事件
+            const settingsBtn = document.getElementById('settings-btn');
+            const settingsPanel = document.getElementById('settings-panel');
+            const settingsClose = document.getElementById('settings-close');
+            const simpleModeToggle = document.getElementById('simple-mode-toggle');
+            const noAnimationToggle = document.getElementById('no-animation-toggle');
+            const volumeSlider = document.getElementById('volume-slider');
+            const aiSimpleToggle = document.getElementById('ai-simple-toggle');
+            
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', function() {
+                    if (settingsPanel) {
+                        settingsPanel.style.display = 'block';
+                    }
+                    playSound('click');
+                });
+            }
+            
+            if (settingsClose) {
+                settingsClose.addEventListener('click', function() {
+                    if (settingsPanel) {
+                        settingsPanel.style.display = 'none';
+                    }
+                    playSound('click');
+                });
+            }
+            
+            if (simpleModeToggle) {
+                simpleModeToggle.addEventListener('click', function() {
+                    settings.simpleMode = !settings.simpleMode;
+                    applySettings();
+                    updateToggleButtons();
+                    saveSettings();
+                    playSound('click');
+                    speakText(settings.simpleMode ? '简洁模式已启用' : '简洁模式已关闭');
+                });
+            }
+            
+            if (noAnimationToggle) {
+                noAnimationToggle.addEventListener('click', function() {
+                    settings.noAnimation = !settings.noAnimation;
+                    applySettings();
+                    updateToggleButtons();
+                    saveSettings();
+                    playSound('click');
+                    speakText(settings.noAnimation ? '无动画模式已启用' : '无动画模式已关闭');
+                });
+            }
+            
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', function() {
+                    settings.volume = parseInt(this.value);
+                    saveSettings();
+                });
+            }
+            
+            if (aiSimpleToggle) {
+                aiSimpleToggle.addEventListener('click', function() {
+                    settings.aiSimpleMode = !settings.aiSimpleMode;
+                    updateToggleButtons();
+                    saveSettings();
+                    playSound('click');
+                    speakText(settings.aiSimpleMode ? 'AI简化回复已启用' : 'AI简化回复已关闭');
                 });
             }
         }
@@ -2594,13 +3062,16 @@
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 
+                // 根据设置调整音量
+                const volume = settings.volume / 100;
+                
                 switch(type) {
                     case 'correct':
                         oscillator.type = 'sine';
                         oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
                         oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
-                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        gainNode.gain.setValueAtTime(0.1 * volume, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, audioContext.currentTime + 0.3);
                         oscillator.start(audioContext.currentTime);
                         oscillator.stop(audioContext.currentTime + 0.3);
                         break;
@@ -2608,8 +3079,8 @@
                         oscillator.type = 'sawtooth';
                         oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
                         oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.3);
-                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        gainNode.gain.setValueAtTime(0.1 * volume, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, audioContext.currentTime + 0.3);
                         oscillator.start(audioContext.currentTime);
                         oscillator.stop(audioContext.currentTime + 0.3);
                         break;
@@ -2617,8 +3088,8 @@
                     default:
                         oscillator.type = 'sine';
                         oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                        gainNode.gain.setValueAtTime(0.1 * volume, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, audioContext.currentTime + 0.1);
                         oscillator.start(audioContext.currentTime);
                         oscillator.stop(audioContext.currentTime + 0.1);
                         break;
@@ -2672,6 +3143,24 @@
         function getAiResponse(message) {
             message = message.toLowerCase();
             
+            // 简化回复处理
+            if (settings.aiSimpleMode) {
+                if (message.includes('你好') || message.includes('嗨') || message.includes('hello')) {
+                    return '你好！有什么可以帮你？';
+                } else if (message.includes('面试')) {
+                    return '保持自信，准时到达。';
+                } else if (message.includes('沟通')) {
+                    return '听对方说，清晰表达。';
+                } else if (message.includes('压力')) {
+                    return '深呼吸，休息一下。';
+                } else if (message.includes('谢谢')) {
+                    return '不客气！';
+                } else {
+                    return '继续加油练习！';
+                }
+            }
+            
+            // 完整回复模式
             if (message.includes('你好') || message.includes('嗨') || message.includes('hello')) {
                 const recommendations = generateRecommendations();
                 let response = '你好！很高兴为你服务。有什么职场相关的问题可以问我。';

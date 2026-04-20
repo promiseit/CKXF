@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iframe测试 - 敞开心扉</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .test-pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0066cc;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0052a3;
+        }
+        #test-output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>敞开心扉 - iframe测试</h1>
+    <p>点击下方按钮运行测试：</p>
+    <button onclick="runFunctionalTests()">运行功能测试</button>
+    <button onclick="runSecurityTests()">运行安全测试</button>
+    <button onclick="runAllTests()">运行所有测试</button>
+    
+    <div id="test-output"></div>
+    
+    <iframe id="test-frame" src="autism-work-tool-improved.html"></iframe>
+    
+    <script src="functional_test.js"></script>
+    <script src="security_test.js"></script>
+    
+    <script>
+        // 重定向console.log到页面
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const output = document.getElementById('test-output');
+            output.textContent += args.join(' ') + '\n';
+        };
+        
+        // 获取iframe中的文档
+        function getIframeDoc() {
+            return document.getElementById('test-frame').contentDocument || document.getElementById('test-frame').contentWindow.document;
+        }
+        
+        // 重写测试函数，使用iframe中的元素
+        function overrideTests() {
+            const iframeDoc = getIframeDoc();
+            
+            // 保存原始的document对象
+            const originalDoc = window.document;
+            
+            // 临时替换document为iframe中的document
+            window.document = iframeDoc;
+            
+            // 运行测试
+            return originalDoc;
+        }
+        
+        // 运行功能测试
+        function runFunctionalTests() {
+            document.getElementById('test-output').textContent = '';
+            console.log('开始功能测试...');
+            
+            const originalDoc = overrideTests();
+            
+            try {
+                // 调用功能测试函数
+                runAllTests();
+            } catch (e) {
+                console.log('测试过程中出现错误:', e.message);
+            } finally {
+                // 恢复原始的document对象
+                window.document = originalDoc;
+            }
+        }
+        
+        // 运行安全测试
+        function runSecurityTests() {
+            document.getElementById('test-output').textContent = '';
+            console.log('开始安全测试...');
+            
+            const originalDoc = overrideTests();
+            
+            try {
+                // 调用安全测试函数
+                runSecurityTests();
+            } catch (e) {
+                console.log('测试过程中出现错误:', e.message);
+            } finally {
+                // 恢复原始的document对象
+                window.document = originalDoc;
+            }
+        }
+        
+        // 运行所有测试
+        function runAllTests() {
+            runFunctionalTests();
+            setTimeout(runSecurityTests, 1000);
+        }
+    </script>
+</body>
+</html>

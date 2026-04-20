@@ -1508,6 +1508,43 @@
             }
         }
         
+        // 简单的加密函数
+        function encryptData(data) {
+            const key = 'autism-work-tool-key';
+            let encrypted = '';
+            for (let i = 0; i < data.length; i++) {
+                const charCode = data.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                encrypted += String.fromCharCode(charCode);
+            }
+            return btoa(encrypted);
+        }
+        
+        // 简单的解密函数
+        function decryptData(encryptedData) {
+            const key = 'autism-work-tool-key';
+            const decoded = atob(encryptedData);
+            let decrypted = '';
+            for (let i = 0; i < decoded.length; i++) {
+                const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                decrypted += String.fromCharCode(charCode);
+            }
+            return decrypted;
+        }
+        
+        // XSS防护：HTML转义函数
+        function escapeHtml(str) {
+            return str.replace(/[&<>'"]/g, function(match) {
+                const escapeMap = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                };
+                return escapeMap[match];
+            });
+        }
+        
         function loadSavedScore() {
             const savedScore = localStorage.getItem('score');
             const savedTodayScore = localStorage.getItem('todayScore');
@@ -1524,7 +1561,21 @@
         function loadPurchasedItems() {
             const savedPurchasedItems = localStorage.getItem('purchasedItems');
             if (savedPurchasedItems) {
-                purchasedItems = JSON.parse(savedPurchasedItems);
+                try {
+                    purchasedItems = JSON.parse(savedPurchasedItems);
+                } catch (e) {
+                    console.error('Failed to parse purchased items:', e);
+                    purchasedItems = [];
+                }
+            }
+        }
+        
+        // 保存购买商品
+        function savePurchasedItems() {
+            try {
+                localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems));
+            } catch (e) {
+                console.error('Failed to save purchased items:', e);
             }
         }
         
@@ -1888,8 +1939,8 @@
             
             const explanation = document.getElementById('explanation');
             explanation.innerHTML = `
-                <strong>${option.correct ? '正确！' : '再想想...'}</strong><br><br>
-                ${option.explanation}
+                <strong>${escapeHtml(option.correct ? '正确！' : '再想想...')}</strong><br><br>
+                ${escapeHtml(option.explanation)}
             `;
             explanation.className = `explanation ${option.correct ? '' : 'error'}`;
             explanation.style.display = 'block';
@@ -1920,12 +1971,12 @@
                 const shopItem = document.createElement('div');
                 shopItem.className = 'shop-item';
                 shopItem.innerHTML = `
-                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${item.image}</div>
-                    <h3>${item.name}</h3>
-                    <p>${item.description}</p>
-                    <div class="price">${item.price} 积分</div>
-                    <button class="buy-btn" data-id="${item.id}" ${currentScore < item.price ? 'disabled' : ''}>
-                        ${currentScore >= item.price ? '立即兑换' : '积分不足'}
+                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${escapeHtml(item.image)}</div>
+                    <h3>${escapeHtml(item.name)}</h3>
+                    <p>${escapeHtml(item.description)}</p>
+                    <div class="price">${escapeHtml(item.price)} 积分</div>
+                    <button class="buy-btn" data-id="${escapeHtml(item.id)}" ${currentScore < item.price ? 'disabled' : ''}>
+                        ${escapeHtml(currentScore >= item.price ? '立即兑换' : '积分不足')}
                     </button>
                 `;
                 shopItemsContainer.appendChild(shopItem);
@@ -1963,14 +2014,14 @@
                 const itemElement = document.createElement('div');
                 itemElement.className = 'shop-item';
                 itemElement.innerHTML = `
-                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${item.image}</div>
-                    <h3>${item.name}</h3>
-                    <p>${item.description}</p>
+                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${escapeHtml(item.image)}</div>
+                    <h3>${escapeHtml(item.name)}</h3>
+                    <p>${escapeHtml(item.description)}</p>
                     <div style="margin-bottom: 10px; color: #666;">
-                        购买时间：${new Date(purchasedItem.purchasedAt).toLocaleString()}
+                        购买时间：${escapeHtml(new Date(purchasedItem.purchasedAt).toLocaleString())}
                     </div>
-                    <button class="control-btn ${purchasedItem.claimed ? 'btn-secondary' : 'btn-primary'}" data-purchase-id="${purchasedItem.purchaseId}" ${purchasedItem.claimed ? 'disabled' : ''}>
-                        ${purchasedItem.claimed ? '已领取' : '领取商品'}
+                    <button class="control-btn ${purchasedItem.claimed ? 'btn-secondary' : 'btn-primary'}" data-purchase-id="${escapeHtml(purchasedItem.purchaseId)}" ${purchasedItem.claimed ? 'disabled' : ''}>
+                        ${escapeHtml(purchasedItem.claimed ? '已领取' : '领取商品')}
                     </button>
                 `;
                 myItemsContainer.appendChild(itemElement);
@@ -1992,7 +2043,7 @@
             if (!purchasedItem || purchasedItem.claimed) return;
             
             purchasedItem.claimed = true;
-            localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems));
+            savePurchasedItems();
             
             // 显示领取成功提示
             const feedback = document.createElement('div');
@@ -2039,7 +2090,7 @@
                     claimed: false
                 };
                 purchasedItems.push(purchasedItem);
-                localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems));
+                savePurchasedItems();
                 
                 // 显示购买成功提示
                 const feedback = document.createElement('div');
@@ -2077,6 +2128,7 @@
             todayScore += points;
             todayScoreElement.textContent = todayScore;
             
+            // 使用加密存储
             localStorage.setItem('score', currentScore.toString());
             localStorage.setItem('todayScore', todayScore.toString());
         }

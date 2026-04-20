@@ -873,152 +873,472 @@
         
         const gameContent = {
             text: {
-                L1: {
-                    title: '职场文字排序',
-                    description: '将打乱的文字重新排列成正确的职场句子',
-                    items: ['请', '在', '下午', '三点', '前', '完成', '这份', '报告', '。'],
-                    correctOrder: ['请', '在', '下午', '三点', '前', '完成', '这份', '报告', '。'],
-                    correctSentence: '请在下午三点前完成这份报告。'
-                },
-                L2: {
-                    title: '职场文字排序',
-                    description: '将打乱的文字重新排列成正确的邮件回复',
-                    items: ['好的', '，', '我会', '在', '明天', '之前', '完成', '这项', '工作', '。'],
-                    correctOrder: ['好的', '，', '我会', '在', '明天', '之前', '完成', '这项', '工作', '。'],
-                    correctSentence: '好的，我会在明天之前完成这项工作。'
-                },
-                L3: {
-                    title: '职场文字排序',
-                    description: '将打乱的文字重新排列成工作汇报',
-                    items: ['本周', '我', '完成', '了', '三个', '项目', '，', '下周', '计划', '开始', '第四个', '。'],
-                    correctOrder: ['本周', '我', '完成', '了', '三个', '项目', '，', '下周', '计划', '开始', '第四个', '。'],
-                    correctSentence: '本周我完成了三个项目，下周计划开始第四个。'
-                },
-                L4: {
-                    title: '职场文字排序',
-                    description: '将打乱的文字重新排列成职场沟通句子',
-                    items: ['请问', '这份', '文件', '需要', '复印', '几份', '？', '我', '现在', '就', '去', '处理', '。'],
-                    correctOrder: ['请问', '这份', '文件', '需要', '复印', '几份', '？', '我', '现在', '就', '去', '处理', '。'],
-                    correctSentence: '请问这份文件需要复印几份？我现在就去处理。'
-                },
-                L5: {
-                    title: '职场文字排序',
-                    description: '将打乱的文字重新排列成复杂工作安排',
-                    items: ['根据', '项目', '进度', '，', '我们', '需要', '在', '下周五', '之前', '完成', '第一', '阶段', '。'],
-                    correctOrder: ['根据', '项目', '进度', '，', '我们', '需要', '在', '下周五', '之前', '完成', '第一', '阶段', '。'],
-                    correctSentence: '根据项目进度，我们需要在下周五之前完成第一阶段。'
-                }
+                L1: [
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成正确的职场句子',
+                        items: ['请', '在', '下午', '三点', '前', '完成', '这份', '报告', '。'],
+                        correctOrder: ['请', '在', '下午', '三点', '前', '完成', '这份', '报告', '。'],
+                        correctSentence: '请在下午三点前完成这份报告。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成正确的职场句子',
+                        items: ['我', '需要', '一杯', '咖啡', '，', '谢谢', '。'],
+                        correctOrder: ['我', '需要', '一杯', '咖啡', '，', '谢谢', '。'],
+                        correctSentence: '我需要一杯咖啡，谢谢。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成正确的职场句子',
+                        items: ['会议', '在', '明天', '上午', '十点', '开始', '。'],
+                        correctOrder: ['会议', '在', '明天', '上午', '十点', '开始', '。'],
+                        correctSentence: '会议在明天上午十点开始。'
+                    }
+                ],
+                L2: [
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成正确的邮件回复',
+                        items: ['好的', '，', '我会', '在', '明天', '之前', '完成', '这项', '工作', '。'],
+                        correctOrder: ['好的', '，', '我会', '在', '明天', '之前', '完成', '这项', '工作', '。'],
+                        correctSentence: '好的，我会在明天之前完成这项工作。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成正确的邮件回复',
+                        items: ['收到', '，', '我', '会', '尽快', '处理', '并', '回复', '您', '。'],
+                        correctOrder: ['收到', '，', '我', '会', '尽快', '处理', '并', '回复', '您', '。'],
+                        correctSentence: '收到，我会尽快处理并回复您。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成正确的邮件回复',
+                        items: ['抱歉', '，', '我', '今天', '有事', '，', '不能', '参加', '会议', '。'],
+                        correctOrder: ['抱歉', '，', '我', '今天', '有事', '，', '不能', '参加', '会议', '。'],
+                        correctSentence: '抱歉，我今天有事，不能参加会议。'
+                    }
+                ],
+                L3: [
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成工作汇报',
+                        items: ['本周', '我', '完成', '了', '三个', '项目', '，', '下周', '计划', '开始', '第四个', '。'],
+                        correctOrder: ['本周', '我', '完成', '了', '三个', '项目', '，', '下周', '计划', '开始', '第四个', '。'],
+                        correctSentence: '本周我完成了三个项目，下周计划开始第四个。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成工作汇报',
+                        items: ['我', '已经', '整理', '好', '所有', '文件', '，', '放在', '您', '的', '桌上', '。'],
+                        correctOrder: ['我', '已经', '整理', '好', '所有', '文件', '，', '放在', '您', '的', '桌上', '。'],
+                        correctSentence: '我已经整理好所有文件，放在您的桌上。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成工作汇报',
+                        items: ['客户', '对', '我们', '的', '方案', '很', '满意', '，', '希望', '尽快', '开始', '合作', '。'],
+                        correctOrder: ['客户', '对', '我们', '的', '方案', '很', '满意', '，', '希望', '尽快', '开始', '合作', '。'],
+                        correctSentence: '客户对我们的方案很满意，希望尽快开始合作。'
+                    }
+                ],
+                L4: [
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成职场沟通句子',
+                        items: ['请问', '这份', '文件', '需要', '复印', '几份', '？', '我', '现在', '就', '去', '处理', '。'],
+                        correctOrder: ['请问', '这份', '文件', '需要', '复印', '几份', '？', '我', '现在', '就', '去', '处理', '。'],
+                        correctSentence: '请问这份文件需要复印几份？我现在就去处理。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成职场沟通句子',
+                        items: ['能否', '请', '您', '给', '我', '一些', '关于', '这个', '项目', '的', '建议', '？'],
+                        correctOrder: ['能否', '请', '您', '给', '我', '一些', '关于', '这个', '项目', '的', '建议', '？'],
+                        correctSentence: '能否请您给我一些关于这个项目的建议？'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成职场沟通句子',
+                        items: ['我', '想', '和', '您', '讨论', '一下', '下个月', '的', '工作计划', '。'],
+                        correctOrder: ['我', '想', '和', '您', '讨论', '一下', '下个月', '的', '工作计划', '。'],
+                        correctSentence: '我想和您讨论一下下个月的工作计划。'
+                    }
+                ],
+                L5: [
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成复杂工作安排',
+                        items: ['根据', '项目', '进度', '，', '我们', '需要', '在', '下周五', '之前', '完成', '第一', '阶段', '。'],
+                        correctOrder: ['根据', '项目', '进度', '，', '我们', '需要', '在', '下周五', '之前', '完成', '第一', '阶段', '。'],
+                        correctSentence: '根据项目进度，我们需要在下周五之前完成第一阶段。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成复杂工作安排',
+                        items: ['为了', '确保', '项目', '按时', '完成', '，', '我们', '需要', '增加', '人手', '并', '调整', '时间表', '。'],
+                        correctOrder: ['为了', '确保', '项目', '按时', '完成', '，', '我们', '需要', '增加', '人手', '并', '调整', '时间表', '。'],
+                        correctSentence: '为了确保项目按时完成，我们需要增加人手并调整时间表。'
+                    },
+                    {
+                        title: '职场文字排序',
+                        description: '将打乱的文字重新排列成复杂工作安排',
+                        items: ['经过', '分析', '，', '我们', '认为', '最佳', '方案', '是', '采用', '模块化', '设计', '并', '分阶段', '实施', '。'],
+                        correctOrder: ['经过', '分析', '，', '我们', '认为', '最佳', '方案', '是', '采用', '模块化', '设计', '并', '分阶段', '实施', '。'],
+                        correctSentence: '经过分析，我们认为最佳方案是采用模块化设计并分阶段实施。'
+                    }
+                ]
             },
             number: {
-                L1: {
-                    title: '职场数字计算',
-                    description: '将打乱的数字和符号重新排列成正确的职场计算',
-                    items: ['12', '个', '员工', '×', '50', '元', '午餐', '午餐费', '=', '600', '元'],
-                    correctOrder: ['12', '个', '员工', '×', '50', '元', '午餐', '午餐费', '=', '600', '元'],
-                    correctSentence: '12个员工×50元午餐费=600元'
-                },
-                L2: {
-                    title: '职场数字计算',
-                    description: '将打乱的数字和符号重新排列成时间管理计算',
-                    items: ['上午', '9', '点', '到', '下午', '5', '点', '，', '扣除', '1', '小时', '午休', '，', '共', '工作', '7', '小时'],
-                    correctOrder: ['上午', '9', '点', '到', '下午', '5', '点', '，', '扣除', '1', '小时', '午休', '，', '共', '工作', '7', '小时'],
-                    correctSentence: '上午9点到下午5点，扣除1小时午休，共工作7小时'
-                },
-                L3: {
-                    title: '职场数字计算',
-                    description: '将打乱的数字和符号重新排列成财务计算',
-                    items: ['产品', '单价', '25', '元', '×', '销售', '数量', '120', '个', '=', '总', '销售额', '3000', '元'],
-                    correctOrder: ['产品', '单价', '25', '元', '×', '销售', '数量', '120', '个', '=', '总', '销售额', '3000', '元'],
-                    correctSentence: '产品单价25元×销售数量120个=总销售额3000元'
-                },
-                L4: {
-                    title: '职场数字计算',
-                    description: '将打乱的数字和符号重新排列成任务分配计算',
-                    items: ['共有', '50', '份', '文件', '需要', '整理', '，', '分给', '5', '个', '同事', '，', '每人', '10', '份'],
-                    correctOrder: ['共有', '50', '份', '文件', '需要', '整理', '，', '分给', '5', '个', '同事', '，', '每人', '10', '份'],
-                    correctSentence: '共有50份文件需要整理，分给5个同事，每人10份'
-                },
-                L5: {
-                    title: '职场数字计算',
-                    description: '将打乱的数字和符号重新排列成综合职场计算',
-                    items: ['本月', '任务', '：', '完成', '4', '个', '项目', '，', '已', '完成', '2', '个', '，', '还', '剩', '50%'],
-                    correctOrder: ['本月', '任务', '：', '完成', '4', '个', '项目', '，', '已', '完成', '2', '个', '，', '还', '剩', '50%'],
-                    correctSentence: '本月任务：完成4个项目，已完成2个，还剩50%'
-                }
+                L1: [
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成正确的职场计算',
+                        items: ['12', '个', '员工', '×', '50', '元', '午餐', '午餐费', '=', '600', '元'],
+                        correctOrder: ['12', '个', '员工', '×', '50', '元', '午餐', '午餐费', '=', '600', '元'],
+                        correctSentence: '12个员工×50元午餐费=600元'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成正确的职场计算',
+                        items: ['5', '天', '×', '8', '小时', '=', '40', '小时', '工作时间'],
+                        correctOrder: ['5', '天', '×', '8', '小时', '=', '40', '小时', '工作时间'],
+                        correctSentence: '5天×8小时=40小时工作时间'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成正确的职场计算',
+                        items: ['3', '个', '会议', '×', '60', '分钟', '=', '180', '分钟', '会议时间'],
+                        correctOrder: ['3', '个', '会议', '×', '60', '分钟', '=', '180', '分钟', '会议时间'],
+                        correctSentence: '3个会议×60分钟=180分钟会议时间'
+                    }
+                ],
+                L2: [
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成时间管理计算',
+                        items: ['上午', '9', '点', '到', '下午', '5', '点', '，', '扣除', '1', '小时', '午休', '，', '共', '工作', '7', '小时'],
+                        correctOrder: ['上午', '9', '点', '到', '下午', '5', '点', '，', '扣除', '1', '小时', '午休', '，', '共', '工作', '7', '小时'],
+                        correctSentence: '上午9点到下午5点，扣除1小时午休，共工作7小时'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成时间管理计算',
+                        items: ['周一', '到', '周五', '，', '每天', '工作', '8', '小时', '，', '一周', '共', '40', '小时'],
+                        correctOrder: ['周一', '到', '周五', '，', '每天', '工作', '8', '小时', '，', '一周', '共', '40', '小时'],
+                        correctSentence: '周一到周五，每天工作8小时，一周共40小时'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成时间管理计算',
+                        items: ['项目', '预计', '需要', '10', '天', '完成', '，', '每天', '6', '小时', '，', '共', '60', '小时'],
+                        correctOrder: ['项目', '预计', '需要', '10', '天', '完成', '，', '每天', '6', '小时', '，', '共', '60', '小时'],
+                        correctSentence: '项目预计需要10天完成，每天6小时，共60小时'
+                    }
+                ],
+                L3: [
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成财务计算',
+                        items: ['产品', '单价', '25', '元', '×', '销售', '数量', '120', '个', '=', '总', '销售额', '3000', '元'],
+                        correctOrder: ['产品', '单价', '25', '元', '×', '销售', '数量', '120', '个', '=', '总', '销售额', '3000', '元'],
+                        correctSentence: '产品单价25元×销售数量120个=总销售额3000元'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成财务计算',
+                        items: ['月度', '预算', '5000', '元', '，', '已', '使用', '3000', '元', '，', '剩余', '2000', '元'],
+                        correctOrder: ['月度', '预算', '5000', '元', '，', '已', '使用', '3000', '元', '，', '剩余', '2000', '元'],
+                        correctSentence: '月度预算5000元，已使用3000元，剩余2000元'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成财务计算',
+                        items: ['会议', '费用', '800', '元', '，', '平均', '分给', '4', '人', '，', '每人', '200', '元'],
+                        correctOrder: ['会议', '费用', '800', '元', '，', '平均', '分给', '4', '人', '，', '每人', '200', '元'],
+                        correctSentence: '会议费用800元，平均分给4人，每人200元'
+                    }
+                ],
+                L4: [
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成任务分配计算',
+                        items: ['共有', '50', '份', '文件', '需要', '整理', '，', '分给', '5', '个', '同事', '，', '每人', '10', '份'],
+                        correctOrder: ['共有', '50', '份', '文件', '需要', '整理', '，', '分给', '5', '个', '同事', '，', '每人', '10', '份'],
+                        correctSentence: '共有50份文件需要整理，分给5个同事，每人10份'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成任务分配计算',
+                        items: ['项目', '有', '8', '个', '任务', '，', '分给', '2', '个', '团队', '，', '每个', '团队', '4', '个', '任务'],
+                        correctOrder: ['项目', '有', '8', '个', '任务', '，', '分给', '2', '个', '团队', '，', '每个', '团队', '4', '个', '任务'],
+                        correctSentence: '项目有8个任务，分给2个团队，每个团队4个任务'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成任务分配计算',
+                        items: ['需要', '准备', '30', '份', '资料', '，', '每天', '准备', '6', '份', '，', '需要', '5', '天'],
+                        correctOrder: ['需要', '准备', '30', '份', '资料', '，', '每天', '准备', '6', '份', '，', '需要', '5', '天'],
+                        correctSentence: '需要准备30份资料，每天准备6份，需要5天'
+                    }
+                ],
+                L5: [
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成综合职场计算',
+                        items: ['本月', '任务', '：', '完成', '4', '个', '项目', '，', '已', '完成', '2', '个', '，', '还', '剩', '50%'],
+                        correctOrder: ['本月', '任务', '：', '完成', '4', '个', '项目', '，', '已', '完成', '2', '个', '，', '还', '剩', '50%'],
+                        correctSentence: '本月任务：完成4个项目，已完成2个，还剩50%'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成综合职场计算',
+                        items: ['年度', '目标', '：', '销售', '10000', '件', '产品', '，', '已', '完成', '7500', '件', '，', '完成率', '75%'],
+                        correctOrder: ['年度', '目标', '：', '销售', '10000', '件', '产品', '，', '已', '完成', '7500', '件', '，', '完成率', '75%'],
+                        correctSentence: '年度目标：销售10000件产品，已完成7500件，完成率75%'
+                    },
+                    {
+                        title: '职场数字计算',
+                        description: '将打乱的数字和符号重新排列成综合职场计算',
+                        items: ['投资', '回报率', '：', '投入', '50000', '元', '，', '收益', '7500', '元', '，', '回报率', '15%'],
+                        correctOrder: ['投资', '回报率', '：', '投入', '50000', '元', '，', '收益', '7500', '元', '，', '回报率', '15%'],
+                        correctSentence: '投资回报率：投入50000元，收益7500元，回报率15%'
+                    }
+                ]
             },
             english: {
-                L1: {
-                    title: '职场英语拼接',
-                    description: '将打乱的英文单词重新排列成正确的职场句子',
-                    items: ['Good', 'morning', ',', 'how', 'can', 'I', 'help', 'you', '?'],
-                    correctOrder: ['Good', 'morning', ',', 'how', 'can', 'I', 'help', 'you', '?'],
-                    correctSentence: 'Good morning, how can I help you?'
-                },
-                L2: {
-                    title: '职场英语拼接',
-                    description: '将打乱的英文单词重新排列成工作沟通句子',
-                    items: ['I', 'will', 'finish', 'this', 'task', 'by', 'tomorrow', '.'],
-                    correctOrder: ['I', 'will', 'finish', 'this', 'task', 'by', 'tomorrow', '.'],
-                    correctSentence: 'I will finish this task by tomorrow.'
-                },
-                L3: {
-                    title: '职场英语拼接',
-                    description: '将打乱的英文单词重新排列成邮件常用语',
-                    items: ['Could', 'you', 'please', 'send', 'me', 'the', 'latest', 'report', '?'],
-                    correctOrder: ['Could', 'you', 'please', 'send', 'me', 'the', 'latest', 'report', '?'],
-                    correctSentence: 'Could you please send me the latest report?'
-                },
-                L4: {
-                    title: '职场英语拼接',
-                    description: '将打乱的英文单词重新排列成工作汇报',
-                    items: ['This', 'week', ',', 'I', 'completed', 'three', 'projects', 'and', 'started', 'the', 'fourth', 'one', '.'],
-                    correctOrder: ['This', 'week', ',', 'I', 'completed', 'three', 'projects', 'and', 'started', 'the', 'fourth', 'one', '.'],
-                    correctSentence: 'This week, I completed three projects and started the fourth one.'
-                },
-                L5: {
-                    title: '职场英语拼接',
-                    description: '将打乱的英文单词重新排列成商务英语句子',
-                    items: ['According', 'to', 'the', 'project', 'timeline', ',', 'we', 'need', 'to', 'finish', 'by', 'Friday', '.'],
-                    correctOrder: ['According', 'to', 'the', 'project', 'timeline', ',', 'we', 'need', 'to', 'finish', 'by', 'Friday', '.'],
-                    correctSentence: 'According to the project timeline, we need to finish by Friday.'
-                }
+                L1: [
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成正确的职场句子',
+                        items: ['Good', 'morning', ',', 'how', 'can', 'I', 'help', 'you', '?'],
+                        correctOrder: ['Good', 'morning', ',', 'how', 'can', 'I', 'help', 'you', '?'],
+                        correctSentence: 'Good morning, how can I help you?'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成正确的职场句子',
+                        items: ['Hello', ',', 'my', 'name', 'is', 'Tom', '.'],
+                        correctOrder: ['Hello', ',', 'my', 'name', 'is', 'Tom', '.'],
+                        correctSentence: 'Hello, my name is Tom.'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成正确的职场句子',
+                        items: ['Thank', 'you', 'very', 'much', '.'],
+                        correctOrder: ['Thank', 'you', 'very', 'much', '.'],
+                        correctSentence: 'Thank you very much.'
+                    }
+                ],
+                L2: [
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成工作沟通句子',
+                        items: ['I', 'will', 'finish', 'this', 'task', 'by', 'tomorrow', '.'],
+                        correctOrder: ['I', 'will', 'finish', 'this', 'task', 'by', 'tomorrow', '.'],
+                        correctSentence: 'I will finish this task by tomorrow.'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成工作沟通句子',
+                        items: ['Can', 'you', 'help', 'me', 'with', 'this', '?'],
+                        correctOrder: ['Can', 'you', 'help', 'me', 'with', 'this', '?'],
+                        correctSentence: 'Can you help me with this?'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成工作沟通句子',
+                        items: ['I', 'am', 'ready', 'for', 'the', 'meeting', '.'],
+                        correctOrder: ['I', 'am', 'ready', 'for', 'the', 'meeting', '.'],
+                        correctSentence: 'I am ready for the meeting.'
+                    }
+                ],
+                L3: [
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成邮件常用语',
+                        items: ['Could', 'you', 'please', 'send', 'me', 'the', 'latest', 'report', '?'],
+                        correctOrder: ['Could', 'you', 'please', 'send', 'me', 'the', 'latest', 'report', '?'],
+                        correctSentence: 'Could you please send me the latest report?'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成邮件常用语',
+                        items: ['I', 'look', 'forward', 'to', 'hearing', 'from', 'you', '.'],
+                        correctOrder: ['I', 'look', 'forward', 'to', 'hearing', 'from', 'you', '.'],
+                        correctSentence: 'I look forward to hearing from you.'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成邮件常用语',
+                        items: ['Please', 'find', 'the', 'attached', 'file', '.'],
+                        correctOrder: ['Please', 'find', 'the', 'attached', 'file', '.'],
+                        correctSentence: 'Please find the attached file.'
+                    }
+                ],
+                L4: [
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成工作汇报',
+                        items: ['This', 'week', ',', 'I', 'completed', 'three', 'projects', 'and', 'started', 'the', 'fourth', 'one', '.'],
+                        correctOrder: ['This', 'week', ',', 'I', 'completed', 'three', 'projects', 'and', 'started', 'the', 'fourth', 'one', '.'],
+                        correctSentence: 'This week, I completed three projects and started the fourth one.'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成工作汇报',
+                        items: ['The', 'project', 'is', 'going', 'well', 'and', 'on', 'schedule', '.'],
+                        correctOrder: ['The', 'project', 'is', 'going', 'well', 'and', 'on', 'schedule', '.'],
+                        correctSentence: 'The project is going well and on schedule.'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成工作汇报',
+                        items: ['I', 'have', 'met', 'all', 'my', 'deadlines', 'for', 'this', 'month', '.'],
+                        correctOrder: ['I', 'have', 'met', 'all', 'my', 'deadlines', 'for', 'this', 'month', '.'],
+                        correctSentence: 'I have met all my deadlines for this month.'
+                    }
+                ],
+                L5: [
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成商务英语句子',
+                        items: ['According', 'to', 'the', 'project', 'timeline', ',', 'we', 'need', 'to', 'finish', 'by', 'Friday', '.'],
+                        correctOrder: ['According', 'to', 'the', 'project', 'timeline', ',', 'we', 'need', 'to', 'finish', 'by', 'Friday', '.'],
+                        correctSentence: 'According to the project timeline, we need to finish by Friday.'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成商务英语句子',
+                        items: ['We', 'should', 'consider', 'all', 'possible', 'options', 'before', 'making', 'a', 'decision', '.'],
+                        correctOrder: ['We', 'should', 'consider', 'all', 'possible', 'options', 'before', 'making', 'a', 'decision', '.'],
+                        correctSentence: 'We should consider all possible options before making a decision.'
+                    },
+                    {
+                        title: '职场英语拼接',
+                        description: '将打乱的英文单词重新排列成商务英语句子',
+                        items: ['The', 'market', 'research', 'shows', 'that', 'there', 'is', 'a', 'growing', 'demand', 'for', 'our', 'product', '.'],
+                        correctOrder: ['The', 'market', 'research', 'shows', 'that', 'there', 'is', 'a', 'growing', 'demand', 'for', 'our', 'product', '.'],
+                        correctSentence: 'The market research shows that there is a growing demand for our product.'
+                    }
+                ]
             },
             coding: {
-                L1: {
-                    title: '职场编程练习',
-                    description: '将打乱的代码片段重新排列成打印每日任务的脚本',
-                    items: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
-                    correctOrder: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
-                    correctSentence: 'tasks = ["整理文件", "回复邮件", "准备会议"] for task in tasks: print(task)'
-                },
-                L2: {
-                    title: '职场编程练习',
-                    description: '将打乱的代码片段重新排列成计算销售数据的脚本',
-                    items: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
-                    correctOrder: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
-                    correctSentence: 'sales = [100, 150, 200, 180] total = sum(sales) print(f"总销售额:", total)'
-                },
-                L3: {
-                    title: '职场编程练习',
-                    description: '将打乱的代码片段重新排列成检查文件的脚本',
-                    items: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
-                    correctOrder: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
-                    correctSentence: 'import os documents = ["report.docx", "data.xlsx"] if os.path.exists(doc): print(f"已找到")'
-                },
-                L4: {
-                    title: '职场编程练习',
-                    description: '将打乱的代码片段重新排列成发送提醒的脚本',
-                    items: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
-                    correctOrder: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
-                    correctSentence: 'from datetime import datetime if current_time.hour == 17: print("下班前请检查任务！")'
-                },
-                L5: {
-                    title: '职场编程练习',
-                    description: '将打乱的代码片段重新排列成项目进度追踪脚本',
-                    items: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
-                    correctOrder: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
-                    correctSentence: 'project_progress = {"phase1": 100, "phase2": 75} for phase, progress in project_progress.items(): print(f"{phase}:", progress)'
-                }
+                L1: [
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成简单的打印脚本',
+                        items: ['print("Hello', 'World!")'],
+                        correctOrder: ['print("Hello', 'World!")'],
+                        correctSentence: 'print("Hello World!")'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成打印任务的脚本',
+                        items: ['print("整理文件")', 'print("回复邮件")'],
+                        correctOrder: ['print("整理文件")', 'print("回复邮件")'],
+                        correctSentence: 'print("整理文件") print("回复邮件")'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成简单的变量脚本',
+                        items: ['name', '=', '"Tom"', 'print(name)'],
+                        correctOrder: ['name', '=', '"Tom"', 'print(name)'],
+                        correctSentence: 'name = "Tom" print(name)'
+                    }
+                ],
+                L2: [
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成打印每日任务的脚本',
+                        items: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
+                        correctOrder: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
+                        correctSentence: 'tasks = ["整理文件", "回复邮件", "准备会议"] for task in tasks: print(task)'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成计算销售数据的脚本',
+                        items: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
+                        correctOrder: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
+                        correctSentence: 'sales = [100, 150, 200, 180] total = sum(sales) print(f"总销售额:", total)'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成简单的加法脚本',
+                        items: ['a', '=', '5', 'b', '=', '3', 'result', '=', 'a', '+', 'b', 'print(result)'],
+                        correctOrder: ['a', '=', '5', 'b', '=', '3', 'result', '=', 'a', '+', 'b', 'print(result)'],
+                        correctSentence: 'a = 5 b = 3 result = a + b print(result)'
+                    }
+                ],
+                L3: [
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成检查文件的脚本',
+                        items: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
+                        correctOrder: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
+                        correctSentence: 'import os documents = ["report.docx", "data.xlsx"] if os.path.exists(doc): print(f"已找到")'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成计算平均值的脚本',
+                        items: ['numbers', '=', '[10,', '20,', '30,', '40]', 'average', '=', 'sum(numbers)', '/', 'len(numbers)', 'print(average)'],
+                        correctOrder: ['numbers', '=', '[10,', '20,', '30,', '40]', 'average', '=', 'sum(numbers)', '/', 'len(numbers)', 'print(average)'],
+                        correctSentence: 'numbers = [10, 20, 30, 40] average = sum(numbers) / len(numbers) print(average)'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成简单的条件脚本',
+                        items: ['age', '=', '18', 'if', 'age', '>=', '18:', 'print("成年人")', 'else:', 'print("未成年人")'],
+                        correctOrder: ['age', '=', '18', 'if', 'age', '>=', '18:', 'print("成年人")', 'else:', 'print("未成年人")'],
+                        correctSentence: 'age = 18 if age >= 18: print("成年人") else: print("未成年人")'
+                    }
+                ],
+                L4: [
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成发送提醒的脚本',
+                        items: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
+                        correctOrder: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
+                        correctSentence: 'from datetime import datetime if current_time.hour == 17: print("下班前请检查任务！")'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成简单的函数脚本',
+                        items: ['def', 'greet(name):', 'print(f"Hello,', 'name!", name)', 'greet("Tom")'],
+                        correctOrder: ['def', 'greet(name):', 'print(f"Hello,', 'name!", name)', 'greet("Tom")'],
+                        correctSentence: 'def greet(name): print(f"Hello, name!", name) greet("Tom")'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成列表处理脚本',
+                        items: ['items', '=', '[1,', '2,', '3,', '4,', '5]', 'even_items', '=', '[x', 'for', 'x', 'in', 'items', 'if', 'x', '%', '2', '==', '0]', 'print(even_items)'],
+                        correctOrder: ['items', '=', '[1,', '2,', '3,', '4,', '5]', 'even_items', '=', '[x', 'for', 'x', 'in', 'items', 'if', 'x', '%', '2', '==', '0]', 'print(even_items)'],
+                        correctSentence: 'items = [1, 2, 3, 4, 5] even_items = [x for x in items if x % 2 == 0] print(even_items)'
+                    }
+                ],
+                L5: [
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成项目进度追踪脚本',
+                        items: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
+                        correctOrder: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
+                        correctSentence: 'project_progress = {"phase1": 100, "phase2": 75} for phase, progress in project_progress.items(): print(f"{phase}:", progress)'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成字典处理脚本',
+                        items: ['employee', '=', '{"name":', '"Tom",', '"age":', '25,', '"department":', '"IT"}', 'for', 'key,', 'value', 'in', 'employee.items():', 'print(f"{key}:", value)'],
+                        correctOrder: ['employee', '=', '{"name":', '"Tom",', '"age":', '25,', '"department":', '"IT"}', 'for', 'key,', 'value', 'in', 'employee.items():', 'print(f"{key}:", value)'],
+                        correctSentence: 'employee = {"name": "Tom", "age": 25, "department": "IT"} for key, value in employee.items(): print(f"{key}:", value)'
+                    },
+                    {
+                        title: '职场编程练习',
+                        description: '将打乱的代码片段重新排列成复杂的条件脚本',
+                        items: ['score', '=', '85', 'if', 'score', '>=', '90:', 'print("优秀")', 'elif', 'score', '>=', '80:', 'print("良好")', 'else:', 'print("需要努力")'],
+                        correctOrder: ['score', '=', '85', 'if', 'score', '>=', '90:', 'print("优秀")', 'elif', 'score', '>=', '80:', 'print("良好")', 'else:', 'print("需要努力")'],
+                        correctSentence: 'score = 85 if score >= 90: print("优秀") elif score >= 80: print("良好") else: print("需要努力")'
+                    }
+                ]
             }
         };
         
@@ -1354,6 +1674,33 @@
             }
         }
         
+        // 存储当前题目信息
+        let currentQuestion = null;
+        
+        function loadGameContent() {
+            const contentArray = gameContent[currentMode][currentLevel];
+            // 随机选择一个题目
+            const randomIndex = Math.floor(Math.random() * contentArray.length);
+            const content = contentArray[randomIndex];
+            
+            // 存储当前题目
+            currentQuestion = content;
+            
+            const gameHeader = document.querySelector('.game-header h2');
+            const gameDescription = document.querySelector('.game-header p');
+            const blocksContainer = document.getElementById('blocks');
+            
+            gameHeader.textContent = content.title;
+            gameDescription.textContent = content.description;
+            
+            blocksContainer.innerHTML = '';
+            document.getElementById('target').innerHTML = '';
+            document.getElementById('feedback').textContent = '请将积木拖放到下方区域';
+            document.getElementById('feedback').className = 'feedback';
+            
+            createBlocks(content.items);
+        }
+        
         function checkAnswer() {
             const target = document.getElementById('target');
             const targetBlocks = target.querySelectorAll('.block');
@@ -1364,7 +1711,7 @@
             });
             
             const feedback = document.getElementById('feedback');
-            const correctOrder = gameContent[currentMode][currentLevel].correctOrder;
+            const correctOrder = currentQuestion.correctOrder;
             
             if (JSON.stringify(userOrder) === JSON.stringify(correctOrder)) {
                 feedback.textContent = '太棒了！回答正确！';
@@ -1382,7 +1729,7 @@
         
         function showHint() {
             const feedback = document.getElementById('feedback');
-            const correctSentence = gameContent[currentMode][currentLevel].correctSentence;
+            const correctSentence = currentQuestion.correctSentence;
             feedback.textContent = '提示：正确的句子是「' + correctSentence + '」';
             feedback.className = 'feedback info';
             speakText('提示：正确的句子是「' + correctSentence + '」');
@@ -1436,7 +1783,11 @@
         }
         
         function loadGameContent() {
-            const content = gameContent[currentMode][currentLevel];
+            const contentArray = gameContent[currentMode][currentLevel];
+            // 随机选择一个题目
+            const randomIndex = Math.floor(Math.random() * contentArray.length);
+            const content = contentArray[randomIndex];
+            
             const gameHeader = document.querySelector('.game-header h2');
             const gameDescription = document.querySelector('.game-header p');
             const blocksContainer = document.getElementById('blocks');

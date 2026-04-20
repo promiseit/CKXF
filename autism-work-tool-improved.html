@@ -1237,14 +1237,14 @@
                         description: '将打乱的代码片段重新排列成打印任务的脚本',
                         items: ['print("整理文件")', 'print("回复邮件")'],
                         correctOrder: ['print("整理文件")', 'print("回复邮件")'],
-                        correctSentence: 'print("整理文件") print("回复邮件")'
+                        correctSentence: 'print("整理文件"); print("回复邮件")'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成简单的变量脚本',
-                        items: ['name', '=', '"Tom"', 'print(name)'],
-                        correctOrder: ['name', '=', '"Tom"', 'print(name)'],
-                        correctSentence: 'name = "Tom" print(name)'
+                        items: ['name', '=', '"Tom"', ';', 'print(name)'],
+                        correctOrder: ['name', '=', '"Tom"', ';', 'print(name)'],
+                        correctSentence: 'name = "Tom"; print(name)'
                     }
                 ],
                 L2: [
@@ -1253,21 +1253,21 @@
                         description: '将打乱的代码片段重新排列成打印每日任务的脚本',
                         items: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
                         correctOrder: ['tasks', '=', '["整理文件", "回复邮件", "准备会议"]', 'for', 'task', 'in', 'tasks:', 'print(task)'],
-                        correctSentence: 'tasks = ["整理文件", "回复邮件", "准备会议"] for task in tasks: print(task)'
+                        correctSentence: 'tasks = ["整理文件", "回复邮件", "准备会议"]; for task in tasks: print(task)'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成计算销售数据的脚本',
                         items: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
                         correctOrder: ['sales', '=', '[100,', '150,', '200,', '180]', 'total', '=', 'sum(sales)', 'print(f"总销售额:", total)'],
-                        correctSentence: 'sales = [100, 150, 200, 180] total = sum(sales) print(f"总销售额:", total)'
+                        correctSentence: 'sales = [100, 150, 200, 180]; total = sum(sales); print(f"总销售额:", total)'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成简单的加法脚本',
                         items: ['a', '=', '5', 'b', '=', '3', 'result', '=', 'a', '+', 'b', 'print(result)'],
                         correctOrder: ['a', '=', '5', 'b', '=', '3', 'result', '=', 'a', '+', 'b', 'print(result)'],
-                        correctSentence: 'a = 5 b = 3 result = a + b print(result)'
+                        correctSentence: 'a = 5; b = 3; result = a + b; print(result)'
                     }
                 ],
                 L3: [
@@ -1276,21 +1276,21 @@
                         description: '将打乱的代码片段重新排列成检查文件的脚本',
                         items: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
                         correctOrder: ['import', 'os', 'documents', '=', '["report.docx",', 'data.xlsx"]', 'if', 'os.path.exists(doc):', 'print(f"已找到")'],
-                        correctSentence: 'import os documents = ["report.docx", "data.xlsx"] if os.path.exists(doc): print(f"已找到")'
+                        correctSentence: 'import os; documents = ["report.docx", "data.xlsx"]; if os.path.exists(doc): print(f"已找到")'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成计算平均值的脚本',
                         items: ['numbers', '=', '[10,', '20,', '30,', '40]', 'average', '=', 'sum(numbers)', '/', 'len(numbers)', 'print(average)'],
                         correctOrder: ['numbers', '=', '[10,', '20,', '30,', '40]', 'average', '=', 'sum(numbers)', '/', 'len(numbers)', 'print(average)'],
-                        correctSentence: 'numbers = [10, 20, 30, 40] average = sum(numbers) / len(numbers) print(average)'
+                        correctSentence: 'numbers = [10, 20, 30, 40]; average = sum(numbers) / len(numbers); print(average)'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成简单的条件脚本',
                         items: ['age', '=', '18', 'if', 'age', '>=', '18:', 'print("成年人")', 'else:', 'print("未成年人")'],
                         correctOrder: ['age', '=', '18', 'if', 'age', '>=', '18:', 'print("成年人")', 'else:', 'print("未成年人")'],
-                        correctSentence: 'age = 18 if age >= 18: print("成年人") else: print("未成年人")'
+                        correctSentence: 'age = 18; if age >= 18: print("成年人") else: print("未成年人")'
                     }
                 ],
                 L4: [
@@ -1299,21 +1299,21 @@
                         description: '将打乱的代码片段重新排列成发送提醒的脚本',
                         items: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
                         correctOrder: ['from', 'datetime', 'import', 'datetime', 'if', 'current_time.hour', '==', '17:', 'print("下班前请检查任务！")'],
-                        correctSentence: 'from datetime import datetime if current_time.hour == 17: print("下班前请检查任务！")'
+                        correctSentence: 'from datetime import datetime; if current_time.hour == 17: print("下班前请检查任务！")'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成简单的函数脚本',
                         items: ['def', 'greet(name):', 'print(f"Hello,', 'name!", name)', 'greet("Tom")'],
                         correctOrder: ['def', 'greet(name):', 'print(f"Hello,', 'name!", name)', 'greet("Tom")'],
-                        correctSentence: 'def greet(name): print(f"Hello, name!", name) greet("Tom")'
+                        correctSentence: 'def greet(name): print(f"Hello, name!", name); greet("Tom")'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成列表处理脚本',
                         items: ['items', '=', '[1,', '2,', '3,', '4,', '5]', 'even_items', '=', '[x', 'for', 'x', 'in', 'items', 'if', 'x', '%', '2', '==', '0]', 'print(even_items)'],
                         correctOrder: ['items', '=', '[1,', '2,', '3,', '4,', '5]', 'even_items', '=', '[x', 'for', 'x', 'in', 'items', 'if', 'x', '%', '2', '==', '0]', 'print(even_items)'],
-                        correctSentence: 'items = [1, 2, 3, 4, 5] even_items = [x for x in items if x % 2 == 0] print(even_items)'
+                        correctSentence: 'items = [1, 2, 3, 4, 5]; even_items = [x for x in items if x % 2 == 0]; print(even_items)'
                     }
                 ],
                 L5: [
@@ -1322,21 +1322,21 @@
                         description: '将打乱的代码片段重新排列成项目进度追踪脚本',
                         items: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
                         correctOrder: ['project_progress', '=', '{"phase1":', '100,', '"phase2":', '75}', 'for', 'phase,', 'progress', 'in', 'project_progress.items():', 'print(f"{phase}:", progress)'],
-                        correctSentence: 'project_progress = {"phase1": 100, "phase2": 75} for phase, progress in project_progress.items(): print(f"{phase}:", progress)'
+                        correctSentence: 'project_progress = {"phase1": 100, "phase2": 75}; for phase, progress in project_progress.items(): print(f"{phase}:", progress)'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成字典处理脚本',
                         items: ['employee', '=', '{"name":', '"Tom",', '"age":', '25,', '"department":', '"IT"}', 'for', 'key,', 'value', 'in', 'employee.items():', 'print(f"{key}:", value)'],
                         correctOrder: ['employee', '=', '{"name":', '"Tom",', '"age":', '25,', '"department":', '"IT"}', 'for', 'key,', 'value', 'in', 'employee.items():', 'print(f"{key}:", value)'],
-                        correctSentence: 'employee = {"name": "Tom", "age": 25, "department": "IT"} for key, value in employee.items(): print(f"{key}:", value)'
+                        correctSentence: 'employee = {"name": "Tom", "age": 25, "department": "IT"}; for key, value in employee.items(): print(f"{key}:", value)'
                     },
                     {
                         title: '职场编程练习',
                         description: '将打乱的代码片段重新排列成复杂的条件脚本',
                         items: ['score', '=', '85', 'if', 'score', '>=', '90:', 'print("优秀")', 'elif', 'score', '>=', '80:', 'print("良好")', 'else:', 'print("需要努力")'],
                         correctOrder: ['score', '=', '85', 'if', 'score', '>=', '90:', 'print("优秀")', 'elif', 'score', '>=', '80:', 'print("良好")', 'else:', 'print("需要努力")'],
-                        correctSentence: 'score = 85 if score >= 90: print("优秀") elif score >= 80: print("良好") else: print("需要努力")'
+                        correctSentence: 'score = 85; if score >= 90: print("优秀") elif score >= 80: print("良好") else: print("需要努力")'
                     }
                 ]
             }

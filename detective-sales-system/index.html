@@ -6,7 +6,8 @@
     <title>神探销售系统 - 客户分析探案平台</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/assessment.css">
-    <!-- 移除CDN依赖，确保离线可用 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="detective-container">
@@ -344,8 +345,8 @@
                             <div class="settings-section">
                                 <h3>大模型设置</h3>
                                 <div class="form-group">
-                                    <label for="default-ai-model">默认大模型</label>
-                                    <select id="default-ai-model" class="ai-model-select">
+                                <label for="default-ai-model">默认大模型</label>
+                                <select id="default-ai-model" class="ai-model-select">
                                         <option value="local">本地模型（GGUF）</option>
                                         <option value="wenxin">文心一言</option>
                                         <option value="tongyi">通义千问</option>

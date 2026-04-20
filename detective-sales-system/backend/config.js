@@ -13,7 +13,7 @@ module.exports = {
       defaultUrl: 'https://api.deepseek.com/chat/completions'
     },
     doubao: {
-      defaultUrl: 'https://ark.cn-beijing.volces.com/api/v1/chat/completions'
+      defaultUrl: 'https://ark.cn-beijing.volces.com/api/v3/chat/completions'
     },
     qianwen: {
       defaultUrl: 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation'

@@ -691,8 +691,8 @@ function handleNewCaseSubmit(e) {
   };
   
   cases.push(newCase);
-        batchSaveCases();
-        renderCaseList();
+  batchSaveCases();
+  renderCaseList();
   
   // 显示欢迎页面
   document.getElementById('new-case-screen').classList.remove('active');
@@ -775,7 +775,6 @@ function handleAddClueSubmit(e) {
     currentCase.clues = currentCase.clues || [];
     currentCase.clues.push(newClue);
     currentCase.updatedAt = new Date().toISOString();
-    
     batchSaveCases();
     renderClueList();
     
@@ -884,6 +883,7 @@ function generateReport() {
 function downloadReport() {
     if (!currentCase) return;
 
+<<<<<<< HEAD
     // 生成 Word 格式的报告内容（HTML 格式）
     const reportContent = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -985,12 +985,14 @@ function downloadReport() {
 function exportPPT() {
     if (!currentCase) return;
 
-    // 初始化数据
+    // 初始化图表数据
     let chartHtml = '';
+    let importanceCounts = [0, 0, 0, 0, 0];
+    let typeLabels = [];
+    let typeData = [];
 
     if (currentCase.clues && currentCase.clues.length > 0) {
         // 统计线索重要性数据
-        const importanceCounts = [0, 0, 0, 0, 0];
         currentCase.clues.forEach(clue => {
             importanceCounts[clue.importance - 1]++;
         });
@@ -1000,45 +1002,26 @@ function exportPPT() {
         currentCase.clues.forEach(clue => {
             typeCounts[clue.type] = (typeCounts[clue.type] || 0) + 1;
         });
-        const typeLabels = Object.keys(typeCounts).map(type => getClueTypeText(type));
-        const typeData = Object.values(typeCounts);
+        typeLabels = Object.keys(typeCounts).map(type => getClueTypeText(type));
+        typeData = Object.values(typeCounts);
 
-        // 生成纯HTML数据表格
         chartHtml = `
-    <!-- 数据统计 -->
+    <!-- 数据可视化 -->
     <div class="slide">
-        <h2>数据统计</h2>
+        <h2>数据可视化</h2>
         <div class="content" style="display: flex; flex-direction: column; gap: 20px;">
             <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
                 <div style="text-align: center; width: 45%; max-width: 400px;">
                     <h3>线索重要性分布</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin: 0 auto;">
-                        <tr style="background-color: #f2f2f2;">
-                            <th style="border: 1px solid #ddd; padding: 8px;">重要性</th>
-                            <th style="border: 1px solid #ddd; padding: 8px;">数量</th>
-                        </tr>
-                        ${[1, 2, 3, 4, 5].map((star, index) => `
-                        <tr>
-                            <td style="border: 1px solid #ddd; padding: 8px;">${star}星</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">${importanceCounts[index]}</td>
-                        </tr>
-                        `).join('')}
-                    </table>
+                    <div style="width: 100%; height: 300px; margin: 0 auto;">
+                        <canvas id="importanceChart" style="max-width: 100%; height: 100%;"></canvas>
+                    </div>
                 </div>
                 <div style="text-align: center; width: 45%; max-width: 400px;">
                     <h3>线索类型分布</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin: 0 auto;">
-                        <tr style="background-color: #f2f2f2;">
-                            <th style="border: 1px solid #ddd; padding: 8px;">类型</th>
-                            <th style="border: 1px solid #ddd; padding: 8px;">数量</th>
-                        </tr>
-                        ${typeLabels.map((label, index) => `
-                        <tr>
-                            <td style="border: 1px solid #ddd; padding: 8px;">${label}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">${typeData[index]}</td>
-                        </tr>
-                        `).join('')}
-                    </table>
+                    <div style="width: 100%; height: 300px; margin: 0 auto;">
+                        <canvas id="typeChart" style="max-width: 100%; height: 100%;"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1053,6 +1036,7 @@ function exportPPT() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${escapeHtml(currentCase.title)} - PPT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -1174,7 +1158,87 @@ function exportPPT() {
         </div>
     </div>
 
+    <script>
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 线索重要性分布图表
+            const importanceCtx = document.getElementById('importanceChart');
+            if (importanceCtx) {
+                new Chart(importanceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['1星', '2星', '3星', '4星', '5星'],
+                        datasets: [{
+                            label: '线索数量',
+                            data: ${JSON.stringify(importanceCounts)},
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(255, 159, 64, 0.7)',
+                                'rgba(255, 205, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(54, 162, 235, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 205, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
 
+            // 线索类型分布图表
+            const typeCtx = document.getElementById('typeChart');
+            if (typeCtx) {
+                new Chart(typeCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ${JSON.stringify(typeLabels)},
+                        datasets: [{
+                            data: ${JSON.stringify(typeData)},
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 205, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 205, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>`;
 
@@ -1217,12 +1281,18 @@ function nextStep() {
             detailDifficulty.textContent = `游戏难度：${getDifficultyText(difficulty)}`;
         }
         
+=======
+        saveCases();
+        updateStatusBar(currentCase.status);
+        document.getElementById('detail-status').textContent = getStatusText(currentCase.status);
+>>>>>>> origin/main
         showToast(`案件状态已更新为：${getStatusText(currentCase.status)}`);
     } else {
         showToast('案件已经是最终状态');
     }
 }
 
+<<<<<<< HEAD
 // 调整游戏难度
 function adjustGameDifficulty() {
     if (!currentCase) return;
@@ -1286,6 +1356,8 @@ function evaluatePerformanceAndAdjustDifficulty() {
     localStorage.setItem('detective_game_difficulty', currentDifficulty.toString());
 }
 
+=======
+>>>>>>> origin/main
 // 上一步
 function prevStep() {
     if (!currentCase) return;
@@ -1296,7 +1368,11 @@ function prevStep() {
     if (currentIndex > 0) {
         currentCase.status = statusOrder[currentIndex - 1];
         currentCase.updatedAt = new Date().toISOString();
+<<<<<<< HEAD
         batchSaveCases();
+=======
+        saveCases();
+>>>>>>> origin/main
         updateStatusBar(currentCase.status);
         document.getElementById('detail-status').textContent = getStatusText(currentCase.status);
         showToast(`案件状态已回退为：${getStatusText(currentCase.status)}`);
@@ -1325,7 +1401,11 @@ function deleteCase() {
     
     if (confirm('确定要删除这个案件吗？此操作不可恢复。')) {
         cases = cases.filter(c => c.id !== currentCase.id);
+<<<<<<< HEAD
         batchSaveCases();
+=======
+        saveCases();
+>>>>>>> origin/main
         renderCaseList();
         
         // 显示欢迎页面
@@ -1351,6 +1431,7 @@ function showSettings() {
     loadSettingsToForm();
 }
 
+<<<<<<< HEAD
 // 显示能力评估页面
 function showAssessment() {
     hideAllScreens();
@@ -1361,6 +1442,8 @@ function showAssessment() {
     }
 }
 
+=======
+>>>>>>> origin/main
 // 隐藏所有页面
 function hideAllScreens() {
     document.querySelectorAll('.screen').forEach(screen => {
@@ -1371,6 +1454,7 @@ function hideAllScreens() {
     });
 }
 
+<<<<<<< HEAD
 // 更安全的加密函数（使用 AES 类似的简单实现，适合前端）
 function encryptData(data) {
     if (!data) return '';
@@ -1455,11 +1539,38 @@ function fallbackDecrypt(encryptedData) {
             result += String.fromCharCode(charCode);
         }
         return result;
+=======
+// 简单加密函数
+function encryptData(data) {
+    if (!data) return '';
+    const key = 'detective_sales_system_secret_key_2024';
+    let encrypted = '';
+    for (let i = 0; i < data.length; i++) {
+        const charCode = data.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+        encrypted += String.fromCharCode(charCode);
+    }
+    return btoa(encrypted);
+}
+
+// 简单解密函数
+function decryptData(encryptedData) {
+    if (!encryptedData) return '';
+    try {
+        const key = 'detective_sales_system_secret_key_2024';
+        const decoded = atob(encryptedData);
+        let decrypted = '';
+        for (let i = 0; i < decoded.length; i++) {
+            const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+            decrypted += String.fromCharCode(charCode);
+        }
+        return decrypted;
+>>>>>>> origin/main
     } catch (e) {
         return '';
     }
 }
 
+<<<<<<< HEAD
 // HTML 转义函数，防止 XSS
 function escapeHtml(text) {
     if (typeof text !== 'string') return text;
@@ -1484,23 +1595,33 @@ function safeSetAttribute(element, attribute, value) {
 // 全局变量
 let localModelLoaded = false;
 
+=======
+>>>>>>> origin/main
 // 加载设置
 function loadSettings() {
     const storedSettings = localStorage.getItem('detective_settings');
     if (!storedSettings) {
         return {
+<<<<<<< HEAD
             defaultModel: 'local',
             apiKey: '',
             apiUrl: '',
             modelId: '',
             localModelPath: '',
             cloudModelsEnabled: false
+=======
+            defaultModel: 'wenxin',
+            apiKey: '',
+            apiUrl: '',
+            modelId: ''
+>>>>>>> origin/main
         };
     }
     
     try {
         const settings = JSON.parse(storedSettings);
         return {
+<<<<<<< HEAD
             defaultModel: settings.defaultModel || 'local',
             apiKey: decryptData(settings.apiKey) || '',
             apiUrl: decryptData(settings.apiUrl) || '',
@@ -1516,6 +1637,19 @@ function loadSettings() {
             modelId: '',
             localModelPath: '',
             cloudModelsEnabled: false
+=======
+            defaultModel: settings.defaultModel || 'wenxin',
+            apiKey: decryptData(settings.apiKey) || '',
+            apiUrl: decryptData(settings.apiUrl) || '',
+            modelId: decryptData(settings.modelId) || ''
+        };
+    } catch (e) {
+        return {
+            defaultModel: 'wenxin',
+            apiKey: '',
+            apiUrl: '',
+            modelId: ''
+>>>>>>> origin/main
         };
     }
 }
@@ -1526,10 +1660,15 @@ function saveSettings() {
     const aiApiKey = document.getElementById('ai-api-key');
     const aiApiUrl = document.getElementById('ai-api-url');
     const aiModelId = document.getElementById('ai-model-id');
+<<<<<<< HEAD
     const localModelPath = document.getElementById('local-model-path');
     const cloudModelsEnabled = document.getElementById('cloud-models-enabled');
     
     if (!defaultAiModel || !aiApiKey || !aiApiUrl || !aiModelId || !localModelPath || !cloudModelsEnabled) {
+=======
+    
+    if (!defaultAiModel || !aiApiKey || !aiApiUrl || !aiModelId) {
+>>>>>>> origin/main
         showToast('设置页面元素缺失，无法保存设置');
         return;
     }
@@ -1538,9 +1677,13 @@ function saveSettings() {
         defaultModel: defaultAiModel.value,
         apiKey: encryptData(aiApiKey.value),
         apiUrl: encryptData(aiApiUrl.value),
+<<<<<<< HEAD
         modelId: encryptData(aiModelId.value),
         localModelPath: encryptData(localModelPath.value),
         cloudModelsEnabled: cloudModelsEnabled.checked
+=======
+        modelId: encryptData(aiModelId.value)
+>>>>>>> origin/main
     };
     
     localStorage.setItem('detective_settings', JSON.stringify(settings));
@@ -1552,7 +1695,11 @@ function loadSettingsToForm() {
     const settings = loadSettings();
     
     const defaultAiModel = document.getElementById('default-ai-model');
+<<<<<<< HEAD
     if (defaultAiModel) defaultAiModel.value = settings.defaultModel || 'local';
+=======
+    if (defaultAiModel) defaultAiModel.value = settings.defaultModel || 'wenxin';
+>>>>>>> origin/main
     
     const aiApiKey = document.getElementById('ai-api-key');
     if (aiApiKey) aiApiKey.value = settings.apiKey || '';
@@ -1562,21 +1709,27 @@ function loadSettingsToForm() {
     
     const aiModelId = document.getElementById('ai-model-id');
     if (aiModelId) aiModelId.value = settings.modelId || '';
+<<<<<<< HEAD
     
     const localModelPath = document.getElementById('local-model-path');
     if (localModelPath) localModelPath.value = settings.localModelPath || '';
     
     const cloudModelsEnabled = document.getElementById('cloud-models-enabled');
     if (cloudModelsEnabled) cloudModelsEnabled.checked = settings.cloudModelsEnabled || false;
+=======
+>>>>>>> origin/main
 }
 
 // 测试API连接
 async function testAPI() {
+<<<<<<< HEAD
     if (!isOnline) {
         showToast('当前处于离线状态，无法测试API连接');
         return;
     }
     
+=======
+>>>>>>> origin/main
     const settings = loadSettings();
     const apiKey = settings.apiKey;
     const apiUrl = settings.apiUrl;
@@ -1648,6 +1801,7 @@ function updateStatusBar(status) {
 
 // 保存案件数据
 function saveCases() {
+<<<<<<< HEAD
     try {
         // 压缩数据以减少存储空间
         const compressedData = JSON.stringify(cases);
@@ -1667,6 +1821,9 @@ function batchSaveCases() {
     saveTimeout = setTimeout(() => {
         batchSaveCases();
     }, 500); // 500ms延迟，合并短时间内的多次保存操作
+=======
+    localStorage.setItem('detective_cases', JSON.stringify(cases));
+>>>>>>> origin/main
 }
 
 // 加载示例数据
@@ -1709,7 +1866,11 @@ function loadSampleData() {
         };
         
         cases.push(sampleCase);
+<<<<<<< HEAD
         batchSaveCases();
+=======
+        saveCases();
+>>>>>>> origin/main
         renderCaseList();
     }
 }
@@ -1771,6 +1932,7 @@ function showToast(message) {
 
 // 构建提示词
 function buildPrompt(clues, caseTitle, clientName) {
+<<<<<<< HEAD
     // 匿名化处理：移除具体的客户名称和案件标题
     const anonymizedClientName = '客户';
     const anonymizedCaseTitle = '项目';
@@ -1785,6 +1947,13 @@ function buildPrompt(clues, caseTitle, clientName) {
     }).join('\n\n');
     
     return `请分析以下销售线索，为${anonymizedClientName}的${anonymizedCaseTitle}项目提供分析。
+=======
+    const cluesText = clues.map(clue => 
+        `- 线索内容：${clue.content}\n  类型：${clue.type}\n  重要性：${clue.importance}星\n  标签：${clue.tags}`
+    ).join('\n\n');
+    
+    return `请分析以下销售线索，为${clientName}的${caseTitle}项目提供分析。
+>>>>>>> origin/main
 
 请详细分析每个线索之间的关联，挖掘潜在的深层需求，提供全面而深入的分析。
 
@@ -1804,10 +1973,13 @@ ${cluesText}
 
 // 调用后端API
 async function callBackendAPI(model, apiKey, apiUrl, prompt, modelId) {
+<<<<<<< HEAD
     if (!isOnline) {
         throw new Error('当前处于离线状态，无法调用云端API');
     }
     
+=======
+>>>>>>> origin/main
     const backendUrl = 'http://localhost:3001/api/ai-analyze';
     
     console.log('调用后端API，URL:', backendUrl, '模型:', model);
@@ -1869,6 +2041,7 @@ async function callDoubaoAPI(apiKey, apiUrl, prompt, modelId) {
     return await callBackendAPI('doubao', apiKey, apiUrl, prompt, modelId);
 }
 
+<<<<<<< HEAD
 // 加载本地GGUF模型（预留接口，实际使用本地智能分析）
 async function loadLocalModel(modelPath) {
     try {
@@ -1905,10 +2078,28 @@ function parseAIResponse(response) {
             step2: '',
             step3: '',
             step4: ''
+=======
+// 解析AI返回的JSON
+function parseAIResponse(response) {
+    try {
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            return JSON.parse(jsonMatch[0]);
+        }
+        return JSON.parse(response);
+    } catch (e) {
+        const steps = response.split(/\d\.\s*|步骤|基础|关键|潜在|行动/).filter(s => s.trim());
+        return {
+            step1: steps[0]?.trim() || '',
+            step2: steps[1]?.trim() || '',
+            step3: steps[2]?.trim() || '',
+            step4: steps[3]?.trim() || ''
+>>>>>>> origin/main
         };
     }
 }
 
+<<<<<<< HEAD
 // AI分析主函数
 async function aiAnalyzeClues(modelType) {
     const settings = loadSettings();
@@ -2008,6 +2199,8 @@ async function aiAnalyzeClues(modelType) {
     }
 }
 
+=======
+>>>>>>> origin/main
 // 智能本地分析（降级方案）
 function generateLocalAnalysis(clues, caseTitle, clientName) {
     // 提取所有线索内容
@@ -2259,7 +2452,11 @@ async function aiAnalyzeClues(model) {
             currentCase.analysis[4] = analysisResults.step4;
         }
         
+<<<<<<< HEAD
         batchSaveCases();
+=======
+        saveCases();
+>>>>>>> origin/main
         
     } catch (error) {
         console.error('AI分析错误:', error);

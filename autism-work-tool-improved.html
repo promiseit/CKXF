@@ -917,6 +917,18 @@
         <div class="virtual-keyboard">
             <h3 style="text-align: center; margin-bottom: 20px; font-size: 20px; color: #333;">虚拟键盘</h3>
             <div class="keyboard-row">
+                <div class="key" tabindex="0">1</div>
+                <div class="key" tabindex="0">2</div>
+                <div class="key" tabindex="0">3</div>
+                <div class="key" tabindex="0">4</div>
+                <div class="key" tabindex="0">5</div>
+                <div class="key" tabindex="0">6</div>
+                <div class="key" tabindex="0">7</div>
+                <div class="key" tabindex="0">8</div>
+                <div class="key" tabindex="0">9</div>
+                <div class="key" tabindex="0">0</div>
+            </div>
+            <div class="keyboard-row">
                 <div class="key" tabindex="0">Q</div>
                 <div class="key" tabindex="0">W</div>
                 <div class="key" tabindex="0">E</div>
@@ -1885,6 +1897,9 @@
                         }
                         aiChatInput.focus();
                     }
+                    
+                    // 播放按键声音
+                    playKeySound(keyText);
                 });
                 
                 // 键盘支持
@@ -2486,6 +2501,54 @@
                         oscillator.stop(audioContext.currentTime + 0.1);
                         break;
                 }
+            }
+        }
+        
+        function playKeySound(keyText) {
+            if (soundEffectsEnabled) {
+                // 使用Web Audio API创建按键声音
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // 根据按键设置不同的频率
+                let frequency = 440; // 默认频率
+                
+                // 字母按键频率
+                const letterFrequencies = {
+                    'A': 440, 'B': 493.88, 'C': 523.25, 'D': 587.33, 'E': 659.25,
+                    'F': 698.46, 'G': 783.99, 'H': 880, 'I': 987.77, 'J': 1046.50,
+                    'K': 1174.66, 'L': 1318.51, 'M': 1396.91, 'N': 1567.98, 'O': 1760,
+                    'P': 1975.53, 'Q': 2093, 'R': 2349.32, 'S': 2637.02, 'T': 2793.83,
+                    'U': 3135.96, 'V': 3520, 'W': 3951.07, 'X': 4186.01, 'Y': 4698.63,
+                    'Z': 5274.04
+                };
+                
+                // 数字按键频率
+                const numberFrequencies = {
+                    '0': 261.63, '1': 293.66, '2': 329.63, '3': 349.23, '4': 392.00,
+                    '5': 440.00, '6': 493.88, '7': 523.25, '8': 587.33, '9': 659.25
+                };
+                
+                if (letterFrequencies[keyText]) {
+                    frequency = letterFrequencies[keyText];
+                } else if (numberFrequencies[keyText]) {
+                    frequency = numberFrequencies[keyText];
+                } else if (keyText === '空格') {
+                    frequency = 330; // 空格的频率
+                } else if (keyText === '删除') {
+                    frequency = 220; // 删除键的频率
+                }
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1);
             }
         }
         

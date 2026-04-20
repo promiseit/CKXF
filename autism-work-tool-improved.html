@@ -1533,6 +1533,12 @@
         
         // XSS防护：HTML转义函数
         function escapeHtml(str) {
+            if (typeof str !== 'string') {
+                if (str === null || str === undefined) {
+                    return '';
+                }
+                str = String(str);
+            }
             return str.replace(/[&<>'"]/g, function(match) {
                 const escapeMap = {
                     '&': '&amp;',
